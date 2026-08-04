@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LaLabela Boutique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  /* =========================================================================
+     LALABELA BOUTIQUE — arquivo único (HTML + CSS + JS)
+     Tudo que você precisa editar no dia a dia está sinalizado com:
+        ✏️ EDITE AQUI
+     Você não precisa mexer em mais nada além dessas áreas.
+  ========================================================================= */
+
+  :root{
+    --cream:#FAF6F1;
+    --wine:#7A2E3A;
+    --wine-dark:#5C222B;
+    --blush:#E9CFC9;
+    --ink:#2A2420;
+    --gold:#B98B4E;
+    --line: rgba(42,36,32,0.14);
+    --radius: 2px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:500;
+    letter-spacing:.01em;
+  }
+  a{color:inherit;}
+
+  /* ---------- ribbon divider (signature motif) ---------- */
+  .ribbon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin: 6px 0;
+    color: var(--gold);
+  }
+  .ribbon svg{width:26px;height:14px;flex:none;}
+  .ribbon::before,.ribbon::after{
+    content:"";
+    height:1px;
+    width:64px;
+    background: linear-gradient(90deg, transparent, var(--line));
+  }
+  .ribbon::after{background: linear-gradient(90deg, var(--line), transparent);}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(250,246,241,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    max-width:1180px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 28px;
+  }
+  .brand-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo{height:46px;width:auto;object-fit:contain;display:block;}
+  .brand{
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.7rem;
+    letter-spacing:.06em;
+    text-decoration:none;
+  }
+  .brand em{font-style:italic;color:var(--wine);}
+
+  /* ---------- barra de horário de atendimento ---------- */
+  .hours-bar{
+    background:var(--wine);
+    color:#fff;
+    text-align:center;
+    padding:9px 16px;
+    font-size:.78rem;
+    letter-spacing:.02em;
+    display:flex;flex-wrap:wrap;
+    align-items:center;justify-content:center;
+    gap:6px 14px;
+  }
+  .hours-bar .hours-note{
+    color:var(--blush);
+    font-style:italic;
+    font-size:.76rem;
+  }
+
+  /* ---------- seção de entregas (final da página) ---------- */
+  .delivery-info{
+    max-width:760px;margin:0 auto;
+    padding:20px 28px 60px;
+    text-align:center;
+  }
+  .delivery-info h2{font-size:1.7rem;margin-bottom:14px;}
+  .delivery-info p{
+    color:rgba(42,36,32,0.75);
+    font-size:.96rem;
+    line-height:1.75;
+    margin:0 0 22px;
+  }
+  .delivery-info p strong{color:var(--wine);}
+  .whatsapp-link{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#25D366;color:#fff;
+    padding:12px 22px;
+    font-size:.85rem;letter-spacing:.04em;text-transform:uppercase;
+    text-decoration:none;
+  }
+  .whatsapp-link:hover{filter:brightness(.95);}
+  .cart-btn{
+    position:relative;
+    display:flex;align-items:center;gap:8px;
+    background:var(--wine);
+    color:#fff;
+    border:none;
+    padding:11px 18px;
+    font-family:'Jost';
+    font-size:.82rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    cursor:pointer;
+    border-radius:var(--radius);
+    transition:background .2s ease;
+  }
+  .cart-btn:hover{background:var(--wine-dark);}
+  .cart-count{
+    background:var(--gold);
+    color:#fff;
+    font-size:.72rem;
+    min-width:18px;height:18px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    padding:0 4px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    max-width:1180px;margin:0 auto;
+    padding:80px 28px 56px;
+    text-align:center;
+  }
+  .hero .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.32em;
+    font-size:.72rem;
+    color:var(--wine);
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 6vw, 4.4rem);
+    margin:14px 0 10px;
+    line-height:1.05;
+  }
+  .hero p{
+    max-width:520px;margin:0 auto;
+    color:rgba(42,36,32,0.72);
+    font-size:1.02rem;
+    line-height:1.6;
+  }
+
+  /* ---------- product grid ---------- */
+  .shop{max-width:1180px;margin:0 auto;padding:10px 28px 90px;}
+  .shop h2{
+    text-align:center;
+    font-size:1.9rem;
+    margin-bottom:6px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(250px,1fr));
+    gap:34px;
+    margin-top:44px;
+  }
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    display:flex;flex-direction:column;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .card:hover{transform:translateY(-4px); box-shadow:0 18px 34px -22px rgba(42,36,32,.35);}
+  .card .img-wrap{
+    position:relative;
+    aspect-ratio: 4/5;
+    overflow:hidden;
+    background:var(--blush);
+  }
+  .card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+  .card:hover img{transform:scale(1.045);}
+  .badge{
+    position:absolute;top:12px;left:12px;
+    background:var(--wine);color:#fff;
+    font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:5px 10px;
+  }
+  .card-body{padding:18px 18px 20px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .card-body h3{font-size:1.25rem;margin:0;}
+  .card-body .desc{font-size:.85rem;color:rgba(42,36,32,.65);line-height:1.45;min-height:2.6em;}
+  .price-row{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:6px;}
+  .price{font-family:'Cormorant Garamond';font-size:1.35rem;color:var(--wine);}
+  .add-btn{
+    background:transparent;
+    border:1px solid var(--ink);
+    color:var(--ink);
+    padding:9px 16px;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .add-btn:hover{background:var(--ink);color:#fff;}
+  .add-btn.added{background:var(--wine);border-color:var(--wine);color:#fff;}
+
+  /* ---------- cart drawer ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(42,36,32,.45);
+    opacity:0;pointer-events:none;transition:opacity .25s ease;
+    z-index:60;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;
+    width:min(420px,92vw);
+    background:var(--cream);
+    z-index:70;
+    transform:translateX(100%);
+    transition:transform .3s ease;
+    display:flex;flex-direction:column;
+    box-shadow:-14px 0 40px rgba(0,0,0,.15);
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:22px 24px;
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .drawer-head h2{margin:0;font-size:1.5rem;}
+  .close-btn{
+    background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--ink);
+    line-height:1;
+  }
+  .drawer-items{flex:1;overflow-y:auto;padding:14px 24px;}
+  .empty-msg{color:rgba(42,36,32,.55);text-align:center;padding:60px 10px;font-size:.95rem;}
+  .item{
+    display:flex;gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .item img{width:64px;height:78px;object-fit:cover;flex:none;}
+  .item-info{flex:1;display:flex;flex-direction:column;gap:4px;}
+  .item-info .name{font-size:.95rem;}
+  .item-info .unit-price{font-size:.78rem;color:rgba(42,36,32,.55);}
+  .qty-row{display:flex;align-items:center;gap:10px;margin-top:2px;}
+  .qty-row button{
+    width:22px;height:22px;border:1px solid var(--line);background:#fff;
+    cursor:pointer;font-size:.85rem;line-height:1;
+  }
+  .qty-row span{font-size:.85rem;min-width:14px;text-align:center;}
+  .remove-btn{
+    background:none;border:none;color:var(--wine);
+    font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;
+    cursor:pointer;text-decoration:underline;margin-left:auto;align-self:flex-start;
+  }
+  .item-total{font-family:'Cormorant Garamond';font-size:1.05rem;white-space:nowrap;}
+
+  .drawer-foot{
+    border-top:1px solid var(--line);
+    padding:20px 24px 26px;
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .ship-block label{
+    font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:rgba(42,36,32,.65);
+    display:block;margin-bottom:6px;
+  }
+  .ship-block select{
+    width:100%;padding:10px 12px;
+    border:1px solid var(--line);background:#fff;
+    font-family:'Jost';font-size:.9rem;color:var(--ink);
+  }
+  .ship-note{font-size:.74rem;color:rgba(42,36,32,.55);margin-top:6px;}
+  .totals{display:flex;flex-direction:column;gap:6px;font-size:.9rem;}
+  .totals .row{display:flex;justify-content:space-between;}
+  .totals .grand{
+    font-family:'Cormorant Garamond';font-size:1.4rem;color:var(--wine);
+    border-top:1px solid var(--line);padding-top:10px;margin-top:4px;
+  }
+  .checkout-btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    background:#25D366;
+    color:#fff;border:none;
+    padding:15px 18px;
+    font-family:'Jost';font-size:.9rem;letter-spacing:.05em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:filter .2s ease;
+  }
+  .checkout-btn:hover{filter:brightness(.94);}
+  .checkout-btn:disabled{background:#c8c8c8;cursor:not-allowed;}
+  .checkout-btn svg{width:19px;height:19px;flex:none;}
+
+  footer{
+    text-align:center;
+    padding:36px 20px 44px;
+    font-size:.78rem;
+    color:rgba(42,36,32,.5);
+    border-top:1px solid var(--line);
+  }
+
+  @media (max-width:560px){
+    .nav{padding:14px 18px;}
+    .hero{padding:56px 20px 40px;}
+    .shop{padding:0 18px 70px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#" class="brand-wrap">
+      <!-- ✏️ EDITE AQUI — LOGO DA LOJA
+           Troque o link do "src" abaixo pelo link direto da sua logo
+           (mesmo processo dos links de foto de produto: suba a imagem no
+           Postimages/Imgur e cole aqui o "link direto").
+           Se não quiser usar logo, pode apagar essa linha <img ...> inteira
+           e vai ficar só o nome da marca escrito. -->
+      <img class="logo" src="https://via.placeholder.com/160x60/FAF6F1/7A2E3A?text=Sua+Logo" alt="Logo LaLabela boutique">
+      <span class="brand">La<em>Labela</em></span>
+    </a>
+    <button class="cart-btn" onclick="openCart()">
+      Sacola <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+  <!-- ✏️ EDITE AQUI — HORÁRIO DE ATENDIMENTO
+       É só trocar o texto abaixo. -->
+  <div class="hours-bar">
+    <span>Atendimento: todos os dias, das 10h às 22h</span>
+    <span class="hours-note">Atendemos fora do horário de expediente quando disponível 😊</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Boutique</div>
+  <h1>LaLabela</h1>
+  <p>Peças escolhidas com carinho para o seu guarda-roupa. Escolha, adicione à sacola e finalize direto pelo WhatsApp.</p>
+</section>
+
+<div class="ribbon">
+  <svg viewBox="0 0 26 14" fill="none"><path d="M13 7C13 7 9 1 4 2C1 2.6 1 6 4 7C1 8 1 11.4 4 12C9 13 13 7 13 7ZM13 7C13 7 17 1 22 2C25 2.6 25 6 22 7C25 8 25 11.4 22 12C17 13 13 7 13 7Z" stroke="currentColor" stroke-width="1"/></svg>
+</div>
+
+<section class="shop" id="shop">
+  <h2 class="serif">Nossa Coleção</h2>
+  <div class="grid" id="productGrid"></div>
+</section>
+
+<div class="ribbon">
+  <svg viewBox="0 0 26 14" fill="none"><path d="M13 7C13 7 9 1 4 2C1 2.6 1 6 4 7C1 8 1 11.4 4 12C9 13 13 7 13 7ZM13 7C13 7 17 1 22 2C25 2.6 25 6 22 7C25 8 25 11.4 22 12C17 13 13 7 13 7Z" stroke="currentColor" stroke-width="1"/></svg>
+</div>
+
+<!-- ✏️ EDITE AQUI 4 — DESCRIÇÃO DE ENTREGAS
+     Texto livre: edite as frases abaixo à vontade. -->
+<section class="delivery-info" id="entregas">
+  <h2 class="serif">Entregas</h2>
+  <p>
+    Fazemos entrega expressa em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas,
+    e em <strong>São João do Caiuá/PR</strong>, com entrega em até 1 dia útil.
+    Para outras cidades e regiões, consultamos o valor do frete direto com você
+    pelo WhatsApp — é só chamar a gente.
+  </p>
+  <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Consultar frete no WhatsApp</a>
+</section>
+
+<footer>LaLabela Boutique — feito com carinho, peça a peça.</footer>
+
+<!-- ===== Carrinho (drawer) ===== -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2 class="serif">Sua Sacola</h2>
+    <button class="close-btn" onclick="closeCart()">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="ship-block">
+      <label>Calcular frete — entrega a partir de São João/PR</label>
+      <select id="shipSelect" onchange="renderTotals()"></select>
+      <div class="ship-note" id="shipNote"></div>
+    </div>
+    <div class="totals">
+      <div class="row"><span>Subtotal</span><span id="subtotalVal">R$ 0,00</span></div>
+      <div class="row"><span>Frete</span><span id="freightVal">—</span></div>
+      <div class="row grand"><span>Total</span><span id="totalVal">R$ 0,00</span></div>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="finalizarNoWhatsapp()">
+      <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.69 4.607 1.885 6.482L4 29l7.7-1.848A11.94 11.94 0 0 0 16.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3Zm0 21.818c-1.968 0-3.897-.53-5.573-1.53l-.4-.238-4.573 1.098 1.12-4.457-.26-.417a9.77 9.77 0 0 1-1.497-5.274c0-5.42 4.41-9.818 9.833-9.818 5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818Zm5.396-7.352c-.296-.148-1.747-.862-2.018-.96-.27-.099-.468-.148-.665.148-.197.296-.763.96-.936 1.157-.172.198-.345.222-.64.074-.297-.148-1.253-.462-2.387-1.472-.883-.787-1.48-1.76-1.653-2.057-.172-.296-.018-.456.13-.604.134-.133.297-.345.445-.518.148-.173.197-.297.296-.494.099-.198.05-.371-.025-.519-.074-.148-.665-1.6-.911-2.192-.24-.577-.485-.5-.665-.51-.172-.008-.37-.01-.567-.01-.198 0-.519.074-.79.371-.271.296-1.036 1.012-1.036 2.47s1.06 2.865 1.208 3.063c.148.198 2.086 3.185 5.053 4.467.706.305 1.257.487 1.687.623.709.225 1.353.194 1.863.118.568-.085 1.747-.714 1.993-1.404.246-.69.246-1.281.172-1.404-.074-.124-.271-.198-.567-.346Z"/></svg>
+      <span id="checkoutLabel">Finalizar pelo WhatsApp</span>
+    </button>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   ✏️ EDITE AQUI 1 — DADOS DA LOJA
+   ========================================================================= */
+const WHATSAPP_NUMERO = "5544997720350"; // troque pelo número da loja (DDI+DDD+número, só dígitos)
+
+/* =========================================================================
+   ✏️ EDITE AQUI 2 — PRODUTOS
+   Para cada produto, preencha:
+     nome        -> nome do produto
+     preco       -> número, use ponto (.) para centavos. Ex: 129.90
+     imagem      -> link da foto (pode usar link do Google Drive/Imgur/etc,
+                    desde que seja um link direto de imagem)
+     descricao   -> frase curta (opcional, pode deixar "")
+     tag         -> selo tipo "Novo" ou "Últimas peças" (opcional, deixe "" para não mostrar)
+   Para adicionar um produto novo, copie um bloco { ... } inteiro e cole
+   antes do "];", separando com vírgula.
+   Para remover um produto, apague o bloco { ... } inteiro dele.
+   ========================================================================= */
+const PRODUTOS = [
+  {
+    nome: "Vestido Camille",
+    preco: 189.90,
+    imagem: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=80",
+    descricao: "Vestido midi em linho, caimento leve.",
+    tag: "Novo"
+  },
+  {
+    nome: "Blusa Odette",
+    preco: 99.90,
+    imagem: "https://images.unsplash.com/photo-1551163943-3f6a855d1153?w=600&q=80",
+    descricao: "Blusa de manga bufante, tecido fluido.",
+    tag: ""
+  },
+  {
+    nome: "Saia Rosalie",
+    preco: 129.90,
+    imagem: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=600&q=80",
+    descricao: "Saia midi plissada, cintura alta.",
+    tag: ""
+  },
+  {
+    nome: "Conjunto Amélie",
+    preco: 219.90,
+    imagem: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600&q=80",
+    descricao: "Conjunto blusa + short em alfaiataria leve.",
+    tag: "Últimas peças"
+  },
+  {
+    nome: "Blazer Margaux",
+    preco: 249.90,
+    imagem: "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=600&q=80",
+    descricao: "Blazer alfaiatado, forro em cetim.",
+    tag: ""
+  },
+  {
+    nome: "Macacão Josephine",
+    preco: 199.90,
+    imagem: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&q=80",
+    descricao: "Macacão pantalona, amarração na cintura.",
+    tag: "Novo"
+  }
+];
+
+/* =========================================================================
+   ✏️ EDITE AQUI 3 — FRETE
+   Adicione ou troque as regiões/cidades e o valor do frete de cada uma.
+     label        -> nome que aparece no dropdown
+     valor        -> preço do frete (0 = grátis)
+     gratisAcima  -> se o subtotal do carrinho passar desse valor, o frete
+                     fica grátis automático (deixe 0 para nunca ficar grátis)
+     consultar    -> deixe "true" para opções em que o frete NÃO tem preço
+                     fixo (vai aparecer "a combinar" e a mensagem do WhatsApp
+                     vai pedir a cidade da pessoa). Para frete com preço
+                     fixo, deixe "false".
+     diaSemana    -> se a entrega só acontece em um dia fixo da semana
+                     (por exemplo, toda vez em um mesmo dia), coloque o
+                     número do dia: 0 = domingo, 1 = segunda, 2 = terça,
+                     3 = quarta, 4 = quinta, 5 = sexta, 6 = sábado.
+                     O site calcula sozinho a data exata da próxima entrega
+                     com base no dia em que a pessoa está comprando.
+                     Se a entrega não tem dia fixo, deixe "null".
+     nota         -> aviso que aparece embaixo, tipo prazo de entrega
+   Para adicionar uma cidade nova, copie um bloco { ... } inteiro e cole
+   antes do "];", separando com vírgula.
+   ========================================================================= */
+const FRETE_OPCOES = [
+  { label: "Retirar na loja (Paranavaí/PR)", valor: 0, gratisAcima: 0, consultar: false, diaSemana: null, nota: "Retirada disponível somente em Paranavaí. Combine o horário pelo WhatsApp." },
+  { label: "Entrega em Paranavaí/PR", valor: 10.00, gratisAcima: 0, consultar: false, diaSemana: null, nota: "Entrega expressa: até 2 horas." },
+  { label: "Entrega em São João do Caiuá/PR", valor: 20.00, gratisAcima: 0, consultar: false, diaSemana: 0, nota: "Entrega semanal, sempre aos domingos." },
+  { label: "Outras cidades e regiões (consultar)", valor: 0, gratisAcima: 0, consultar: true, diaSemana: null, nota: "Envie sua cidade pelo WhatsApp para consultarmos o valor do frete." }
+];
+
+const NOMES_DIAS_SEMANA = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+
+// Calcula a próxima data (a partir de hoje) que cai no dia da semana informado.
+// Se hoje já for esse dia, considera a entrega para hoje mesmo.
+function proximaDataParaDiaSemana(diaSemanaAlvo){
+  const hoje = new Date();
+  const diaAtual = hoje.getDay();
+  const diferenca = (diaSemanaAlvo - diaAtual + 7) % 7;
+  const data = new Date(hoje);
+  data.setDate(hoje.getDate() + diferenca);
+  return data;
+}
+
+function formatarDataCurta(data){
+  return data.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+}
+
+/* =========================================================================
+   A partir daqui é só o funcionamento do site — não precisa mexer.
+   ========================================================================= */
+let carrinho = []; // {nome, preco, imagem, qtd}
+
+function formatarPreco(v){
+  return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+}
+
+function montarVitrine(){
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = PRODUTOS.map((p, i) => `
+    <div class="card">
+      <div class="img-wrap">
+        ${p.tag ? `<span class="badge">${p.tag}</span>` : ""}
+        <img src="${p.imagem}" alt="${p.nome}" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>${p.nome}</h3>
+        <div class="desc">${p.descricao || ""}</div>
+        <div class="price-row">
+          <span class="price">${formatarPreco(p.preco)}</span>
+          <button class="add-btn" id="add-${i}" onclick="adicionarAoCarrinho(${i})">Adicionar</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function montarFrete(){
+  const sel = document.getElementById('shipSelect');
+  sel.innerHTML = FRETE_OPCOES.map((f,i) => `<option value="${i}">${f.label}</option>`).join('');
+}
+
+function adicionarAoCarrinho(i){
+  const p = PRODUTOS[i];
+  const existente = carrinho.find(item => item.nome === p.nome);
+  if(existente){ existente.qtd += 1; }
+  else{ carrinho.push({nome:p.nome, preco:p.preco, imagem:p.imagem, qtd:1}); }
+
+  const btn = document.getElementById(`add-${i}`);
+  btn.textContent = "Adicionado ✓";
+  btn.classList.add('added');
+  setTimeout(()=>{ btn.textContent = "Adicionar"; btn.classList.remove('added'); }, 1200);
+
+  atualizarCarrinho();
+}
+
+function alterarQtd(nome, delta){
+  const item = carrinho.find(i => i.nome === nome);
+  if(!item) return;
+  item.qtd += delta;
+  if(item.qtd <= 0){ carrinho = carrinho.filter(i => i.nome !== nome); }
+  atualizarCarrinho();
+}
+
+function removerItem(nome){
+  carrinho = carrinho.filter(i => i.nome !== nome);
+  atualizarCarrinho();
+}
+
+function atualizarCarrinho(){
+  document.getElementById('cartCount').textContent = carrinho.reduce((s,i)=>s+i.qtd,0);
+
+  const wrap = document.getElementById('drawerItems');
+  if(carrinho.length === 0){
+    wrap.innerHTML = `<div class="empty-msg">Sua sacola está vazia.<br>Escolha suas peças favoritas ✂️</div>`;
+  } else {
+    wrap.innerHTML = carrinho.map(item => `
+      <div class="item">
+        <img src="${item.imagem}" alt="${item.nome}">
+        <div class="item-info">
+          <span class="name">${item.nome}</span>
+          <span class="unit-price">${formatarPreco(item.preco)} / un.</span>
+          <div class="qty-row">
+            <button onclick="alterarQtd('${item.nome.replace(/'/g,"\\'")}', -1)">−</button>
+            <span>${item.qtd}</span>
+            <button onclick="alterarQtd('${item.nome.replace(/'/g,"\\'")}', 1)">+</button>
+            <button class="remove-btn" onclick="removerItem('${item.nome.replace(/'/g,"\\'")}')">remover</button>
+          </div>
+        </div>
+        <div class="item-total">${formatarPreco(item.preco * item.qtd)}</div>
+      </div>
+    `).join('');
+  }
+  renderTotals();
+}
+
+function getSubtotal(){
+  return carrinho.reduce((s,i)=> s + i.preco*i.qtd, 0);
+}
+
+function renderTotals(){
+  const subtotal = getSubtotal();
+  const idx = Number(document.getElementById('shipSelect').value || 0);
+  const opcao = FRETE_OPCOES[idx];
+
+  let frete = opcao.valor;
+  let freteTexto = frete === 0 ? "Grátis" : formatarPreco(frete);
+  if(opcao.gratisAcima > 0 && subtotal >= opcao.gratisAcima){
+    frete = 0;
+    freteTexto = "Grátis";
+  }
+  if(opcao.consultar){
+    freteTexto = "A combinar";
+  }
+
+  let notaTexto = opcao.nota || "";
+  if(opcao.diaSemana !== null && opcao.diaSemana !== undefined){
+    const proximaData = proximaDataParaDiaSemana(opcao.diaSemana);
+    notaTexto += ` Próxima entrega: ${formatarDataCurta(proximaData)} (${NOMES_DIAS_SEMANA[opcao.diaSemana]}).`;
+  }
+
+  document.getElementById('subtotalVal').textContent = formatarPreco(subtotal);
+  document.getElementById('freightVal').textContent = carrinho.length ? freteTexto : "—";
+  document.getElementById('shipNote').textContent = notaTexto;
+
+  const totalNumerico = subtotal + (opcao.consultar ? 0 : frete);
+  document.getElementById('totalVal').textContent = formatarPreco(totalNumerico);
+
+  const btn = document.getElementById('checkoutBtn');
+  btn.disabled = carrinho.length === 0;
+}
+
+function openCart(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeCart(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function finalizarNoWhatsapp(){
+  if(carrinho.length === 0) return;
+
+  const idx = Number(document.getElementById('shipSelect').value || 0);
+  const opcao = FRETE_OPCOES[idx];
+  const subtotal = getSubtotal();
+  let frete = opcao.valor;
+  if(opcao.gratisAcima > 0 && subtotal >= opcao.gratisAcima) frete = 0;
+  const consultar = opcao.consultar;
+
+  let msg = "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
+  carrinho.forEach(item => {
+    msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
+  });
+  msg += `\nSubtotal: ${formatarPreco(subtotal)}`;
+  msg += `\nEntrega: ${opcao.label}`;
+  if(opcao.diaSemana !== null && opcao.diaSemana !== undefined){
+    const proximaData = proximaDataParaDiaSemana(opcao.diaSemana);
+    msg += ` (próxima entrega: ${formatarDataCurta(proximaData)} - ${NOMES_DIAS_SEMANA[opcao.diaSemana]})`;
+  }
+  msg += consultar ? `\nFrete: a combinar` : `\nFrete: ${frete === 0 ? "Grátis" : formatarPreco(frete)}`;
+  msg += consultar ? `\n\n(vou te passar minha cidade para calcularmos o frete)` : `\nTotal: ${formatarPreco(subtotal + frete)}`;
+
+  const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+montarVitrine();
+montarFrete();
+atualizarCarrinho();
+
+document.getElementById('deliveryWhatsapp').href =
+  `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent('Olá! Gostaria de consultar o frete para minha cidade.')}`;
+</script>
+</body>
+</html>

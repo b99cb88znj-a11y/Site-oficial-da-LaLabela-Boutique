@@ -378,10 +378,9 @@
 <section class="delivery-info" id="entregas">
   <h2 class="serif">Entregas</h2>
   <p>
-    Fazemos entrega expressa em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas,
+    Fazemos entrega em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas,
     e em <strong>São João do Caiuá/PR</strong>, com entrega em até 1 dia útil.
-    Para outras cidades e regiões, consultamos o valor do frete direto com você
-    pelo WhatsApp — é só chamar a gente.
+    Para outras cidades e regiões, consultar taxas e prazos pelo WhatsApp — é só chamar a gente.
   </p>
   <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Consultar frete no WhatsApp</a>
 </section>
@@ -435,46 +434,46 @@ const WHATSAPP_NUMERO = "5544997720350"; // troque pelo número da loja (DDI+DDD
    ========================================================================= */
 const PRODUTOS = [
   {
-    nome: "Vestido Camille",
-    preco: 189.90,
-    imagem: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=80",
-    descricao: "Vestido midi em linho, caimento leve.",
-    tag: "Novo"
+    nome: "Conjunto Maresia",
+    preco: 150.00,
+    imagem: "https://i.postimg.cc/L54mcxDd/IMG-3628.jpg",
+    descricao: "Conjunto Duas Peças, perfeito para dias quentes.",
+    tag: "estoque quase esgotado"
   },
   {
-    nome: "Blusa Odette",
-    preco: 99.90,
-    imagem: "https://images.unsplash.com/photo-1551163943-3f6a855d1153?w=600&q=80",
-    descricao: "Blusa de manga bufante, tecido fluido.",
-    tag: ""
-  },
-  {
-    nome: "Saia Rosalie",
-    preco: 129.90,
-    imagem: "https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=600&q=80",
-    descricao: "Saia midi plissada, cintura alta.",
-    tag: ""
-  },
-  {
-    nome: "Conjunto Amélie",
-    preco: 219.90,
-    imagem: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600&q=80",
-    descricao: "Conjunto blusa + short em alfaiataria leve.",
+    nome: "Conjunto Mafil",
+    preco: 150.00,
+    imagem: "https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg",
+    descricao: "Conjunto Duas peças.",
     tag: "Últimas peças"
   },
   {
-    nome: "Blazer Margaux",
-    preco: 249.90,
-    imagem: "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?w=600&q=80",
-    descricao: "Blazer alfaiatado, forro em cetim.",
+    nome: "Vestido Verão",
+    preco: 80.00,
+    imagem: "https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg",
+    descricao: "o vestido perfeito para dias quentes.",
+    tag: "o mais vendido"
+  },
+  {
+    nome: "Conjunto Luxo",
+    preco: 160.00,
+    imagem: "https://i.postimg.cc/9ffKHv58/EC63DBCD-C2B9-4C31-A4B8-4756586365DE.jpg",
+    descricao: "Conjunto duas peça.",
     tag: ""
   },
   {
-    nome: "Macacão Josephine",
-    preco: 199.90,
-    imagem: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&q=80",
-    descricao: "Macacão pantalona, amarração na cintura.",
-    tag: "Novo"
+    nome: "Conjunto Sophie",
+    preco: 70.00,
+    imagem: "https://i.postimg.cc/63J3mVFt/B2BCDDAC-D626-4AA3-99D0-9BF61179CA88.png",
+    descricao: "Conjunto Duas Peça, tecido fluido.",
+    tag: "promoção"
+  },
+  {
+    nome: "Vestido Mônaco",
+    preco: 70.00,
+    imagem: "https://i.postimg.cc/jdKf5TgN/C4271E37-C738-44AA-A8A8-E7A278EA6417.jpg",
+    descricao: "Vestido midi Ribana canelada, caimento leve.",
+    tag: "promoção"
   }
 ];
 
@@ -510,7 +509,7 @@ const FRETE_OPCOES = [
 const NOMES_DIAS_SEMANA = ["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
 
 // Calcula a próxima data (a partir de hoje) que cai no dia da semana informado.
-// Se hoje já for esse dia, considera a entrega para hoje mesmo.
+// Se hoje já for esse dia, considera a entrega para hoje mesmo. 
 function proximaDataParaDiaSemana(diaSemanaAlvo){
   const hoje = new Date();
   const diaAtual = hoje.getDay();

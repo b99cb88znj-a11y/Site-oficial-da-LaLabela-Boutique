@@ -1,0 +1,9 @@
+{
+  "name": "LaLabela Boutique",
+  "short_name": "LaLabela",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#E91E63",
+  "description": "LaLabela Boutique — moda feminina"
+}

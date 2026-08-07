@@ -715,10 +715,9 @@ if(!pagamento){
   const consultar = opcao.consultar;
 
   let msg = "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
-  msg += `Forma de pagamento: ${pagamento}\n`;
   carrinho.forEach(item => {
    msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
-  
+  msg += `Forma de pagamento: ${pagamento}\n`;
   });
   
   msg += `\nSubtotal: ${formatarPreco(subtotal)}`;

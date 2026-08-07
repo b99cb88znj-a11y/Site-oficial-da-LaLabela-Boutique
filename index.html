@@ -435,6 +435,16 @@
       <div class="ship-note" id="shipNote"></div>
     </div>
     <div class="totals">
+      <div class="payment-block">
+  <label>Forma de pagamento</label>
+
+  <select id="paymentSelect">
+    <option value="">Selecione uma forma de pagamento</option>
+    <option value="Pix">Pix</option>
+    <option value="Cartão">Cartão</option>
+    <option value="Dinheiro">Dinheiro</option>
+  </select>
+</div>
       <div class="row"><span>Subtotal</span><span id="subtotalVal">R$ 0,00</span></div>
       <div class="row"><span>Frete</span><span id="freightVal">—</span></div>
       <div class="row grand"><span>Total</span><span id="totalVal">R$ 0,00</span></div>
@@ -691,7 +701,12 @@ function closeCart(){
 
 function finalizarNoWhatsapp(){
   if(carrinho.length === 0) return;
+const pagamento = document.getElementById('paymentSelect').value;
 
+if(!pagamento){
+  alert('Selecione uma forma de pagamento.');
+  return;
+}
   const idx = Number(document.getElementById('shipSelect').value || 0);
   const opcao = FRETE_OPCOES[idx];
   const subtotal = getSubtotal();
@@ -700,9 +715,12 @@ function finalizarNoWhatsapp(){
   const consultar = opcao.consultar;
 
   let msg = "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
+  msg += `Forma de pagamento: ${pagamento}\n`;
   carrinho.forEach(item => {
-    msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
+   msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
+  
   });
+  
   msg += `\nSubtotal: ${formatarPreco(subtotal)}`;
   msg += `\nEntrega: ${opcao.label}`;
   if(opcao.diaSemana !== null && opcao.diaSemana !== undefined){

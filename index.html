@@ -570,7 +570,23 @@
 }
 
 }
+/* LOGO OCUPANDO TODA A ÁREA INTERNA DO CABEÇALHO */
 
+.logo-full {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.logo-full .logo {
+  height: 100%;
+  max-height: 90px;
+  width: auto;
+  object-fit: contain;
+}
 
 </style>
 </head>
@@ -590,8 +606,9 @@
            Se não quiser usar logo, pode apagar essa linha <img ...> inteira
            e vai ficar só o nome da marca escrito. -->
      
-    <img class="logo" src="./LaLabela-icon-512-final.png" alt="LaLabela">
-    </a>
+ <div class="logo-full">
+  <img class="logo" src="./LaLabela-icon-512-final.png" alt="LaLabela">
+</div>   
     <button class="cart-btn" onclick="openCart()">
       Sacola <span class="cart-count" id="cartCount">0</span>
     </button>

@@ -479,6 +479,45 @@
         font-size: 13px;
     }
 }
+    /* ===== BARRA DE PESQUISA ===== */
+
+.barra-pesquisa {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ed1760;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.barra-pesquisa input {
+    flex: 1;
+    height: 50px;
+    border: none;
+    outline: none;
+    padding: 0 20px;
+    font-size: 16px;
+    color: #333;
+    background: transparent;
+}
+
+.barra-pesquisa input::placeholder {
+    color: #999;
+}
+
+.barra-pesquisa button {
+    width: 55px;
+    height: 50px;
+    border: none;
+    background: #ed1760;
+    color: white;
+    font-size: 19px;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -523,7 +562,21 @@
 
 <section class="shop" id="shop">
   <h2 class="serif">Nossa Coleção</h2>
-  <div class="grid" id="productGrid"></div>
+  
+
+<!-- BARRA DE PESQUISA -->
+<div class="barra-pesquisa">
+    <input 
+        type="text" 
+        id="campoPesquisa" 
+        placeholder="Pesquisar produto..."
+        oninput="pesquisarProdutos()"
+    >
+    <button type="button" onclick="pesquisarProdutos()">🔍</button>
+</div>
+
+<div class="grid" id="productGrid"></div>
+  
 </section>
 
 <div class="ribbon">
@@ -902,6 +955,26 @@ atualizarCarrinho();
 
 document.getElementById('deliveryWhatsapp').href =
   `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent('Olá! Gostaria de consultar o frete para minha cidade.')}`;
+  function pesquisarProdutos() {
+    const campo = document.getElementById("campoPesquisa");
+    const termo = campo.value.toLowerCase().trim();
+
+    const grade = document.getElementById("productGrid");
+
+    if (!grade) return;
+
+    const produtos = grade.children;
+
+    Array.from(produtos).forEach(function(produto) {
+        const texto = produto.innerText.toLowerCase();
+
+        if (texto.includes(termo)) {
+            produto.style.display = "";
+        } else {
+            produto.style.display = "none";
+        }
+    });
+}
 </script>
   
 

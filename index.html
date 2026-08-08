@@ -517,6 +517,10 @@
     color: white;
     font-size: 19px;
     cursor: pointer;
+  .barra-pesquisa .lupa {
+    color: white;
+    font-size: 30px;
+
 }
 </style>
 </head>
@@ -572,7 +576,7 @@
         placeholder="Pesquisar produto..."
         oninput="pesquisarProdutos()"
     >
-    <button type="button" onclick="pesquisarProdutos()">🔍</button>
+    <button type="button" onclick="pesquisarProdutos()"><span class="lupa">⌕</span></button>
 </div>
 
 <div class="grid" id="productGrid"></div>

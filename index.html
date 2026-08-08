@@ -407,7 +407,76 @@
 
     overflow-x: hidden;
   }
-  
+  /* ===== RODAPÉ LALABELA ===== */
+
+.rodape {
+    background-color: #ed1760;
+    color: white;
+    padding: 45px 7% 25px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+    text-align: left;
+}
+
+.rodape-coluna {
+    min-width: 0;
+}
+
+.rodape-icone {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.rodape-coluna h3 {
+    font-size: 17px;
+    margin: 0 0 12px;
+    font-weight: 600;
+}
+
+.rodape-coluna p {
+    font-size: 14px;
+    margin: 6px 0;
+    line-height: 1.5;
+}
+
+.rodape-final {
+    grid-column: 1 / -1;
+    border-top: 1px solid rgba(255,255,255,0.5);
+    padding-top: 20px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 15px;
+}
+
+/* ===== CELULAR ===== */
+
+@media (max-width: 700px) {
+
+    .rodape {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 35px 20px 25px;
+        gap: 30px 15px;
+    }
+
+    .rodape-icone {
+        font-size: 26px;
+    }
+
+    .rodape-coluna h3 {
+        font-size: 13px;
+    }
+
+    .rodape-coluna p {
+        font-size: 12px;
+    }
+
+    .rodape-final {
+        grid-column: 1 / -1;
+        font-size: 13px;
+    }
+}
 </style>
 </head>
 <body>
@@ -471,7 +540,38 @@
   <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Consultar frete no WhatsApp</a>
 </section>
 
-<footer>LaLabela Boutique — feito com carinho, peça a peça.</footer>
+<footer class="rodape">
+
+    <div class="rodape-coluna">
+        <div class="rodape-icone">📱</div>
+        <h3>FALE CONOSCO</h3>
+        <p>(44) 99772-0350</p>
+    </div>
+
+    <div class="rodape-coluna">
+        <div class="rodape-icone">◎</div>
+        <h3>INSTAGRAM</h3>
+        <p>@lalabela_boutiquepvai</p>
+    </div>
+
+    <div class="rodape-coluna">
+        <div class="rodape-icone">🚚</div>
+        <h3>ENTREGA EXPRESSA</h3>
+        <p>Paranavaí/PR</p>
+        <p>Entrega em até 2 horas</p>
+    </div>
+
+    <div class="rodape-coluna">
+        <div class="rodape-icone">📄</div>
+        <h3>CNPJ</h3>
+        <p>44.106.069/0001-70</p>
+    </div>
+
+    <div class="rodape-final">
+        LaLabela Boutique — feito com carinho, peça a peça.
+    </div>
+
+</footer>
 
 <!-- ===== Carrinho (drawer) ===== -->
 <div class="overlay" id="overlay" onclick="closeCart()"></div>

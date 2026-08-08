@@ -529,7 +529,44 @@
     bottom: -5px;
     transform: rotate(45deg);
 }
+/* BOTÃO ROSA DA PESQUISA */
+.barra-pesquisa button {
+  width: 100px;
+  height: 100%;
+  background: #ed1764 !important;
+  border: none !important;
+  border-radius: 0 50px 50px 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
 
+/* LUPA BRANCA */
+.barra-pesquisa button .lupa {
+  width: 26px;
+  height: 26px;
+  border: 4px solid white;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+/* CABO DA LUPA */
+.barra-pesquisa button .lupa::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 4px;
+  background: white;
+  border-radius: 4px;
+  right: -9px;
+  bottom: -5px;
+  transform: rotate(45deg);
+}
 
 }
 

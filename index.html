@@ -9,7 +9,54 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  
+/* TELA DE BOAS-VINDAS */
 
+#telaBoasVindas {
+    position: fixed;
+    inset: 0;
+    background: #ed1764;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 99999;
+    color: white;
+    padding: 30px;
+    animation: sairTela 1s ease 3s forwards;
+}
+
+#telaBoasVindas img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 35px;
+    margin-bottom: 25px;
+}
+
+#telaBoasVindas h1 {
+    font-size: 32px;
+    margin: 5px 0 15px;
+}
+
+#telaBoasVindas p {
+    font-size: 21px;
+    margin: 5px 0 15px;
+}
+
+#telaBoasVindas span {
+    font-size: 16px;
+    max-width: 320px;
+    line-height: 1.5;
+}
+
+@keyframes sairTela {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
   /* =========================================================================
      LALABELA BOUTIQUE — arquivo único (HTML + CSS + JS)
      Tudo que você precisa editar no dia a dia está sinalizado com:
@@ -364,7 +411,11 @@
 </style>
 </head>
 <body>
-
+<div id="telaBoasVindas">
+    <img src="./LaLabela-icon-512-final.png" alt="LaLabela Boutique">
+    <h1>Bem-vinda à LaLabela Boutique</h1>
+    <p>Moda, estilo e peças escolhidas especialmente para você.</p>
+</div>
 <header>
   <div class="nav">
     <a href="#" class="brand-wrap">

@@ -519,30 +519,28 @@
     cursor: pointer;
 .barra-pesquisa .lupa {
     font-size: 0 !important;
-    width: 32px;
-    height: 32px;
-    border: 5px solid white;
-    border-radius: 50%;
-    display: inline-block;
-    position: relative;
-    box-sizing: border-box;
+    width: 42px !important;
+    height: 42px !important;
+    border: 5px solid white !important;
+    border-radius: 50% !important;
+    display: inline-block !important;
+    position: relative !important;
+    box-sizing: border-box !important;
 }
 
 .barra-pesquisa .lupa::after {
-    content: "";
-    position: absolute;
-    width: 24px;
-    height: 7px;
-    background: white;
-    border-radius: 5px;
-    right: -15px;
-    bottom: -8px;
-    transform: rotate(45deg);
+    content: "" !important;
+    position: absolute !important;
+    width: 20px !important;
+    height: 6px !important;
+    background: white !important;
+    border-radius: 5px !important;
+    right: -15px !important;
+    bottom: -8px !important;
+    transform: rotate(45deg) !important;
 }
 
 
-
-}
 </style>
 </head>
 <body>
@@ -597,7 +595,7 @@
         placeholder="Pesquisar produto..."
         oninput="pesquisarProdutos()"
     >
-    <button type="button" onclick="pesquisarProdutos()"><span class="lupa">⌕</span></button>
+    <button type="button" onclick="pesquisarProdutos()"><span class="lupa"></span></button>
 </div>
 
 <div class="grid" id="productGrid"></div>

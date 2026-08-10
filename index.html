@@ -570,7 +570,98 @@
 }
 
 }
+/* ===== GALERIA E OPÇÕES DO PRODUTO ===== */
 
+.galeria-produto {
+  position: relative;
+  width: 100%;
+}
+
+.galeria-produto .imagem-principal {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  display: block;
+}
+
+.seta-galeria {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,.85);
+  color: #ed1764;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.seta-esquerda {
+  left: 10px;
+}
+
+.seta-direita {
+  right: 10px;
+}
+
+.miniaturas {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  overflow-x: auto;
+  background: #fff;
+}
+
+.miniatura {
+  width: 52px;
+  height: 62px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.miniatura.ativa {
+  border: 2px solid #ed1764;
+}
+
+.opcoes-produto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.opcoes-produto label {
+  font-size: .72rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.opcoes-produto select {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-family: 'Jost', sans-serif;
+  font-size: .85rem;
+  color: #222;
+}
+
+.opcoes-produto select:focus {
+  outline: none;
+  border-color: #ed1764;
+}
+
+.item-opcoes {
+  font-size: .72rem;
+  color: #777;
+  line-height: 1.5;
+}
 
 </style>
 </head>
@@ -748,44 +839,96 @@ const PRODUTOS = [
   {
     nome: "Conjunto Maresia",
     preco: 150.00,
-    imagem: "https://i.postimg.cc/L54mcxDd/IMG-3628.jpg",
+
+    imagens: [
+      "https://i.postimg.cc/L54mcxDd/IMG-3628.jpg",
+      "COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",
+      "COLE-AQUI-O-LINK-DA-TERCEIRA-FOTO"
+    ],
+
+    cores: ["Preto", "Rosa", "Branco"],
+    tamanhos: ["P", "M", "G"],
+
     descricao: "Conjunto Duas Peças, perfeito para dias quentes.",
     tag: "estoque quase esgotado"
   },
+
   {
     nome: "Conjunto Mafil",
     preco: 150.00,
-    imagem: "https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg",
+
+    imagens: [
+      "https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg",
+      "COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",
+      "COLE-AQUI-O-LINK-DA-TERCEIRA-FOTO"
+    ],
+
+    cores: ["Preto", "Rosa"],
+    tamanhos: ["P", "M", "G"],
+
     descricao: "Conjunto Duas peças.",
     tag: "Últimas peças"
   },
+
   {
     nome: "Vestido Verão",
     preco: 80.00,
-    imagem: "https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg",
-    descricao: "o vestido perfeito para dias quentes.",
-    tag: "o mais vendido"
+
+    imagens: [
+      "https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg",
+      "COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO"
+    ],
+
+    cores: ["Rosa", "Preto", "Branco"],
+    tamanhos: ["P", "M", "G"],
+
+    descricao: "O vestido perfeito para dias quentes.",
+    tag: "O mais vendido"
   },
+
   {
     nome: "Conjunto Luxo",
     preco: 160.00,
-    imagem: "https://i.postimg.cc/9ffKHv58/EC63DBCD-C2B9-4C31-A4B8-4756586365DE.jpg",
-    descricao: "Conjunto duas peça.",
+
+    imagens: [
+      "https://i.postimg.cc/9ffKHv58/EC63DBCD-C2B9-4C31-A4B8-4756586365DE.jpg"
+    ],
+
+    cores: ["Preto", "Chocolate"],
+    tamanhos: ["P", "M", "G"],
+
+    descricao: "Conjunto duas peças.",
     tag: ""
   },
+
   {
     nome: "Conjunto Sophie",
     preco: 70.00,
-    imagem: "https://i.postimg.cc/63J3mVFt/B2BCDDAC-D626-4AA3-99D0-9BF61179CA88.png",
-    descricao: "Conjunto Duas Peça, tecido fluido.",
-    tag: "promoção"
+
+    imagens: [
+      "https://i.postimg.cc/63J3mVFt/B2BCDDAC-D626-4AA3-99D0-9BF61179CA88.png"
+    ],
+
+    cores: ["Rosa", "Branco"],
+    tamanhos: ["36", "38", "40"],
+
+    descricao: "Conjunto duas peças, tecido fluido.",
+    tag: "Promoção"
   },
+
   {
     nome: "Vestido Mônaco",
     preco: 70.00,
-    imagem: "https://i.postimg.cc/jdKf5TgN/C4271E37-C738-44AA-A8A8-E7A278EA6417.jpg",
+
+    imagens: [
+      "https://i.postimg.cc/jdKf5TgN/C4271E37-C738-44AA-A8A8-E7A278EA6417.jpg"
+    ],
+
+    cores: ["Preto", "Rosa", "Verde"],
+    tamanhos: ["P", "M", "G"],
+
     descricao: "Vestido midi Ribana canelada, caimento leve.",
-    tag: "promoção"
+    tag: "Promoção"
   }
 ];
 
@@ -843,26 +986,198 @@ let carrinho = []; // {nome, preco, imagem, qtd}
 function formatarPreco(v){
   return v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
 }
-
 function montarVitrine(){
   const grid = document.getElementById('productGrid');
-  grid.innerHTML = PRODUTOS.map((p, i) => `
-    <div class="card">
-      <div class="img-wrap">
-        ${p.tag ? `<span class="badge">${p.tag}</span>` : ""}
-        <img src="${p.imagem}" alt="${p.nome}" loading="lazy">
-      </div>
-      <div class="card-body">
-        <h3>${p.nome}</h3>
-        <div class="desc">${p.descricao || ""}</div>
-        <div class="price-row">
-          <span class="price">${formatarPreco(p.preco)}</span>
-          <button class="add-btn" id="add-${i}" onclick="adicionarAoCarrinho(${i})">Adicionar</button>
+
+  grid.innerHTML = PRODUTOS.map((p, i) => {
+
+    const imagens = p.imagens && p.imagens.length
+      ? p.imagens
+      : [p.imagem];
+
+    const cores = p.cores || [];
+    const tamanhos = p.tamanhos || [];
+
+    return `
+      <div class="card">
+
+        <div class="img-wrap galeria-produto">
+
+          ${p.tag ? `<span class="badge">${p.tag}</span>` : ""}
+
+          <img
+            id="foto-principal-${i}"
+            class="imagem-principal"
+            src="${imagens[0]}"
+            alt="${p.nome}"
+            loading="lazy"
+          >
+
+          ${
+            imagens.length > 1
+            ? `
+              <button
+                class="seta-galeria seta-esquerda"
+                onclick="mudarFoto(${i}, -1)"
+              >‹</button>
+
+              <button
+                class="seta-galeria seta-direita"
+                onclick="mudarFoto(${i}, 1)"
+              >›</button>
+            `
+            : ""
+          }
+
+        </div>
+
+        ${
+          imagens.length > 1
+          ? `
+            <div class="miniaturas">
+              ${imagens.map((img, fotoIndex) => `
+                <img
+                  class="miniatura ${fotoIndex === 0 ? 'ativa' : ''}"
+                  id="miniatura-${i}-${fotoIndex}"
+                  src="${img}"
+                  onclick="selecionarFoto(${i}, ${fotoIndex})"
+                  alt="${p.nome}"
+                >
+              `).join('')}
+            </div>
+          `
+          : ""
+        }
+
+        <div class="card-body">
+
+          <h3>${p.nome}</h3>
+
+          <div class="desc">
+            ${p.descricao || ""}
+          </div>
+
+          ${
+            cores.length || tamanhos.length
+            ? `
+              <div class="opcoes-produto">
+
+                ${
+                  cores.length
+                  ? `
+                    <div>
+                      <label>Cor — opcional</label>
+                      <select id="cor-${i}">
+                        <option value="">Não informar</option>
+                        ${cores.map(cor => `
+                          <option value="${cor}">${cor}</option>
+                        `).join('')}
+                      </select>
+                    </div>
+                  `
+                  : ""
+                }
+
+                ${
+                  tamanhos.length
+                  ? `
+                    <div>
+                      <label>Tamanho — opcional</label>
+                      <select id="tamanho-${i}">
+                        <option value="">Não informar</option>
+                        ${tamanhos.map(tamanho => `
+                          <option value="${tamanho}">${tamanho}</option>
+                        `).join('')}
+                      </select>
+                    </div>
+                  `
+                  : ""
+                }
+
+              </div>
+            `
+            : ""
+          }
+
+          <div class="price-row">
+            <span class="price">
+              ${formatarPreco(p.preco)}
+            </span>
+
+            <button
+              class="add-btn"
+              id="add-${i}"
+              onclick="adicionarAoCarrinho(${i})"
+            >
+              Adicionar
+            </button>
+          </div>
+
         </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
+function selecionarFoto(produtoIndex, fotoIndex){
+  const produto = PRODUTOS[produtoIndex];
+
+  const imagens = produto.imagens && produto.imagens.length
+    ? produto.imagens
+    : [produto.imagem];
+
+  const principal = document.getElementById(`foto-principal-${produtoIndex}`);
+
+  if(!principal) return;
+
+  principal.src = imagens[fotoIndex];
+
+  imagens.forEach((_, index) => {
+    const miniatura = document.getElementById(
+      `miniatura-${produtoIndex}-${index}`
+    );
+
+    if(miniatura){
+      miniatura.classList.toggle(
+        'ativa',
+        index === fotoIndex
+      );
+    }
+  });
+}
+
+function mudarFoto(produtoIndex, direcao){
+
+  const produto = PRODUTOS[produtoIndex];
+
+  const imagens = produto.imagens && produto.imagens.length
+    ? produto.imagens
+    : [produto.imagem];
+
+  if(imagens.length <= 1) return;
+
+  const principal = document.getElementById(
+    `foto-principal-${produtoIndex}`
+  );
+
+  let indiceAtual = imagens.indexOf(principal.src);
+
+  if(indiceAtual === -1){
+    indiceAtual = 0;
+  }
+
+  let novoIndice = indiceAtual + direcao;
+
+  if(novoIndice < 0){
+    novoIndice = imagens.length - 1;
+  }
+
+  if(novoIndice >= imagens.length){
+    novoIndice = 0;
+  }
+
+  selecionarFoto(produtoIndex, novoIndice);
+}
+
 
 function montarFrete(){
   const sel = document.getElementById('shipSelect');
@@ -870,26 +1185,85 @@ function montarFrete(){
 }
 
 function adicionarAoCarrinho(i){
+
   const p = PRODUTOS[i];
-  const existente = carrinho.find(item => item.nome === p.nome);
-  if(existente){ existente.qtd += 1; }
-  else{ carrinho.push({nome:p.nome, preco:p.preco, imagem:p.imagem, qtd:1}); }
+
+  const corElement = document.getElementById(`cor-${i}`);
+  const tamanhoElement = document.getElementById(`tamanho-${i}`);
+
+  const cor = corElement ? corElement.value : "";
+  const tamanho = tamanhoElement ? tamanhoElement.value : "";
+
+  const existente = carrinho.find(item =>
+    item.nome === p.nome &&
+    item.cor === cor &&
+    item.tamanho === tamanho
+  );
+
+  if(existente){
+
+    existente.qtd += 1;
+
+  } else {
+
+    carrinho.push({
+      nome: p.nome,
+      preco: p.preco,
+      imagem: p.imagens ? p.imagens[0] : p.imagem,
+      qtd: 1,
+      cor: cor,
+      tamanho: tamanho
+    });
+
+  }
 
   const btn = document.getElementById(`add-${i}`);
+
   btn.textContent = "Adicionado ✓";
   btn.classList.add('added');
-  setTimeout(()=>{ btn.textContent = "Adicionar"; btn.classList.remove('added'); }, 1200);
+
+  setTimeout(() => {
+    btn.textContent = "Adicionar";
+    btn.classList.remove('added');
+  }, 1200);
 
   atualizarCarrinho();
 }
 
-function alterarQtd(nome, delta){
-  const item = carrinho.find(i => i.nome === nome);
+function criarChaveItem(item){
+  return `${item.nome}|${item.cor || ""}|${item.tamanho || ""}`;
+}
+
+function alterarQtd(chave, delta){
+
+  const item = carrinho.find(
+    i => criarChaveItem(i) === chave
+  );
+
   if(!item) return;
+
   item.qtd += delta;
-  if(item.qtd <= 0){ carrinho = carrinho.filter(i => i.nome !== nome); }
+
+  if(item.qtd <= 0){
+
+    carrinho = carrinho.filter(
+      i => criarChaveItem(i) !== chave
+    );
+
+  }
+
   atualizarCarrinho();
 }
+
+function removerItem(chave){
+
+  carrinho = carrinho.filter(
+    i => criarChaveItem(i) !== chave
+  );
+
+  atualizarCarrinho();
+}
+
 
 function removerItem(nome){
   carrinho = carrinho.filter(i => i.nome !== nome);
@@ -897,29 +1271,103 @@ function removerItem(nome){
 }
 
 function atualizarCarrinho(){
-  document.getElementById('cartCount').textContent = carrinho.reduce((s,i)=>s+i.qtd,0);
+
+  document.getElementById('cartCount').textContent =
+    carrinho.reduce((s,i) => s + i.qtd, 0);
 
   const wrap = document.getElementById('drawerItems');
+
   if(carrinho.length === 0){
-    wrap.innerHTML = `<div class="empty-msg">Sua sacola está vazia.<br>Escolha suas peças favoritas ✂️</div>`;
-  } else {
-    wrap.innerHTML = carrinho.map(item => `
-      <div class="item">
-        <img src="${item.imagem}" alt="${item.nome}">
-        <div class="item-info">
-          <span class="name">${item.nome}</span>
-          <span class="unit-price">${formatarPreco(item.preco)} / un.</span>
-          <div class="qty-row">
-            <button onclick="alterarQtd('${item.nome.replace(/'/g,"\\'")}', -1)">−</button>
-            <span>${item.qtd}</span>
-            <button onclick="alterarQtd('${item.nome.replace(/'/g,"\\'")}', 1)">+</button>
-            <button class="remove-btn" onclick="removerItem('${item.nome.replace(/'/g,"\\'")}')">remover</button>
-          </div>
-        </div>
-        <div class="item-total">${formatarPreco(item.preco * item.qtd)}</div>
+
+    wrap.innerHTML = `
+      <div class="empty-msg">
+        Sua sacola está vazia.<br>
+        Escolha suas peças favoritas ✂️
       </div>
-    `).join('');
+    `;
+
+  } else {
+
+    wrap.innerHTML = carrinho.map(item => {
+
+      const chave = criarChaveItem(item)
+        .replace(/'/g, "\\'");
+
+      const opcoes = [];
+
+      if(item.cor){
+        opcoes.push(`Cor: ${item.cor}`);
+      }
+
+      if(item.tamanho){
+        opcoes.push(`Tamanho: ${item.tamanho}`);
+      }
+
+      return `
+        <div class="item">
+
+          <img
+            src="${item.imagem}"
+            alt="${item.nome}"
+          >
+
+          <div class="item-info">
+
+            <span class="name">
+              ${item.nome}
+            </span>
+
+            <span class="unit-price">
+              ${formatarPreco(item.preco)} / un.
+            </span>
+
+            ${
+              opcoes.length
+              ? `
+                <span class="item-opcoes">
+                  ${opcoes.join(" • ")}
+                </span>
+              `
+              : ""
+            }
+
+            <div class="qty-row">
+
+              <button
+                onclick="alterarQtd('${chave}', -1)"
+              >
+                −
+              </button>
+
+              <span>${item.qtd}</span>
+
+              <button
+                onclick="alterarQtd('${chave}', 1)"
+              >
+                +
+              </button>
+
+              <button
+                class="remove-btn"
+                onclick="removerItem('${chave}')"
+              >
+                remover
+              </button>
+
+            </div>
+
+          </div>
+
+          <div class="item-total">
+            ${formatarPreco(item.preco * item.qtd)}
+          </div>
+
+        </div>
+      `;
+
+    }).join('');
   }
+
   renderTotals();
 }
 
@@ -985,9 +1433,19 @@ if(!pagamento){
 
   let msg = "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
   carrinho.forEach(item => {
-   msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
-  
-  });
+
+  msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
+
+  if(item.cor){
+    msg += `   Cor: ${item.cor}\n`;
+  }
+
+  if(item.tamanho){
+    msg += `   Tamanho: ${item.tamanho}\n`;
+  }
+
+  msg += `\n`;
+});
   
   msg += `\nSubtotal: ${formatarPreco(subtotal)}`;
   msg += `\nEntrega: ${opcao.label}`;

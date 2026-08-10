@@ -1031,23 +1031,7 @@ function montarVitrine(){
 
         </div>
 
-        ${
-          imagens.length > 1
-          ? `
-            <div class="miniaturas">
-              ${imagens.map((img, fotoIndex) => `
-                <img
-                  class="miniatura ${fotoIndex === 0 ? 'ativa' : ''}"
-                  id="miniatura-${i}-${fotoIndex}"
-                  src="${img}"
-                  onclick="selecionarFoto(${i}, ${fotoIndex})"
-                  alt="${p.nome}"
-                >
-              `).join('')}
-            </div>
-          `
-          : ""
-        }
+        
 
         <div class="card-body">
 

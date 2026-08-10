@@ -1481,6 +1481,19 @@ if ("serviceWorker" in navigator) {
 </script>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+const SUPABASE_URL = "https://zldnnbbihwxfpyyjfwxv.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_UMh-6z9BBeSPi7Ctwdkf5g_PXGduoyu";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+console.log("Supabase conectado!");
+</script>
 </body>
 </html>

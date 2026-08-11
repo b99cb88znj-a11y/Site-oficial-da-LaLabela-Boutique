@@ -596,40 +596,7 @@ header{
         grid-column: 1 / -1;
         font-size: 13px;
     }
-  /* ===== BOTÃO LATERAL DE CATEGORIAS ===== */
-
-.botao-categorias {
-    position: fixed;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 50;
-
-    background: #F8BBD0;
-    color: #000000;
-
-    border: 1px solid #000000;
-    border-left: none;
-    border-radius: 0 12px 12px 0;
-
-    padding: 14px 10px;
-
-    font-family: 'Jost', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-
-    cursor: pointer;
-
-    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
-}
-
-.botao-categorias:hover {
-    background: #000000;
-    color: #FFFFFF;
-}
+  /
 
 
 /* ===== MENU LATERAL DE CATEGORIAS ===== */
@@ -995,14 +962,8 @@ header{
     >
     <button type="button" onclick="pesquisarProdutos()"><span class="lupa"></span></button>
 </div>
-</div>
 
-<!-- BOTÃO FILTRAR POR CATEGORIA -->
-<div class="filtro-categoria">
-    <button type="button" onclick="abrirFiltro()">
-        ☰ FILTRAR POR CATEGORIA
-    </button>
-</div>
+
 
 <div class="grid" id="productGrid"></div>
 

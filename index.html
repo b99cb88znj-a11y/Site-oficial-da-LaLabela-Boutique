@@ -919,7 +919,7 @@ header{
 
     <!-- LALABELA -->
     <a href="#" class="brand-wrap">
-      <span class="brand">LaLabela</em></span>
+      <span class="brand">LaLabela</span>
     </a>
 
     <!-- SACOLA -->
@@ -936,6 +936,7 @@ header{
     <span>Atendimento: todos os dias, das 10h às 22h</span>
     <span class="hours-note">Atendemos fora do horário de expediente quando disponível 😊</span>
   </div>
+    
 </header>
 
 <section class="hero">
@@ -1025,6 +1026,31 @@ header{
     
 
 </footer>
+<!-- ===== MENU LATERAL DE CATEGORIAS ===== -->
+
+<div class="fundo-categorias" id="fundoCategorias"></div>
+
+<div class="menu-categorias" id="menuCategorias">
+
+  <button class="fechar-categorias" type="button" onclick="fecharFiltro()">
+    ×
+  </button>
+
+  <h2>Categorias</h2>
+
+  <div class="lista-categorias">
+
+    <button type="button" onclick="filtrarCategoria('todos')">Todos</button>
+    <button type="button" onclick="filtrarCategoria('Blusas')">Blusas</button>
+    <button type="button" onclick="filtrarCategoria('Vestido')">Vestidos</button>
+    <button type="button" onclick="filtrarCategoria('Lançamento')">Lançamentos</button>
+    <button type="button" onclick="filtrarCategoria('Calça')">Calças</button>
+    <button type="button" onclick="filtrarCategoria('Conjunto')">Conjuntos</button>
+    <button type="button" onclick="filtrarCategoria('Short')">Shorts</button>
+    <button type="button" onclick="filtrarCategoria('Promoção')">Promoção</button>
+
+  </div>
+
 
 <!-- ===== Carrinho (drawer) ===== -->
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
@@ -1085,7 +1111,7 @@ const PRODUTOS = [
   {
     nome: "Conjunto Maresia",
     preco: 150.00,
-
+    categoria: "Conjunto",
     imagens: [
       "https://i.postimg.cc/L54mcxDd/IMG-3628.jpg",
       "COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",

@@ -596,7 +596,7 @@ header{
         grid-column: 1 / -1;
         font-size: 13px;
     }
-  /
+}
 
 
 /* ===== MENU LATERAL DE CATEGORIAS ===== */
@@ -605,21 +605,20 @@ header{
     position: fixed;
     top: 0;
     left: 0;
-
     width: 280px;
     max-width: 85vw;
     height: 100vh;
 
     background: #FFFFFF;
-
-    z-index: 9999;
+    z-index: 99999;
 
     transform: translateX(-100%);
     transition: transform .3s ease;
 
-    box-shadow: 8px 0 25px rgba(0,0,0,0.15);
+    box-shadow: 8px 0 25px rgba(0,0,0,0.18);
 
-    padding: 25px 20px;
+    padding: 70px 20px 25px;
+    overflow-y: auto;
 }
 
 .menu-categorias.aberto {
@@ -630,7 +629,8 @@ header{
     margin: 0 0 25px;
 
     font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
+    font-size: 30px;
+    font-weight: 500;
 
     color: #000000;
 }
@@ -640,11 +640,14 @@ header{
     top: 18px;
     right: 18px;
 
-    background: none;
+    width: 40px;
+    height: 40px;
+
+    background: #FFFFFF;
     border: none;
 
-    font-size: 28px;
-    color: #000000;
+    font-size: 32px;
+    color: #E91E63;
 
     cursor: pointer;
 }
@@ -652,33 +655,57 @@ header{
 .lista-categorias {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .lista-categorias button {
     width: 100%;
 
-    padding: 13px 15px;
+    padding: 14px 16px;
 
     background: #FFFFFF;
     color: #000000;
 
-    border: 1px solid #000000;
+    border: 1px solid #E91E63;
 
     text-align: left;
 
     font-family: 'Jost', sans-serif;
     font-size: 14px;
+    font-weight: 400;
 
     cursor: pointer;
 
     border-radius: 6px;
+
+    transition: .2s ease;
 }
 
 .lista-categorias button:hover,
 .lista-categorias button.ativa {
     background: #F8BBD0;
     color: #000000;
+}
+
+/* FUNDO ESCURO */
+
+.fundo-categorias {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,0.45);
+
+    z-index: 99998;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity .3s ease, visibility .3s ease;
+}
+
+.fundo-categorias.aberto {
+    opacity: 1;
+    visibility: visible;
 }
 
 
@@ -1051,7 +1078,8 @@ header{
 
   </div>
 
-
+</div>
+  
 <!-- ===== Carrinho (drawer) ===== -->
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
 <div class="drawer" id="drawer">
@@ -1128,7 +1156,7 @@ const PRODUTOS = [
   {
     nome: "Conjunto Mafil",
     preco: 150.00,
-
+    categoria: "Conjunto",
     imagens: [
       "https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg",
       "COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",
@@ -1752,26 +1780,91 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
-  <script>
-const botaoCategorias = document.querySelector('.menu-categoria-topo');
-const menuCategorias = document.querySelector('.menu-categorias');
-const fundoCategorias = document.querySelector('.fundo-categorias');
-const fecharCategorias = document.querySelector('.fechar-categorias');
+<script>
 
-botaoCategorias.addEventListener('click', () => {
-    menuCategorias.classList.add('aberto');
-    fundoCategorias.classList.add('aberto');
+/* ================================
+   MENU DE CATEGORIAS
+================================ */
+
+function abrirFiltro() {
+    const menu = document.getElementById("menuCategorias");
+    const fundo = document.getElementById("fundoCategorias");
+
+    menu.classList.add("aberto");
+    fundo.classList.add("aberto");
+}
+
+function fecharFiltro() {
+    const menu = document.getElementById("menuCategorias");
+    const fundo = document.getElementById("fundoCategorias");
+
+    menu.classList.remove("aberto");
+    fundo.classList.remove("aberto");
+}
+
+
+/* FECHAR CLICANDO NO FUNDO */
+
+document.getElementById("fundoCategorias").addEventListener("click", function() {
+    fecharFiltro();
 });
 
-fecharCategorias.addEventListener('click', () => {
-    menuCategorias.classList.remove('aberto');
-    fundoCategorias.classList.remove('aberto');
-});
 
-fundoCategorias.addEventListener('click', () => {
-    menuCategorias.classList.remove('aberto');
-    fundoCategorias.classList.remove('aberto');
-});
+/* ================================
+   FILTRO DE CATEGORIAS
+================================ */
+
+function filtrarCategoria(categoria) {
+
+    const produtos = document.querySelectorAll("#productGrid .card");
+    const botoes = document.querySelectorAll(".lista-categorias button");
+
+    botoes.forEach(botao => {
+        botao.classList.remove("ativa");
+    });
+
+    const botaoSelecionado = Array.from(botoes).find(botao =>
+        botao.getAttribute("onclick") &&
+        botao.getAttribute("onclick").includes("'" + categoria + "'")
+    );
+
+    if (botaoSelecionado) {
+        botaoSelecionado.classList.add("ativa");
+    }
+
+    produtos.forEach((produto, index) => {
+
+        const dados = PRODUTOS[index];
+
+        if (!dados) return;
+
+        if (categoria === "todos") {
+            produto.style.display = "";
+            return;
+        }
+
+        const categoriaProduto = dados.categoria || "";
+        const tagProduto = dados.tag || "";
+
+        if (
+            categoriaProduto.toLowerCase() === categoria.toLowerCase() ||
+            tagProduto.toLowerCase() === categoria.toLowerCase()
+        ) {
+            produto.style.display = "";
+        } else {
+            produto.style.display = "none";
+        }
+    });
+
+    fecharFiltro();
+
+    document.getElementById("shop").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+</script>
 
 </script>
 </body>

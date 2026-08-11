@@ -1765,6 +1765,27 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+  <script>
+const botaoCategorias = document.querySelector('.menu-categoria-topo');
+const menuCategorias = document.querySelector('.menu-categorias');
+const fundoCategorias = document.querySelector('.fundo-categorias');
+const fecharCategorias = document.querySelector('.fechar-categorias');
+
+botaoCategorias.addEventListener('click', () => {
+    menuCategorias.classList.add('aberto');
+    fundoCategorias.classList.add('aberto');
+});
+
+fecharCategorias.addEventListener('click', () => {
+    menuCategorias.classList.remove('aberto');
+    fundoCategorias.classList.remove('aberto');
+});
+
+fundoCategorias.addEventListener('click', () => {
+    menuCategorias.classList.remove('aberto');
+    fundoCategorias.classList.remove('aberto');
+});
+
 </script>
 </body>
 </html>

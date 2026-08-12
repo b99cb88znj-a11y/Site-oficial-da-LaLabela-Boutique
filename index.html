@@ -214,7 +214,7 @@ header{
 }
 
 
-/* SACOLA MAIOR */
+/* SACOLA QUADRADA E NA COR ROSA PINK DO RODAPÉ (#ed1760) */
 
 .cart-btn{
     justify-self:end;
@@ -222,31 +222,31 @@ header{
     display:flex;
     align-items:center;
     gap:8px;
-    background:#FF69B4;
+    background:#ed1760;
     color:#fff;
     border:none;
     padding:11px 18px;
-    border-radius:24px;
+    border-radius:0px;
     font-family:'Jost',sans-serif;
     font-size:14px;
     font-weight:600;
     cursor:pointer;
     transition:background .2s ease;
-    box-shadow:0 4px 12px rgba(233,30,99,0.25);
+    box-shadow:0 4px 12px rgba(237,23,96,0.25);
 }
 
 .cart-btn:hover{
-    background:#C2185B;
+    background:#c21250;
     color:#fff;
 }
 
 .cart-count{
     background:#fff;
-    color:#E91E63;
+    color:#ed1760;
     font-size:11px;
     min-width:20px;
     height:20px;
-    border-radius:50%;
+    border-radius:0px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -1127,7 +1127,7 @@ header{
 
 
 <!-- =========================================================
-     HEADER (Sem o letreiro rosa abaixo)
+     HEADER
 ========================================================= -->
 
 <header>
@@ -1153,7 +1153,7 @@ header{
         </a>
 
 
-        <!-- Botão Sacola maior e destacado -->
+        <!-- Botão Sacola Quadrado e na cor Rosa Pink do Rodapé -->
         <button
             class="cart-btn"
             onclick="openCart()"
@@ -1218,7 +1218,7 @@ header{
 
 
 <!-- =========================================================
-     PRODUTOS (Com a barra de pesquisa bem acima)
+     PRODUTOS
 ========================================================= -->
 
 <section
@@ -1231,7 +1231,7 @@ header{
     </h2>
 
 
-    <!-- PESQUISA MAIS ACIMA -->
+    <!-- PESQUISA -->
 
     <div class="barra-pesquisa">
 
@@ -1674,7 +1674,6 @@ const WHATSAPP_NUMERO = "5544997720350";
 
 /* =========================================================
    PRODUTOS
-   AGORA VÊM DO FIREBASE
 ========================================================= */
 
 let PRODUTOS = [];
@@ -2456,7 +2455,7 @@ function montarFrete(){
 
 
 /* =========================================================
-   CARRINHO E TRAVA DE ESTOQUE POR COR E TAMANHO CORRIGIDA
+   CARRINHO E TRAVA DE ESTOQUE
 ========================================================= */
 
 function criarChaveItem(item){

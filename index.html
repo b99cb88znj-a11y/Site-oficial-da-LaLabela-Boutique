@@ -1887,11 +1887,15 @@ function filtrarCategoria(categoria) {
 
   
   
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
   import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
@@ -1902,14 +1906,64 @@ function filtrarCategoria(categoria) {
     appId: "1:642045507952:web:8953c11428090b4a41b7b5"
   };
 
+  // Inicializa o Firebase
   const app = initializeApp(firebaseConfig);
 
+  // Firestore
   const db = getFirestore(app);
+
+  // Authentication
   const auth = getAuth(app);
 
-  console.log("Firebase conectado!");
+  // Deixa disponíveis para o restante do site
+  window.firebaseApp = app;
+  window.firebaseDB = db;
+  window.firebaseAuth = auth;
 
+  // Função de login
+  window.fazerLoginFirebase = async function(email, senha) {
+    try {
+      const resultado = await signInWithEmailAndPassword(
+        auth,
+        email,
+        senha
+      );
+
+      console.log("Login realizado com sucesso!");
+
+      return resultado.user;
+
+    } catch (erro) {
+      console.error("Erro ao fazer login:", erro);
+
+      throw erro;
+    }
+  };
+
+  // Função de logout
+  window.sairFirebase = async function() {
+    try {
+      await signOut(auth);
+      console.log("Usuário saiu da conta.");
+    } catch (erro) {
+      console.error("Erro ao sair:", erro);
+    }
+  };
+
+  // Verifica se existe usuário logado
+  onAuthStateChanged(auth, (usuario) => {
+
+    if (usuario) {
+      console.log("Usuário logado:", usuario.email);
+    } else {
+      console.log("Nenhum usuário logado.");
+    }
+
+  });
+
+  console.log("Firebase conectado!");
 </script>
+
 
 
 </body>

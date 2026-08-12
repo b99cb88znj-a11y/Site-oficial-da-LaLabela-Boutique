@@ -1396,6 +1396,7 @@ header{
         <button class="fechar-modal-sistema" onclick="fecharModalPerfil()">&times;</button>
         <h2>Meu Perfil</h2>
         <div class="grupo-campo"><label>Seu Nome</label><input type="text" id="perfilNome" placeholder="Ex: Maria Silva"></div>
+        <div class="grupo-campo"><label>CPF</label><input type="text" id="perfilCpf" placeholder="000.000.000-00" oninput="this.value=this.value.replace(/\D/g,'').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2').substring(0,14)"></div>
         <div class="grupo-campo"><label>WhatsApp</label><input type="text" id="perfilWhatsapp" placeholder="(44) 99999-9999"></div>
         <div class="grupo-campo"><label>E-mail (Obrigatório)</label><input type="email" id="perfilEmail" placeholder="seu@email.com"></div>
         <h3 style="margin-top:20px; font-size:1.2rem; color:#ed1760;">Endereços Salvos</h3>
@@ -1427,6 +1428,12 @@ header{
         <div class="drawer-items" id="drawerItems"></div>
 
         <div class="form-checkout-group">
+            <label>Nome Completo (Obrigatório)</label>
+            <input type="text" id="checkoutNome" placeholder="Seu nome completo" required>
+
+            <label>CPF (Obrigatório)</label>
+            <input type="text" id="checkoutCpf" placeholder="000.000.000-00" oninput="this.value=this.value.replace(/\D/g,'').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2').substring(0,14)" required>
+
             <label>E-mail (Obrigatório)</label>
             <input type="email" id="checkoutEmail" placeholder="seu@email.com" required>
 
@@ -1439,13 +1446,13 @@ header{
                 <button type="button" onclick="buscarCep()">Buscar</button>
             </div>
 
-            <label>Rua</label>
+            <label>Rua (Obrigatório)</label>
             <input type="text" id="checkoutRua" placeholder="Nome da rua / avenida">
 
-            <label>Número</label>
+            <label>Número (Obrigatório)</label>
             <input type="text" id="checkoutNumero" placeholder="Ex: 123">
 
-            <label>Bairro</label>
+            <label>Bairro (Obrigatório)</label>
             <input type="text" id="checkoutBairro" placeholder="Bairro">
 
             <label>Complemento</label>
@@ -1483,6 +1490,7 @@ let indiceFotoModal = 0;
 
 let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
     nome: "",
+    cpf: "",
     whatsapp: "",
     email: "",
     enderecos: []
@@ -1490,9 +1498,12 @@ let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
 
 function carregarPerfilNaTela(){
     document.getElementById("perfilNome").value = perfilCliente.nome || "";
+    document.getElementById("perfilCpf").value = perfilCliente.cpf || "";
     document.getElementById("perfilWhatsapp").value = perfilCliente.whatsapp || "";
     document.getElementById("perfilEmail").value = perfilCliente.email || "";
     
+    if(document.getElementById("checkoutNome")) document.getElementById("checkoutNome").value = perfilCliente.nome || "";
+    if(document.getElementById("checkoutCpf")) document.getElementById("checkoutCpf").value = perfilCliente.cpf || "";
     if(document.getElementById("checkoutEmail")) document.getElementById("checkoutEmail").value = perfilCliente.email || "";
     if(document.getElementById("checkoutWhatsapp")) document.getElementById("checkoutWhatsapp").value = perfilCliente.whatsapp || "";
 
@@ -1501,6 +1512,7 @@ function carregarPerfilNaTela(){
 
 function salvarPerfilCliente(){
     perfilCliente.nome = document.getElementById("perfilNome").value.trim();
+    perfilCliente.cpf = document.getElementById("perfilCpf").value.trim();
     perfilCliente.whatsapp = document.getElementById("perfilWhatsapp").value.trim();
     perfilCliente.email = document.getElementById("perfilEmail").value.trim();
 
@@ -1656,7 +1668,8 @@ function normalizarProduto(doc){
     if(!Array.isArray(tamanhos)) tamanhos = String(tamanhos).split(",").map(v => v.trim()).filter(Boolean);
 
     let preco = Number(dados.preco ?? dados.preço ?? dados.valor ?? 0) || 0;
-    let estoque = Number(dados.estoque ?? 999) || 0;
+    // Se o produto não tiver o campo estoque, assumimos um valor alto para não barrar a venda
+    let estoque = dados.estoque !== undefined ? Number(dados.estoque) : 999;
 
     return {
         id: doc.id || dados.id || "",
@@ -1799,8 +1812,16 @@ function adicionarDoModal(i){
 
     const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
     if(existente){
+        if (existente.qtd + 1 > p.estoque) {
+            alert("Atenção: A quantidade desejada excede o limite disponível em nosso estoque no momento.");
+            return;
+        }
         existente.qtd += 1;
     } else {
+        if (1 > p.estoque) {
+            alert("Atenção: Este produto está indisponível no estoque no momento.");
+            return;
+        }
         carrinho.push({
             nome: p.nome,
             preco: p.preco,
@@ -1830,8 +1851,16 @@ function adicionarAoCarrinho(i){
 
     const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
     if(existente){
+        if (existente.qtd + 1 > p.estoque) {
+            alert("Atenção: A quantidade desejada excede o limite disponível em nosso estoque no momento.");
+            return;
+        }
         existente.qtd += 1;
     } else {
+        if (1 > p.estoque) {
+            alert("Atenção: Este produto está indisponível no estoque no momento.");
+            return;
+        }
         carrinho.push({
             nome: p.nome,
             preco: p.preco,
@@ -1849,6 +1878,12 @@ function adicionarAoCarrinho(i){
 function alterarQtd(chave, delta){
     const item = carrinho.find(i => criarChaveItem(i) === chave);
     if(!item) return;
+
+    if (delta > 0 && (item.qtd + delta > item.estoque)) {
+        alert("Quantidade máxima atingida para o estoque disponível no momento.");
+        return;
+    }
+
     item.qtd += delta;
     if(item.qtd <= 0){
         carrinho = carrinho.filter(i => criarChaveItem(i) !== chave);
@@ -1917,19 +1952,20 @@ function closeCart(){
 }
 
 function finalizarPedidoSite(){
+    const nome = document.getElementById("checkoutNome").value.trim();
+    const cpf = document.getElementById("checkoutCpf").value.trim();
     const email = document.getElementById("checkoutEmail").value.trim();
     const rua = document.getElementById("checkoutRua").value.trim();
     const numero = document.getElementById("checkoutNumero").value.trim();
     const bairro = document.getElementById("checkoutBairro").value.trim();
     const pagamento = document.getElementById("paymentSelect").value;
 
-    if(!email){
-        alert("O e-mail é obrigatório para finalizar o pedido.");
-        document.getElementById("checkoutEmail").focus();
+    if(!nome || !cpf || !email){
+        alert("Nome, CPF e E-mail são dados obrigatórios para finalizar o pedido.");
         return;
     }
     if(!rua || !numero || !bairro){
-        alert("Por favor, preencha o endereço completo (Rua, Número e Bairro).");
+        alert("Por favor, preencha o endereço de entrega completo (Rua, Número e Bairro).");
         return;
     }
     if(!pagamento){
@@ -1937,6 +1973,8 @@ function finalizarPedidoSite(){
         return;
     }
 
+    perfilCliente.nome = nome;
+    perfilCliente.cpf = cpf;
     perfilCliente.email = email;
     localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
 
@@ -1975,6 +2013,7 @@ function aplicarFiltros(){
 function abrirFiltro(){
     document.getElementById("menuCategorias").classList.add("aberto");
     document.getElementById("fundoCategorias").classList.add("aberto");
+    carregarPerfilNaTela(); // Garante que Nome e CPF sejam carregados ao abrir o menu
 }
 
 function fecharFiltro(){
@@ -1992,6 +2031,9 @@ function filtrarCategoria(cat){
 document.getElementById("fundoCategorias").addEventListener("click", fecharFiltro);
 
 document.getElementById("deliveryWhatsapp").href = `https://wa.me/5544997720350?text=${encodeURIComponent("Olá! Gostaria de tirar dúvidas sobre o frete.")}`;
+
+// Chama para garantir que, caso já existam dados no LocalStorage, eles preencham a sacola de primeira.
+carregarPerfilNaTela();
 
 </script>
 

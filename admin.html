@@ -12,10 +12,6 @@ content="width=device-width, initial-scale=1.0">
 
 <style>
 
-/* =====================================================
-   CONFIGURAÇÃO GERAL
-===================================================== */
-
 *{
     box-sizing:border-box;
 }
@@ -164,7 +160,7 @@ body{
 
 
 /* =====================================================
-   MENU LATERAL
+   SIDEBAR
 ===================================================== */
 
 .sidebar{
@@ -880,10 +876,6 @@ body{
 <div class="layout">
 
 
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
-
 <aside class="sidebar">
 
     <div class="logo">
@@ -937,65 +929,47 @@ body{
         <button
             class="ativo"
             onclick="menuNavegar('Dashboard',this)">
-
             Dashboard
-
         </button>
 
         <button
             onclick="menuNavegar('Produtos',this)">
-
             Produtos
-
         </button>
 
         <button
             onclick="menuNavegar('Categorias',this)">
-
             Categorias
-
         </button>
 
         <button
             onclick="menuNavegar('Pedidos',this)">
-
             Pedidos
-
         </button>
 
         <button
             onclick="menuNavegar('Clientes',this)">
-
             Clientes
-
         </button>
 
         <button
             onclick="menuNavegar('Cupons',this)">
-
             Cupons
-
         </button>
 
         <button
             onclick="menuNavegar('Configurações',this)">
-
             Configurações
-
         </button>
 
         <button
             onclick="menuNavegar('Banners',this)">
-
             Banners
-
         </button>
 
         <button
             onclick="fazerLogout()">
-
             Sair
-
         </button>
 
     </div>
@@ -1013,10 +987,6 @@ body{
 
 </aside>
 
-
-<!-- =====================================================
-     CONTEÚDO
-===================================================== -->
 
 <main class="main">
 
@@ -1044,10 +1014,6 @@ body{
 <div class="content">
 
 
-<!-- =====================================================
-     BOAS-VINDAS
-===================================================== -->
-
 <div class="welcome">
 
     <div>
@@ -1073,10 +1039,6 @@ body{
 </div>
 
 
-<!-- =====================================================
-     CARDS
-===================================================== -->
-
 <div class="cards">
 
     <div class="card">
@@ -1094,9 +1056,7 @@ body{
         <div
             class="card-value"
             id="totalProdutos">
-
             0
-
         </div>
 
         <div class="card-info">
@@ -1121,9 +1081,7 @@ body{
         <div
             class="card-value"
             id="totalPromocoes">
-
             0
-
         </div>
 
         <div class="card-info">
@@ -1148,9 +1106,7 @@ body{
         <div
             class="card-value"
             id="totalVisualizacoes">
-
             0
-
         </div>
 
         <div class="card-info">
@@ -1175,9 +1131,7 @@ body{
         <div
             class="card-value"
             id="totalPedidos">
-
             0
-
         </div>
 
         <div class="card-info">
@@ -1202,9 +1156,7 @@ body{
         <div
             class="card-value"
             id="totalFaturamento">
-
             R$ 0,00
-
         </div>
 
         <div class="card-info">
@@ -1215,10 +1167,6 @@ body{
 
 </div>
 
-
-<!-- =====================================================
-     PRODUTOS
-===================================================== -->
 
 <section
     class="section"
@@ -1246,15 +1194,10 @@ body{
         <div class="table-head">
 
             <div>Produto</div>
-
             <div>Categoria</div>
-
             <div>Preço</div>
-
             <div>Estoque</div>
-
             <div>Status</div>
-
             <div>Ações</div>
 
         </div>
@@ -1272,10 +1215,6 @@ body{
 
 </section>
 
-
-<!-- =====================================================
-     GRÁFICO
-===================================================== -->
 
 <section class="section">
 
@@ -1495,14 +1434,10 @@ body{
 
 
 <!-- =====================================================
-     FIREBASE
+     FIREBASE + CLOUDINARY
 ===================================================== -->
 
 <script type="module">
-
-/* =====================================================
-   FIREBASE
-===================================================== */
 
 import {
     initializeApp
@@ -1533,7 +1468,7 @@ from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
 /* =====================================================
-   CONFIGURAÇÃO REAL DO SEU FIREBASE
+   FIREBASE
 ===================================================== */
 
 const firebaseConfig = {
@@ -1560,7 +1495,23 @@ const firebaseConfig = {
 
 
 /* =====================================================
-   INICIALIZA FIREBASE
+   CLOUDINARY
+===================================================== */
+
+const CLOUDINARY_CLOUD_NAME =
+    "ddhdmddq";
+
+const CLOUDINARY_UPLOAD_PRESET =
+    "lalabela_produtos";
+
+const CLOUDINARY_UPLOAD_URL =
+    "https://api.cloudinary.com/v1_1/" +
+    CLOUDINARY_CLOUD_NAME +
+    "/image/upload";
+
+
+/* =====================================================
+   INICIALIZAÇÃO
 ===================================================== */
 
 const app =
@@ -1583,7 +1534,7 @@ let produtoEditando = null;
 
 let fotosAtuais = [];
 
-let carregamentoInicial = true;
+let listenerProdutosIniciado = false;
 
 
 /* =====================================================
@@ -1607,7 +1558,7 @@ const btnLogin =
 
 
 /* =====================================================
-   OBSERVADOR DE LOGIN
+   LOGIN OBSERVER
 ===================================================== */
 
 onAuthStateChanged(
@@ -1630,10 +1581,6 @@ onAuthStateChanged(
             carregarProdutosFirebase();
 
         }else{
-
-            console.log(
-                "Nenhum usuário autenticado."
-            );
 
             telaLogin.style.display =
                 "flex";
@@ -1779,13 +1726,11 @@ async function(){
 window.fazerLogout =
 async function(){
 
-    const confirmar =
-        confirm(
+    if(
+        !confirm(
             "Deseja realmente sair do painel?"
-        );
-
-
-    if(!confirmar){
+        )
+    ){
         return;
     }
 
@@ -1828,10 +1773,17 @@ document
 
 
 /* =====================================================
-   CARREGAR PRODUTOS FIRESTORE
+   PRODUTOS FIRESTORE
 ===================================================== */
 
 function carregarProdutosFirebase(){
+
+    if(listenerProdutosIniciado){
+        return;
+    }
+
+    listenerProdutosIniciado = true;
+
 
     const lista =
         document.getElementById(
@@ -1846,15 +1798,8 @@ function carregarProdutosFirebase(){
     `;
 
 
-    const produtosRef =
-        collection(
-            db,
-            "produtos"
-        );
-
-
     onSnapshot(
-        produtosRef,
+        collection(db,"produtos"),
 
         snapshot => {
 
@@ -1869,12 +1814,6 @@ function carregarProdutosFirebase(){
 
                     }
                 );
-
-
-            console.log(
-                "Produtos recebidos do Firestore:",
-                produtos
-            );
 
 
             renderizarProdutos();
@@ -1936,10 +1875,14 @@ function(){
             (produto,index) => {
 
                 const foto =
-                    produto.imagens &&
+                    Array.isArray(
+                        produto.imagens
+                    ) &&
                     produto.imagens.length
-                    ? produto.imagens[0]
-                    : "";
+                    ?
+                    produto.imagens[0]
+                    :
+                    "";
 
 
                 lista.innerHTML += `
@@ -1974,28 +1917,22 @@ function(){
 
                     </div>
 
-
                     <div>
                         ${produto.categoria || "-"}
                     </div>
 
-
                     <div class="price">
-
                         R$
                         ${Number(
                             produto.preco || 0
                         )
                         .toFixed(2)
                         .replace(".",",")}
-
                     </div>
-
 
                     <div class="stock">
                         —
                     </div>
-
 
                     <div>
 
@@ -2005,24 +1942,18 @@ function(){
 
                     </div>
 
-
                     <div class="actions">
 
                         <button
                             class="action"
                             onclick="editarProduto(${index})">
-
                             Editar
-
                         </button>
-
 
                         <button
                             class="action delete"
                             onclick="excluirProduto(${index})">
-
                             Excluir
-
                         </button>
 
                     </div>
@@ -2133,7 +2064,7 @@ function(nome,botao){
 
 
 /* =====================================================
-   VER TODOS
+   VER PRODUTOS
 ===================================================== */
 
 window.verTodosProdutos =
@@ -2159,7 +2090,6 @@ function(){
 
     produtoEditando =
         null;
-
 
     document
     .getElementById(
@@ -2297,7 +2227,7 @@ function(index){
 
 
 /* =====================================================
-   RENDERIZAR FOTOS
+   FOTOS
 ===================================================== */
 
 window.renderizarFotos =
@@ -2315,12 +2245,31 @@ function(){
     fotosAtuais.forEach(
         (foto,index) => {
 
+            let preview = "";
+
+
+            if(typeof foto === "string"){
+
+                preview =
+                    foto;
+
+            }else if(
+                foto &&
+                foto.preview
+            ){
+
+                preview =
+                    foto.preview;
+
+            }
+
+
             container.innerHTML += `
 
                 <div class="foto-item">
 
                     <img
-                        src="${foto}"
+                        src="${preview}"
                         alt="Foto ${index + 1}"
                     >
 
@@ -2372,6 +2321,23 @@ function(){
 window.removerFoto =
 function(index){
 
+    const foto =
+        fotosAtuais[index];
+
+
+    if(
+        foto &&
+        typeof foto === "object" &&
+        foto.preview
+    ){
+
+        URL.revokeObjectURL(
+            foto.preview
+        );
+
+    }
+
+
     fotosAtuais.splice(
         index,
         1
@@ -2397,29 +2363,34 @@ function(event){
     arquivos.forEach(
         arquivo => {
 
-            const reader =
-                new FileReader();
+            if(
+                !arquivo.type.startsWith(
+                    "image/"
+                )
+            ){
+                return;
+            }
 
 
-            reader.onload =
-                function(e){
-
-                    fotosAtuais.push(
-                        e.target.result
-                    );
+            const preview =
+                URL.createObjectURL(
+                    arquivo
+                );
 
 
-                    renderizarFotos();
+            fotosAtuais.push({
 
-                };
+                file:arquivo,
 
+                preview:preview
 
-            reader.readAsDataURL(
-                arquivo
-            );
+            });
 
         }
     );
+
+
+    renderizarFotos();
 
 
     event.target.value = "";
@@ -2428,7 +2399,81 @@ function(event){
 
 
 /* =====================================================
-   SALVAR PRODUTO NO FIRESTORE
+   CLOUDINARY
+===================================================== */
+
+async function enviarFotoCloudinary(
+    arquivo
+){
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "file",
+        arquivo
+    );
+
+
+    formData.append(
+        "upload_preset",
+        "lalabela_produtos"
+    );
+
+
+    formData.append(
+        "folder",
+        "lalabela/produtos"
+    );
+
+
+    const resposta =
+        await fetch(
+            "https://api.cloudinary.com/v1_1/ddhdmddq/image/upload",
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+
+    const dados =
+        await resposta.json();
+
+
+    if(!resposta.ok){
+
+        console.error(
+            "Erro Cloudinary:",
+            dados
+        );
+
+
+        throw new Error(
+            dados.error?.message ||
+            "Erro ao enviar imagem para o Cloudinary."
+        );
+
+    }
+
+
+    if(!dados.secure_url){
+
+        throw new Error(
+            "Cloudinary não retornou a URL da imagem."
+        );
+
+    }
+
+
+    return dados.secure_url;
+
+}
+
+
+/* =====================================================
+   SALVAR PRODUTO
 ===================================================== */
 
 window.salvarProduto =
@@ -2475,7 +2520,8 @@ async function(){
         .value
         .split(",")
         .map(
-            item => item.trim()
+            item =>
+                item.trim()
         )
         .filter(Boolean);
 
@@ -2488,7 +2534,8 @@ async function(){
         .value
         .split(",")
         .map(
-            item => item.trim()
+            item =>
+                item.trim()
         )
         .filter(Boolean);
 
@@ -2533,38 +2580,85 @@ async function(){
     }
 
 
-    const produto = {
-
-        nome:nome,
-
-        preco:preco,
-
-        categoria:categoria,
-
-        imagens:[...fotosAtuais],
-
-        cores:cores,
-
-        tamanhos:tamanhos,
-
-        descricao:descricao,
-
-        tag:tag,
-
-        atualizadoEm:
-            serverTimestamp()
-
-    };
-
-
     btn.disabled =
         true;
 
     btn.textContent =
-        "Salvando...";
+        "Enviando fotos...";
 
 
     try{
+
+        const imagens = [];
+
+
+        /*
+           FOTOS JÁ EXISTENTES:
+           continuam usando as URLs.
+
+           FOTOS NOVAS:
+           são enviadas para o Cloudinary.
+        */
+
+        for(
+            const foto of fotosAtuais
+        ){
+
+            if(
+                typeof foto === "string"
+            ){
+
+                imagens.push(
+                    foto
+                );
+
+            }else if(
+                foto &&
+                foto.file
+            ){
+
+                const url =
+                    await enviarFotoCloudinary(
+                        foto.file
+                    );
+
+
+                imagens.push(
+                    url
+                );
+
+            }
+
+        }
+
+
+        btn.textContent =
+            "Salvando produto...";
+
+
+        const produto = {
+
+            nome:nome,
+
+            preco:preco,
+
+            categoria:categoria,
+
+            imagens:imagens,
+
+            cores:cores,
+
+            tamanhos:tamanhos,
+
+            descricao:descricao,
+
+            tag:tag,
+
+            atualizadoEm:
+                serverTimestamp()
+
+        };
+
 
         if(
             produtoEditando === null
@@ -2577,6 +2671,7 @@ async function(){
                 ),
                 {
                     ...produto,
+
                     criadoEm:
                         serverTimestamp()
                 }
@@ -2631,7 +2726,7 @@ async function(){
     }catch(error){
 
         console.error(
-            "Erro ao salvar produto:",
+            "Erro ao salvar:",
             error
         );
 
@@ -2642,13 +2737,14 @@ async function(){
         ){
 
             alert(
-                "O Firebase bloqueou a gravação. Precisamos ajustar as regras do Firestore."
+                "O Firebase bloqueou a gravação. Verifique as regras do Firestore."
             );
 
         }else{
 
             alert(
-                "Não foi possível salvar o produto."
+                "Não foi possível salvar o produto.\n\n" +
+                error.message
             );
 
         }
@@ -2667,7 +2763,7 @@ async function(){
 
 
 /* =====================================================
-   EXCLUIR PRODUTO DO FIRESTORE
+   EXCLUIR PRODUTO
 ===================================================== */
 
 window.excluirProduto =
@@ -2725,7 +2821,7 @@ async function(index){
         ){
 
             alert(
-                "O Firebase bloqueou a exclusão. Precisamos ajustar as regras do Firestore."
+                "O Firebase bloqueou a exclusão. Verifique as regras do Firestore."
             );
 
         }else{
@@ -2828,7 +2924,7 @@ function(){
 
 
 /* =====================================================
-   FECHAR CLICANDO FORA
+   FECHAR FORA DO MODAL
 ===================================================== */
 
 document
@@ -2852,7 +2948,7 @@ document
 
 
 /* =====================================================
-   FOTOS INICIAIS
+   INICIAL
 ===================================================== */
 
 renderizarFotos();
@@ -2867,11 +2963,15 @@ console.log(
 );
 
 console.log(
-    "Firebase: lalabela-boutique"
+    "Firebase conectado."
 );
 
 console.log(
-    "Firestore: coleção produtos"
+    "Firestore: produtos"
+);
+
+console.log(
+    "Cloudinary conectado."
 );
 
 console.log(

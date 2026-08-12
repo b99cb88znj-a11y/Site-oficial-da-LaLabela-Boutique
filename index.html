@@ -222,10 +222,11 @@ header{
     display:flex;
     align-items:center;
     gap:7px;
-    background:none;
-    color:#E91E63;
+    background:#ed1764;
+    color:#fff;
     border:none;
-    padding:8px 0;
+    padding:8px 14px;
+    border-radius:20px;
     font-family:'Jost',sans-serif;
     font-size:13px;
     font-weight:500;
@@ -233,13 +234,14 @@ header{
 }
 
 .cart-btn:hover{
-    color:#C2185B;
+    background:#C2185B;
 }
 
 .cart-count{
-    background:#E91E63;
-    color:#fff;
+    background:#fff;
+    color:#ed1764;
     font-size:10px;
+    font-weight:700;
     min-width:18px;
     height:18px;
     border-radius:50%;
@@ -1069,24 +1071,8 @@ header{
         font-size:2.05rem;
     }
 
-    .menu-categoria-topo,
-    .cart-btn{
-        font-size:0;
-    }
-
-    .menu-categoria-topo .tres-riscos{
-        font-size:25px;
-    }
-
-    .cart-btn::before{
-        content:"🛍️";
-        font-size:23px;
-        line-height:1;
-    }
-
-    .cart-count{
-        font-size:10px;
-        margin-left:-5px;
+    .menu-categoria-topo span:nth-child(2){
+        display:none;
     }
 
     .hero{
@@ -1860,38 +1846,18 @@ function normalizarProduto(doc){
         [];
 
 
-    /*
-      Se o painel salvar apenas uma imagem
-    */
-
     if(!Array.isArray(imagens)){
-
-        imagens = [
-            imagens
-        ];
-
+        imagens = [imagens];
     }
 
-
-    /*
-      Aceita também "imagem"
-    */
 
     if(
         imagens.length === 0 &&
         dados.imagem
     ){
-
-        imagens = [
-            dados.imagem
-        ];
-
+        imagens = [dados.imagem];
     }
 
-
-    /*
-      Remove links vazios
-    */
 
     imagens = imagens
         .filter(
@@ -1902,24 +1868,16 @@ function normalizarProduto(doc){
         );
 
 
-    /*
-      Se houver URL em campo foto
-    */
-
     if(
         imagens.length === 0 &&
         dados.foto
     ){
-
-        imagens = [
-            dados.foto
-        ];
-
+        imagens = [dados.foto];
     }
 
 
     /*
-      CORES
+      CORES E ESTOQUE POR VARIAÇÃO
     */
 
     let cores =
@@ -1946,10 +1904,6 @@ function normalizarProduto(doc){
     }
 
 
-    /*
-      TAMANHOS
-    */
-
     let tamanhos =
         dados.tamanhos ||
         dados.tamanho ||
@@ -1975,9 +1929,10 @@ function normalizarProduto(doc){
     }
 
 
-    /*
-      PREÇO
-    */
+    /* Estoque detalhado ou geral */
+    let estoqueGeral = Number(dados.estoque ?? dados.quantidade ?? 9999);
+    let estoqueCombinacoes = dados.estoqueCombinacoes || dados.estoquePorCorETamanho || null;
+
 
     let preco =
         dados.preco ??
@@ -2001,10 +1956,6 @@ function normalizarProduto(doc){
     preco = Number(preco) || 0;
 
 
-    /*
-      NOME
-    */
-
     const nome =
         dados.nome ||
         dados.name ||
@@ -2013,29 +1964,17 @@ function normalizarProduto(doc){
         "Produto";
 
 
-    /*
-      CATEGORIA
-    */
-
     const categoria =
         dados.categoria ||
         dados.category ||
         "";
 
 
-    /*
-      DESCRIÇÃO
-    */
-
     const descricao =
         dados.descricao ||
         dados.description ||
         "";
 
-
-    /*
-      TAG
-    */
 
     const tag =
         dados.tag ||
@@ -2047,21 +1986,15 @@ function normalizarProduto(doc){
     return {
 
         id:doc.id || dados.id || "",
-
         nome:String(nome),
-
         preco:preco,
-
         categoria:String(categoria),
-
         imagens:imagens,
-
         cores:cores,
-
         tamanhos:tamanhos,
-
+        estoque:estoqueGeral,
+        estoqueCombinacoes:estoqueCombinacoes,
         descricao:String(descricao),
-
         tag:String(tag)
 
     };
@@ -2242,7 +2175,7 @@ function montarVitrine(){
                                             <div>
 
                                                 <label>
-                                                    Cor — opcional
+                                                    Cor
                                                 </label>
 
                                                 <select
@@ -2250,7 +2183,7 @@ function montarVitrine(){
                                                 >
 
                                                     <option value="">
-                                                        Não informar
+                                                        Selecione a cor
                                                     </option>
 
                                                     ${
@@ -2285,7 +2218,7 @@ function montarVitrine(){
                                             <div>
 
                                                 <label>
-                                                    Tamanho — opcional
+                                                    Tamanho
                                                 </label>
 
                                                 <select
@@ -2293,7 +2226,7 @@ function montarVitrine(){
                                                 >
 
                                                     <option value="">
-                                                        Não informar
+                                                        Selecione o tamanho
                                                     </option>
 
                                                     ${
@@ -2519,170 +2452,138 @@ function montarFrete(){
 
 
 /* =========================================================
-   CARRINHO
+   CARRINHO E ESTOQUE
 ========================================================= */
 
-function criarChaveItem(item){
+function verificarEstoqueDisponivel(p, cor, tamanho, qtdDesejada){
+    // Se houver controle por combinações específicas
+    if(p.estoqueCombinacoes && typeof p.estoqueCombinacoes === 'object'){
+        // Tenta achar chave direta ou combinada
+        for(let key in p.estoqueCombinacoes){
+            let estoqueItem = Number(p.estoqueCombinacoes[key]);
+            // Verifica se a chave bate com a cor ou tamanho informados
+            if((cor && key.toLowerCase().includes(cor.toLowerCase())) && 
+               (tamanho && key.toLowerCase().includes(tamanho.toLowerCase()))){
+                return qtdDesejada <= estoqueItem;
+            }
+        }
+    }
+    
+    // Validação padrão pelo estoque geral do produto
+    if(p.estoque !== undefined && p.estoque !== null){
+        return qtdDesejada <= Number(p.estoque);
+    }
 
-    return `${item.nome}|${item.cor || ""}|${item.tamanho || ""}`;
-
+    return true;
 }
-
 
 function adicionarAoCarrinho(i){
 
-    const p =
-        PRODUTOS[i];
-
+    const p = PRODUTOS[i];
 
     if(!p){
         return;
     }
 
 
-    const corElement =
-        document.getElementById(
-            `cor-${i}`
-        );
+    const corElement = document.getElementById(`cor-${i}`);
+    const tamanhoElement = document.getElementById(`tamanho-${i}`);
 
 
-    const tamanhoElement =
-        document.getElementById(
-            `tamanho-${i}`
-        );
+    const cor = corElement ? corElement.value : "";
+    const tamanho = tamanhoElement ? tamanhoElement.value : "";
 
+    // Validação se selecionou opções obrigatórias caso existam
+    if(p.cores && p.cores.length > 0 && !cor){
+        alert("Por favor, selecione uma cor.");
+        return;
+    }
 
-    const cor =
-        corElement
-        ? corElement.value
-        : "";
-
-
-    const tamanho =
-        tamanhoElement
-        ? tamanhoElement.value
-        : "";
-
-
-    const existente =
-        carrinho.find(
-            item =>
-                item.nome === p.nome &&
-                item.cor === cor &&
-                item.tamanho === tamanho
-        );
-
-
-    if(existente){
-
-        existente.qtd += 1;
-
-    }else{
-
-        carrinho.push({
-
-            nome:p.nome,
-
-            preco:p.preco,
-
-            imagem:
-                p.imagens && p.imagens.length
-                ? p.imagens[0]
-                : "",
-
-            qtd:1,
-
-            cor:cor,
-
-            tamanho:tamanho
-
-        });
-
+    if(p.tamanhos && p.tamanhos.length > 0 && !tamanho){
+        alert("Por favor, selecione um tamanho.");
+        return;
     }
 
 
-    const btn =
-        document.getElementById(
-            `add-${i}`
-        );
+    const existente = carrinho.find(
+        item =>
+            item.produtoId === p.id &&
+            item.cor === cor &&
+            item.tamanho === tamanho
+    );
 
+    const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
+    const novaQtd = qtdAtualNoCarrinho + 1;
+
+    // TRAVA DE ESTOQUE
+    const temEstoque = verificarEstoqueDisponivel(p, cor, tamanho, novaQtd);
+    if(!temEstoque){
+        alert("Ops! Quantidade indisponível em estoque para esta combinação.");
+        return;
+    }
+
+
+    if(existente){
+        existente.qtd = novaQtd;
+    }else{
+        carrinho.push({
+            produtoId: p.id,
+            nome: p.nome,
+            preco: p.preco,
+            imagem: p.imagens && p.imagens.length ? p.imagens[0] : "",
+            qtd: 1,
+            cor: cor,
+            tamanho: tamanho
+        });
+    }
+
+
+    const btn = document.getElementById(`add-${i}`);
 
     if(btn){
 
-        btn.textContent =
-            "Adicionado ✓";
-
+        btn.textContent = "Adicionado ✓";
         btn.classList.add("added");
 
-
         setTimeout(() => {
-
-            btn.textContent =
-                "Adicionar";
-
+            btn.textContent = "Adicionar";
             btn.classList.remove("added");
-
-        },1200);
+        }, 1200);
 
     }
 
 
     atualizarCarrinho();
-
     openCart();
 
 }
 
 
-function alterarQtd(
-    chave,
-    delta
-){
+function alterarQtdPorIndex(index, delta){
+    const item = carrinho[index];
+    if(!item) return;
 
-    const item =
-        carrinho.find(
-            i =>
-                criarChaveItem(i) === chave
-        );
+    const produtoRef = PRODUTOS.find(p => p.id === item.produtoId) || PRODUTOS[0];
+    const novaQtd = item.qtd + delta;
 
-
-    if(!item){
-        return;
+    if(novaQtd > 0){
+        const temEstoque = verificarEstoqueDisponivel(produtoRef, item.cor, item.tamanho, novaQtd);
+        if(!temEstoque){
+            alert("Quantidade máxima em estoque atingida para este item.");
+            return;
+        }
+        item.qtd = novaQtd;
+    } else {
+        carrinho.splice(index, 1);
     }
-
-
-    item.qtd += delta;
-
-
-    if(item.qtd <= 0){
-
-        carrinho =
-            carrinho.filter(
-                i =>
-                    criarChaveItem(i) !== chave
-            );
-
-    }
-
 
     atualizarCarrinho();
-
 }
 
 
-function removerItem(
-    chave
-){
-
-    carrinho =
-        carrinho.filter(
-            i =>
-                criarChaveItem(i) !== chave
-        );
-
-
+function removerItemPorIndex(index){
+    carrinho.splice(index, 1);
     atualizarCarrinho();
-
 }
 
 
@@ -2692,29 +2593,14 @@ function removerItem(
 
 function atualizarCarrinho(){
 
-    const cartCount =
-        document.getElementById(
-            "cartCount"
-        );
-
+    const cartCount = document.getElementById("cartCount");
 
     if(cartCount){
-
-        cartCount.textContent =
-            carrinho.reduce(
-                (s,i) =>
-                    s + i.qtd,
-                0
-            );
-
+        cartCount.textContent = carrinho.reduce((s,i) => s + i.qtd, 0);
     }
 
 
-    const wrap =
-        document.getElementById(
-            "drawerItems"
-        );
-
+    const wrap = document.getElementById("drawerItems");
 
     if(!wrap){
         return;
@@ -2739,32 +2625,17 @@ function atualizarCarrinho(){
 
     }else{
 
-        wrap.innerHTML =
-            carrinho
-            .map(item => {
-
-                const chave =
-                    criarChaveItem(item);
-
+        wrap.innerHTML = carrinho
+            .map((item, index) => {
 
                 const opcoes = [];
 
-
                 if(item.cor){
-
-                    opcoes.push(
-                        `Cor: ${escaparHTML(item.cor)}`
-                    );
-
+                    opcoes.push(`Cor: ${escaparHTML(item.cor)}`);
                 }
 
-
                 if(item.tamanho){
-
-                    opcoes.push(
-                        `Tamanho: ${escaparHTML(item.tamanho)}`
-                    );
-
+                    opcoes.push(`Tamanho: ${escaparHTML(item.tamanho)}`);
                 }
 
 
@@ -2824,7 +2695,7 @@ function atualizarCarrinho(){
 
                                 <button
 
-                                    onclick="alterarQtd(${JSON.stringify(chave)},-1)"
+                                    onclick="alterarQtdPorIndex(${index}, -1)"
 
                                     type="button"
 
@@ -2840,7 +2711,7 @@ function atualizarCarrinho(){
 
                                 <button
 
-                                    onclick="alterarQtd(${JSON.stringify(chave)},1)"
+                                    onclick="alterarQtdPorIndex(${index}, 1)"
 
                                     type="button"
 
@@ -2853,7 +2724,7 @@ function atualizarCarrinho(){
 
                                     class="remove-btn"
 
-                                    onclick="removerItem(${JSON.stringify(chave)})"
+                                    onclick="removerItemPorIndex(${index})"
 
                                     type="button"
 
@@ -2870,9 +2741,7 @@ function atualizarCarrinho(){
 
                         <div class="item-total">
 
-                            ${formatarPreco(
-                                item.preco * item.qtd
-                            )}
+                            ${formatarPreco(item.preco * item.qtd)}
 
                         </div>
 
@@ -2909,66 +2778,44 @@ function getSubtotal(){
 
 function renderTotals(){
 
-    const subtotal =
-        getSubtotal();
+    const subtotal = getSubtotal();
 
-
-    const select =
-        document.getElementById(
-            "shipSelect"
-        );
-
+    const select = document.getElementById("shipSelect");
 
     if(!select){
         return;
     }
 
 
-    const idx =
-        Number(select.value || 0);
+    const idx = Number(select.value || 0);
 
-
-    const opcao =
-        FRETE_OPCOES[idx];
-
+    const opcao = FRETE_OPCOES[idx];
 
     if(!opcao){
         return;
     }
 
 
-    let frete =
-        opcao.valor;
+    let frete = opcao.valor;
 
-
-    let freteTexto =
-        frete === 0
-        ? "Grátis"
-        : formatarPreco(frete);
+    let freteTexto = frete === 0 ? "Grátis" : formatarPreco(frete);
 
 
     if(
         opcao.gratisAcima > 0 &&
         subtotal >= opcao.gratisAcima
     ){
-
         frete = 0;
-
         freteTexto = "Grátis";
-
     }
 
 
     if(opcao.consultar){
-
-        freteTexto =
-            "A combinar";
-
+        freteTexto = "A combinar";
     }
 
 
-    let notaTexto =
-        opcao.nota || "";
+    let notaTexto = opcao.nota || "";
 
 
     if(
@@ -2976,69 +2823,28 @@ function renderTotals(){
         opcao.diaSemana !== undefined
     ){
 
-        const proximaData =
-            proximaDataParaDiaSemana(
-                opcao.diaSemana
-            );
+        const proximaData = proximaDataParaDiaSemana(opcao.diaSemana);
 
-
-        notaTexto +=
-            ` Próxima entrega: ${
-                formatarDataCurta(proximaData)
-            } (${
-                NOMES_DIAS_SEMANA[
-                    opcao.diaSemana
-                ]
-            }).`;
+        notaTexto += ` Próxima entrega: ${formatarDataCurta(proximaData)} (${NOMES_DIAS_SEMANA[opcao.diaSemana]}).`;
 
     }
 
 
-    document.getElementById(
-        "subtotalVal"
-    ).textContent =
-        formatarPreco(subtotal);
+    document.getElementById("subtotalVal").textContent = formatarPreco(subtotal);
+
+    document.getElementById("freightVal").textContent = carrinho.length ? freteTexto : "—";
+
+    document.getElementById("shipNote").textContent = notaTexto;
 
 
-    document.getElementById(
-        "freightVal"
-    ).textContent =
-        carrinho.length
-        ? freteTexto
-        : "—";
+    const totalNumerico = subtotal + (opcao.consultar ? 0 : frete);
+
+    document.getElementById("totalVal").textContent = formatarPreco(totalNumerico);
 
 
-    document.getElementById(
-        "shipNote"
-    ).textContent =
-        notaTexto;
+    const btn = document.getElementById("checkoutBtn");
 
-
-    const totalNumerico =
-        subtotal +
-        (
-            opcao.consultar
-            ? 0
-            : frete
-        );
-
-
-    document.getElementById(
-        "totalVal"
-    ).textContent =
-        formatarPreco(
-            totalNumerico
-        );
-
-
-    const btn =
-        document.getElementById(
-            "checkoutBtn"
-        );
-
-
-    btn.disabled =
-        carrinho.length === 0;
+    btn.disabled = carrinho.length === 0;
 
 }
 
@@ -3049,28 +2855,16 @@ function renderTotals(){
 
 function openCart(){
 
-    document
-        .getElementById("drawer")
-        .classList.add("open");
-
-
-    document
-        .getElementById("overlay")
-        .classList.add("open");
+    document.getElementById("drawer").classList.add("open");
+    document.getElementById("overlay").classList.add("open");
 
 }
 
 
 function closeCart(){
 
-    document
-        .getElementById("drawer")
-        .classList.remove("open");
-
-
-    document
-        .getElementById("overlay")
-        .classList.remove("open");
+    document.getElementById("drawer").classList.remove("open");
+    document.getElementById("overlay").classList.remove("open");
 
 }
 
@@ -3086,90 +2880,54 @@ function finalizarNoWhatsapp(){
     }
 
 
-    const pagamento =
-        document.getElementById(
-            "paymentSelect"
-        ).value;
-
+    const pagamento = document.getElementById("paymentSelect").value;
 
     if(!pagamento){
-
-        alert(
-            "Selecione uma forma de pagamento."
-        );
-
+        alert("Selecione uma forma de pagamento.");
         return;
-
     }
 
 
-    const idx =
-        Number(
-            document.getElementById(
-                "shipSelect"
-            ).value || 0
-        );
+    const idx = Number(document.getElementById("shipSelect").value || 0);
 
+    const opcao = FRETE_OPCOES[idx];
 
-    const opcao =
-        FRETE_OPCOES[idx];
+    const subtotal = getSubtotal();
 
-
-    const subtotal =
-        getSubtotal();
-
-
-    let frete =
-        opcao.valor;
+    let frete = opcao.valor;
 
 
     if(
         opcao.gratisAcima > 0 &&
         subtotal >= opcao.gratisAcima
     ){
-
         frete = 0;
-
     }
 
 
-    let msg =
-        "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
+    let msg = "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
 
 
     carrinho.forEach(item => {
 
-        msg +=
-            `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
-
+        msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
 
         if(item.cor){
-
-            msg +=
-                `   Cor: ${item.cor}\n`;
-
+            msg += `   Cor: ${item.cor}\n`;
         }
-
 
         if(item.tamanho){
-
-            msg +=
-                `   Tamanho: ${item.tamanho}\n`;
-
+            msg += `   Tamanho: ${item.tamanho}\n`;
         }
-
 
         msg += "\n";
 
     });
 
 
-    msg +=
-        `Subtotal: ${formatarPreco(subtotal)}`;
+    msg += `Subtotal: ${formatarPreco(subtotal)}`;
 
-
-    msg +=
-        `\nEntrega: ${opcao.label}`;
+    msg += `\nEntrega: ${opcao.label}`;
 
 
     if(
@@ -3177,57 +2935,27 @@ function finalizarNoWhatsapp(){
         opcao.diaSemana !== undefined
     ){
 
-        const proximaData =
-            proximaDataParaDiaSemana(
-                opcao.diaSemana
-            );
+        const proximaData = proximaDataParaDiaSemana(opcao.diaSemana);
 
-
-        msg +=
-            ` (próxima entrega: ${formatarDataCurta(proximaData)} - ${NOMES_DIAS_SEMANA[opcao.diaSemana]})`;
+        msg += ` (próxima entrega: ${formatarDataCurta(proximaData)} - ${NOMES_DIAS_SEMANA[opcao.diaSemana]})`;
 
     }
 
 
     if(opcao.consultar){
-
-        msg +=
-            "\nFrete: a combinar";
-
-        msg +=
-            "\n\nVou passar minha cidade para calcularmos o frete.";
-
+        msg += "\nFrete: a combinar";
+        msg += "\n\nVou passar minha cidade para calcularmos o frete.";
     }else{
-
-        msg +=
-            `\nFrete: ${
-                frete === 0
-                ? "Grátis"
-                : formatarPreco(frete)
-            }`;
-
-        msg +=
-            `\nTotal: ${
-                formatarPreco(
-                    subtotal + frete
-                )
-            }`;
-
+        msg += `\nFrete: ${frete === 0 ? "Grátis" : formatarPreco(frete)}`;
+        msg += `\nTotal: ${formatarPreco(subtotal + frete)}`;
     }
 
 
-    msg +=
-        `\nForma de pagamento: ${pagamento}`;
+    msg += `\nForma de pagamento: ${pagamento}`;
 
+    const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(msg)}`;
 
-    const url =
-        `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(msg)}`;
-
-
-    window.open(
-        url,
-        "_blank"
-    );
+    window.open(url, "_blank");
 
 }
 
@@ -3237,91 +2965,54 @@ function finalizarNoWhatsapp(){
 ========================================================= */
 
 function pesquisarProdutos(){
-
     aplicarFiltros();
-
 }
 
 
 function aplicarFiltros(){
 
-    const campo =
-        document.getElementById(
-            "campoPesquisa"
-        );
+    const campo = document.getElementById("campoPesquisa");
 
+    const termo = campo ? campo.value.toLowerCase().trim() : "";
 
-    const termo =
-        campo
-        ? campo.value.toLowerCase().trim()
-        : "";
-
-
-    const cards =
-        document.querySelectorAll(
-            "#productGrid .card"
-        );
+    const cards = document.querySelectorAll("#productGrid .card");
 
 
     cards.forEach(card => {
 
-        const index =
-            Number(
-                card.dataset.produtoIndex
-            );
+        const index = Number(card.dataset.produtoIndex);
 
-
-        const produto =
-            PRODUTOS[index];
-
+        const produto = PRODUTOS[index];
 
         if(!produto){
             return;
         }
 
 
-        const texto =
-            `
+        const texto = `
 
-                ${produto.nome}
+            ${produto.nome}
+            ${produto.descricao}
+            ${produto.categoria}
+            ${produto.tag}
+            ${(produto.cores || []).join(" ")}
+            ${(produto.tamanhos || []).join(" ")}
 
-                ${produto.descricao}
-
-                ${produto.categoria}
-
-                ${produto.tag}
-
-                ${(produto.cores || []).join(" ")}
-
-                ${(produto.tamanhos || []).join(" ")}
-
-            `.toLowerCase();
+        `.toLowerCase();
 
 
-        const correspondePesquisa =
-            !termo ||
-            texto.includes(termo);
+        const correspondePesquisa = !termo || texto.includes(termo);
 
-
-        const categoria =
-            categoriaAtual.toLowerCase();
-
+        const categoria = categoriaAtual.toLowerCase();
 
         const correspondeCategoria =
             categoria === "todos" ||
-            String(produto.categoria || "")
-                .toLowerCase()
-                .includes(categoria) ||
-            String(produto.tag || "")
-                .toLowerCase()
-                .includes(categoria);
+            String(produto.categoria || "").toLowerCase().includes(categoria) ||
+            String(produto.tag || "").toLowerCase().includes(categoria);
 
 
         card.style.display =
-            correspondePesquisa &&
-            correspondeCategoria
-            ? ""
-            : "none";
+            correspondePesquisa && correspondeCategoria ? "" : "none";
 
     });
 
@@ -3333,92 +3024,42 @@ function aplicarFiltros(){
 ========================================================= */
 
 function abrirFiltro(){
-
-    document
-        .getElementById(
-            "menuCategorias"
-        )
-        .classList.add("aberto");
-
-
-    document
-        .getElementById(
-            "fundoCategorias"
-        )
-        .classList.add("aberto");
-
+    document.getElementById("menuCategorias").classList.add("aberto");
+    document.getElementById("fundoCategorias").classList.add("aberto");
 }
 
 
 function fecharFiltro(){
-
-    document
-        .getElementById(
-            "menuCategorias"
-        )
-        .classList.remove("aberto");
-
-
-    document
-        .getElementById(
-            "fundoCategorias"
-        )
-        .classList.remove("aberto");
-
+    document.getElementById("menuCategorias").classList.remove("aberto");
+    document.getElementById("fundoCategorias").classList.remove("aberto");
 }
 
 
 function filtrarCategoria(categoria){
 
-    categoriaAtual =
-        categoria;
+    categoriaAtual = categoria;
 
+    const botoes = document.querySelectorAll(".lista-categorias button");
 
-    const botoes =
-        document.querySelectorAll(
-            ".lista-categorias button"
-        );
+    botoes.forEach(botao => botao.classList.remove("ativa"));
 
-
-    botoes.forEach(
-        botao =>
-            botao.classList.remove("ativa")
+    const selecionado = Array.from(botoes).find(
+        botao => botao.getAttribute("onclick")?.includes(`'${categoria}'`)
     );
 
 
-    const selecionado =
-        Array.from(botoes)
-        .find(
-            botao =>
-                botao
-                .getAttribute("onclick")
-                ?.includes(
-                    `'${categoria}'`
-                )
-        );
-
-
     if(selecionado){
-
-        selecionado.classList.add(
-            "ativa"
-        );
-
+        selecionado.classList.add("ativa");
     }
 
 
     aplicarFiltros();
-
-
     fecharFiltro();
 
-
-    document
-        .getElementById("shop")
-        .scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-        });
+    document.getElementById("shop").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
 
 }
 
@@ -3427,14 +3068,7 @@ function filtrarCategoria(categoria){
    FUNDO DO MENU
 ========================================================= */
 
-document
-    .getElementById(
-        "fundoCategorias"
-    )
-    .addEventListener(
-        "click",
-        fecharFiltro
-    );
+document.getElementById("fundoCategorias").addEventListener("click", fecharFiltro);
 
 
 /* =========================================================
@@ -3442,19 +3076,12 @@ document
 ========================================================= */
 
 montarFrete();
-
 atualizarCarrinho();
 
-
-document
-    .getElementById(
-        "deliveryWhatsapp"
-    )
-    .href =
-        `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(
-            "Olá! Gostaria de consultar o frete para minha cidade."
-        )}`;
-
+document.getElementById("deliveryWhatsapp").href =
+    `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(
+        "Olá! Gostaria de consultar o frete para minha cidade."
+    )}`;
 
 </script>
 
@@ -3466,17 +3093,9 @@ document
 <script>
 
 if("serviceWorker" in navigator){
-
     navigator.serviceWorker
         .register("./sw.js")
-        .catch(
-            erro =>
-                console.log(
-                    "Service Worker:",
-                    erro
-                )
-        );
-
+        .catch(erro => console.log("Service Worker:", erro));
 }
 
 </script>
@@ -3514,147 +3133,24 @@ import {
 
 const firebaseConfig = {
 
-    apiKey:
-        "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
-
-    authDomain:
-        "lalabela-boutique.firebaseapp.com",
-
-    projectId:
-        "lalabela-boutique",
-
-    storageBucket:
-        "lalabela-boutique.firebasestorage.app",
-
-    messagingSenderId:
-        "642045507952",
-
-    appId:
-        "1:642045507952:web:8953c11428090b4a41b7b5"
+    apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
+    authDomain: "lalabela-boutique.firebaseapp.com",
+    projectId: "lalabela-boutique",
+    storageBucket: "lalabela-boutique.firebasestorage.app",
+    messagingSenderId: "642045507952",
+    appId: "1:642045507952:web:8953c11428090b4a41b7b5"
 
 };
 
 
-/* =========================================================
-   INICIALIZAR FIREBASE
-========================================================= */
-
-const app =
-    initializeApp(
-        firebaseConfig
-    );
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 
-const db =
-    getFirestore(app);
-
-
-const auth =
-    getAuth(app);
-
-
-/* Disponibiliza globalmente */
-
-window.firebaseApp =
-    app;
-
-window.firebaseDB =
-    db;
-
-window.firebaseAuth =
-    auth;
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-window.fazerLoginFirebase =
-    async function(email, senha){
-
-        try{
-
-            const resultado =
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    senha
-                );
-
-
-            console.log(
-                "Login realizado com sucesso!"
-            );
-
-
-            return resultado.user;
-
-        }catch(erro){
-
-            console.error(
-                "Erro ao fazer login:",
-                erro
-            );
-
-            throw erro;
-
-        }
-
-    };
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-window.sairFirebase =
-    async function(){
-
-        try{
-
-            await signOut(auth);
-
-            console.log(
-                "Usuário saiu da conta."
-            );
-
-        }catch(erro){
-
-            console.error(
-                "Erro ao sair:",
-                erro
-            );
-
-        }
-
-    };
-
-
-/* =========================================================
-   LOGIN OBSERVER
-========================================================= */
-
-onAuthStateChanged(
-    auth,
-    usuario => {
-
-        if(usuario){
-
-            console.log(
-                "Usuário logado:",
-                usuario.email
-            );
-
-        }else{
-
-            console.log(
-                "Nenhum usuário logado."
-            );
-
-        }
-
-    }
-);
+window.firebaseApp = app;
+window.firebaseDB = db;
+window.firebaseAuth = auth;
 
 
 /* =========================================================
@@ -3663,15 +3159,7 @@ onAuthStateChanged(
 
 function carregarProdutosDoFirebase(){
 
-    const grid =
-        document.getElementById(
-            "productGrid"
-        );
-
-
-    /*
-      Mensagem enquanto carrega
-    */
+    const grid = document.getElementById("productGrid");
 
     grid.innerHTML = `
 
@@ -3690,127 +3178,39 @@ function carregarProdutosDoFirebase(){
 
     `;
 
-
-    /*
-      AQUI ESTÁ A PARTE PRINCIPAL:
-      O SITE BUSCA A COLEÇÃO "produtos"
-    */
-
-    const produtosRef =
-        collection(
-            db,
-            "produtos"
-        );
-
-
-    /*
-      onSnapshot deixa a vitrine
-      atualizando automaticamente.
-    */
+    const produtosRef = collection(db, "produtos");
 
     onSnapshot(
-
         produtosRef,
-
         snapshot => {
-
             try{
-
-                PRODUTOS =
-                    snapshot.docs.map(
-                        doc =>
-                            normalizarProduto(doc)
-                    );
-
-
-                console.log(
-                    "Produtos carregados:",
-                    PRODUTOS
-                );
-
-
+                PRODUTOS = snapshot.docs.map(doc => normalizarProduto(doc));
+                console.log("Produtos carregados:", PRODUTOS);
                 montarVitrine();
-
-
             }catch(erro){
-
-                console.error(
-                    "Erro ao organizar produtos:",
-                    erro
-                );
-
-
-                mostrarErroFirebase(
-                    erro
-                );
-
+                console.error("Erro ao organizar produtos:", erro);
+                mostrarErroFirebase(erro);
             }
-
         },
-
         erro => {
-
-            console.error(
-                "Erro ao buscar produtos no Firebase:",
-                erro
-            );
-
-
-            mostrarErroFirebase(
-                erro
-            );
-
+            console.error("Erro ao buscar produtos no Firebase:", erro);
+            mostrarErroFirebase(erro);
         }
-
     );
 
 }
 
 
-/* =========================================================
-   ERRO FIREBASE
-========================================================= */
-
 function mostrarErroFirebase(erro){
 
-    const grid =
-        document.getElementById(
-            "productGrid"
-        );
+    const grid = document.getElementById("productGrid");
+    let mensagem = "Não foi possível carregar os produtos.";
 
-
-    let mensagem =
-        "Não foi possível carregar os produtos.";
-
-
-    if(
-        erro &&
-        erro.code === "permission-denied"
-    ){
-
-        mensagem =
-            "O Firebase bloqueou o acesso aos produtos.";
-
-
-    }else if(
-        erro &&
-        erro.code === "failed-precondition"
-    ){
-
-        mensagem =
-            "O Firebase informou que falta uma configuração.";
-
-
-    }else if(
-        erro &&
-        erro.code === "unavailable"
-    ){
-
-        mensagem =
-            "O Firebase está temporariamente indisponível.";
-
+    if(erro && erro.code === "permission-denied"){
+        mensagem = "O Firebase bloqueou o acesso aos produtos.";
+    }else if(erro && erro.code === "unavailable"){
+        mensagem = "O Firebase está temporariamente indisponível.";
     }
-
 
     grid.innerHTML = `
 
@@ -3838,23 +3238,9 @@ function mostrarErroFirebase(erro){
 }
 
 
-/* =========================================================
-   INICIAR BUSCA
-========================================================= */
-
 carregarProdutosDoFirebase();
 
-
-console.log(
-    "Firebase conectado!"
-);
-
-console.log(
-    "Vitrine conectada à coleção Firestore: produtos"
-);
-
 </script>
-
 
 </body>
 </html>

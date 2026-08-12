@@ -1,635 +1,1083 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>LaLabela Boutique - Painel</title>
+<title>LaLabela Boutique — Painel</title>
 
 <style>
 
 *{
-  box-sizing:border-box;
+    box-sizing:border-box;
 }
 
 body{
-  margin:0;
-  background:#f7f7f7;
-  font-family:Arial,sans-serif;
-  color:#222;
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#fafafa;
+    color:#171717;
 }
 
-/* CABEÇALHO */
+/* =========================
+   LAYOUT
+========================= */
 
-header{
-  background:#f20b68;
-  color:white;
-  text-align:center;
-  padding:32px 20px;
+.layout{
+    display:flex;
+    min-height:100vh;
 }
 
-header h1{
-  margin:0;
-  font-size:34px;
-  font-weight:bold;
+/* =========================
+   MENU LATERAL
+========================= */
+
+.sidebar{
+    width:260px;
+    background:#fff;
+    border-right:1px solid #eee;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    padding:25px 18px;
+    z-index:20;
 }
 
-header p{
-  margin:10px 0 0;
-  font-size:20px;
+.logo{
+    text-align:center;
+    margin-bottom:35px;
 }
 
-/* CONTAINER */
-
-.container{
-  max-width:1000px;
-  margin:auto;
-  padding:30px 18px;
+.logo .nome{
+    font-family:Georgia, serif;
+    font-size:34px;
+    color:#d62973;
 }
 
-/* RESUMO */
+.logo .sub{
+    color:#d62973;
+    letter-spacing:4px;
+    font-size:12px;
+    margin-top:-4px;
+}
 
-.resumo{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-  margin-bottom:30px;
+.admin{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:30px;
+}
+
+.admin-foto{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.admin strong{
+    display:block;
+    font-size:15px;
+}
+
+.admin span{
+    display:block;
+    color:#d62973;
+    font-size:13px;
+    margin-top:4px;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.menu button{
+    border:0;
+    background:transparent;
+    padding:14px;
+    border-radius:10px;
+    text-align:left;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.menu button:hover,
+.menu button.ativo{
+    background:#fff0f6;
+    color:#d62973;
+}
+
+.menu-icon{
+    width:25px;
+    display:inline-block;
+}
+
+.whatsapp-box{
+    position:absolute;
+    bottom:20px;
+    left:18px;
+    right:18px;
+    background:#fff0f6;
+    padding:18px;
+    border-radius:10px;
+    font-size:13px;
+}
+
+.whatsapp-box strong{
+    color:#d62973;
+    display:block;
+    margin-bottom:5px;
+}
+
+/* =========================
+   CONTEÚDO
+========================= */
+
+.main{
+    margin-left:260px;
+    width:calc(100% - 260px);
+}
+
+.topbar{
+    height:70px;
+    background:#fff;
+    border-bottom:1px solid #eee;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+}
+
+.topbar-left{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.notification{
+    font-size:22px;
+}
+
+.account{
+    border-left:1px solid #eee;
+    padding-left:20px;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.content{
+    padding:32px;
+}
+
+.welcome{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.welcome h1{
+    margin:0;
+    font-size:27px;
+}
+
+.welcome p{
+    color:#777;
+    margin:7px 0 0;
+}
+
+.btn-primary{
+    background:#e52b79;
+    color:#fff;
+    border:0;
+    border-radius:8px;
+    padding:13px 22px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.btn-primary:hover{
+    background:#c91d63;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    margin-bottom:25px;
 }
 
 .card{
-  background:white;
-  border-radius:22px;
-  padding:28px 20px;
-  text-align:center;
-  box-shadow:0 8px 25px rgba(0,0,0,.07);
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:14px;
+    padding:20px;
 }
 
-.card strong{
-  display:block;
-  color:#f20b68;
-  font-size:38px;
-  margin-bottom:8px;
+.card-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
 }
 
-.card span{
-  color:#777;
-  font-size:19px;
+.card-icon{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#fff0f6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
 }
 
-/* PRODUTOS */
-
-.produtos-box{
-  background:white;
-  border-radius:25px;
-  padding:28px;
-  box-shadow:0 8px 25px rgba(0,0,0,.07);
+.card-title{
+    font-size:14px;
 }
 
-.produtos-box h2{
-  margin:0 0 25px;
-  font-size:30px;
+.card-value{
+    font-size:26px;
+    font-weight:bold;
+    margin-top:8px;
 }
 
-/* BOTÃO ADICIONAR */
-
-.btn-add{
-  border:0;
-  background:#f20b68;
-  color:white;
-  padding:17px 27px;
-  border-radius:15px;
-  font-size:18px;
-  cursor:pointer;
-  margin-bottom:25px;
+.card-info{
+    color:#888;
+    font-size:12px;
+    margin-top:5px;
 }
 
-/* PRODUTO */
+/* =========================
+   PRODUTOS
+========================= */
 
-.produto{
-  display:flex;
-  align-items:center;
-  gap:20px;
-  padding:20px 0;
-  border-bottom:1px solid #eee;
+.section{
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom:25px;
 }
 
-.produto:last-child{
-  border-bottom:none;
+.section-header{
+    padding:20px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
 }
 
-.produto img{
-  width:145px;
-  height:175px;
-  object-fit:cover;
-  border-radius:16px;
-  background:#eee;
+.section-header h2{
+    margin:0;
+    font-size:20px;
 }
 
-.info{
-  flex:1;
+.link{
+    color:#d62973;
+    cursor:pointer;
 }
 
-.info h3{
-  margin:0 0 8px;
-  font-size:23px;
+.table{
+    width:100%;
 }
 
-.preco{
-  color:#f20b68;
-  font-size:21px;
-  font-weight:bold;
-  margin-bottom:7px;
+.table-head,
+.product-row{
+    display:grid;
+    grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 130px;
+    align-items:center;
+    padding:12px 25px;
 }
 
-.categoria{
-  color:#777;
-  font-size:17px;
+.table-head{
+    background:#fff8fb;
+    color:#555;
+    font-size:13px;
 }
 
-.tag{
-  display:inline-block;
-  margin-top:9px;
-  padding:6px 12px;
-  border-radius:20px;
-  background:#fbdce9;
-  color:#d90058;
-  font-size:14px;
+.product-row{
+    border-top:1px solid #eee;
 }
 
-/* EDITAR */
-
-.btn-editar{
-  background:#222;
-  color:white;
-  border:0;
-  padding:14px 20px;
-  border-radius:13px;
-  font-size:17px;
-  cursor:pointer;
+.product{
+    display:flex;
+    align-items:center;
+    gap:15px;
 }
 
-/* MODAL */
+.product img{
+    width:62px;
+    height:62px;
+    object-fit:cover;
+    border-radius:9px;
+}
+
+.product-name{
+    font-weight:500;
+}
+
+.price{
+    font-weight:bold;
+}
+
+.stock{
+    color:#29934a;
+}
+
+.status{
+    display:inline-block;
+    background:#e9f8ed;
+    color:#29934a;
+    border-radius:20px;
+    padding:6px 12px;
+    font-size:12px;
+    width:max-content;
+}
+
+.actions{
+    display:flex;
+    gap:7px;
+}
+
+.action{
+    width:42px;
+    height:38px;
+    border:1px solid #ddd;
+    background:#fff;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.action:hover{
+    background:#fff0f6;
+}
+
+.delete:hover{
+    background:#fff0f0;
+    color:red;
+}
+
+/* =========================
+   MODAL
+========================= */
 
 .modal{
-  display:none;
-  position:fixed;
-  z-index:999;
-  left:0;
-  top:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,.55);
-  overflow:auto;
-  padding:25px 15px;
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.aberto{
+    display:flex;
 }
 
 .modal-box{
-  background:white;
-  max-width:650px;
-  margin:auto;
-  border-radius:25px;
-  padding:25px;
+    background:#fff;
+    width:100%;
+    max-width:700px;
+    max-height:92vh;
+    overflow:auto;
+    border-radius:18px;
+    padding:28px;
 }
 
-.modal-topo{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
 }
 
-.modal-topo h2{
-  margin:0;
-  font-size:27px;
+.modal-header h2{
+    margin:0;
 }
 
 .fechar{
-  border:0;
-  background:#eee;
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  font-size:24px;
-  cursor:pointer;
+    border:0;
+    background:#f3f3f3;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
 }
 
-/* FORMULÁRIO */
-
-.campo{
-  margin-bottom:18px;
+.form-group{
+    margin-bottom:17px;
 }
 
-.campo label{
-  display:block;
-  font-weight:bold;
-  margin-bottom:7px;
-  font-size:16px;
+.form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
 }
 
-.campo input,
-.campo textarea,
-.campo select{
-  width:100%;
-  border:1px solid #ddd;
-  border-radius:12px;
-  padding:14px;
-  font-size:16px;
-  outline:none;
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:12px;
+    font-size:14px;
 }
 
-.campo textarea{
-  min-height:110px;
-  resize:vertical;
+.form-group textarea{
+    min-height:100px;
+    resize:vertical;
 }
 
-.linha{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
 }
 
-/* FOTOS */
+/* =========================
+   FOTOS
+========================= */
 
-.foto-preview{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:10px;
+.fotos-container{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:10px;
 }
 
-.foto-preview img{
-  width:100%;
-  height:130px;
-  object-fit:cover;
-  border-radius:12px;
-  background:#eee;
+.foto-item{
+    position:relative;
+    height:130px;
 }
 
-/* BOTÕES DO MODAL */
-
-.botoes{
-  display:flex;
-  gap:12px;
-  margin-top:25px;
+.foto-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid #ddd;
 }
 
-.btn-salvar{
-  flex:1;
-  border:0;
-  background:#f20b68;
-  color:white;
-  padding:16px;
-  border-radius:13px;
-  font-size:17px;
-  cursor:pointer;
+.remover-foto{
+    position:absolute;
+    top:5px;
+    right:5px;
+    width:28px;
+    height:28px;
+    border:0;
+    border-radius:50%;
+    background:#fff;
+    color:#e00000;
+    cursor:pointer;
+    font-weight:bold;
 }
 
-.btn-cancelar{
-  flex:1;
-  border:0;
-  background:#eee;
-  color:#222;
-  padding:16px;
-  border-radius:13px;
-  font-size:17px;
-  cursor:pointer;
+.adicionar-foto{
+    height:130px;
+    border:2px dashed #e52b79;
+    border-radius:10px;
+    background:#fff7fa;
+    color:#e52b79;
+    cursor:pointer;
+    font-size:13px;
 }
 
-/* MOBILE */
+#fotoInput{
+    display:none;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:25px;
+}
+
+.btn-cancel{
+    border:1px solid #ddd;
+    background:#fff;
+    border-radius:8px;
+    padding:12px 20px;
+    cursor:pointer;
+}
+
+.btn-save{
+    border:0;
+    background:#e52b79;
+    color:#fff;
+    border-radius:8px;
+    padding:12px 25px;
+    cursor:pointer;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        width:220px;
+    }
+
+    .main{
+        margin-left:220px;
+        width:calc(100% - 220px);
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .table-head,
+    .product-row{
+        grid-template-columns:2fr 1fr 1fr 100px;
+    }
+
+    .table-head div:nth-child(4),
+    .table-head div:nth-child(5),
+    .product-row > div:nth-child(4),
+    .product-row > div:nth-child(5){
+        display:none;
+    }
+}
 
 @media(max-width:700px){
 
-  .resumo{
-    grid-template-columns:1fr;
-  }
+    .sidebar{
+        display:none;
+    }
 
-  .produto{
-    align-items:flex-start;
-  }
+    .main{
+        margin-left:0;
+        width:100%;
+    }
 
-  .produto img{
-    width:105px;
-    height:135px;
-  }
+    .content{
+        padding:18px;
+    }
 
-  .info h3{
-    font-size:19px;
-  }
+    .topbar{
+        padding:0 18px;
+    }
 
-  .preco{
-    font-size:18px;
-  }
+    .cards{
+        grid-template-columns:1fr 1fr;
+    }
 
-  .btn-editar{
-    padding:10px 13px;
-    font-size:14px;
-  }
+    .welcome{
+        align-items:flex-start;
+        gap:15px;
+    }
 
-  .linha{
-    grid-template-columns:1fr;
-  }
+    .welcome h1{
+        font-size:21px;
+    }
 
-  .produtos-box{
-    padding:22px 16px;
-  }
+    .table-head{
+        display:none;
+    }
 
+    .product-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap:15px;
+        padding:15px;
+    }
+
+    .product{
+        width:100%;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .fotos-container{
+        grid-template-columns:repeat(2,1fr);
+    }
 }
 
 </style>
-
 </head>
 
 <body>
 
+<div class="layout">
 
-<header>
+<!-- MENU -->
 
-<h1>LaLabela Boutique</h1>
+<aside class="sidebar">
 
-<p>Painel administrativo</p>
+    <div class="logo">
+        <div class="nome">LaLabela</div>
+        <div class="sub">BOUTIQUE</div>
+    </div>
 
-</header>
+    <div class="admin">
+        <div style="
+        width:48px;
+        height:48px;
+        border-radius:50%;
+        background:#ffe4ef;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:22px;">
+        👩🏻
+        </div>
+
+        <div>
+            <strong>Olá, Thay!</strong>
+            <span>Administrador</span>
+        </div>
+    </div>
+
+    <div class="menu">
+
+        <button class="ativo">
+            <span class="menu-icon">▦</span>
+            Dashboard
+        </button>
+
+        <button>
+            <span class="menu-icon">🛍️</span>
+            Produtos
+        </button>
+
+        <button>
+            <span class="menu-icon">▱</span>
+            Categorias
+        </button>
+
+        <button>
+            <span class="menu-icon">🛒</span>
+            Pedidos
+        </button>
+
+        <button>
+            <span class="menu-icon">👥</span>
+            Clientes
+        </button>
+
+        <button>
+            <span class="menu-icon">🏷️</span>
+            Cupons
+        </button>
+
+        <button>
+            <span class="menu-icon">⚙️</span>
+            Configurações
+        </button>
+
+        <button>
+            <span class="menu-icon">🖼️</span>
+            Banners
+        </button>
+
+        <button>
+            <span class="menu-icon">↪</span>
+            Sair
+        </button>
+
+    </div>
+
+    <div class="whatsapp-box">
+        <strong>💬 Atendimento via WhatsApp</strong>
+        (44) 99772-0350
+    </div>
+
+</aside>
 
 
-<div class="container">
+<!-- CONTEÚDO -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+            ☰ &nbsp; Dashboard
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="notification">
+                ♡
+            </div>
+
+            <div class="account">
+                LaLabela Boutique⌄
+            </div>
+
+        </div>
+
+    </header>
 
 
-<!-- RESUMO -->
+    <div class="content">
 
-<div class="resumo">
+        <div class="welcome">
 
-<div class="card">
+            <div>
+                <h1>Bem-vinda de volta, Thay! 💕</h1>
+                <p>Aqui está o resumo da sua loja hoje.</p>
+            </div>
 
-<strong id="totalProdutos">
-0
-</strong>
+            <button class="btn-primary" onclick="abrirNovoProduto()">
+                ＋ Novo Produto
+            </button>
 
-<span>
-Produtos
-</span>
+        </div>
+
+
+        <!-- CARDS -->
+
+        <div class="cards">
+
+            <div class="card">
+
+                <div class="card-top">
+                    <div class="card-icon">🛍️</div>
+                    <div class="card-title">Produtos</div>
+                </div>
+
+                <div class="card-value" id="totalProdutos">
+                    0
+                </div>
+
+                <div class="card-info">
+                    Total de produtos
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-top">
+                    <div class="card-icon">🏷️</div>
+                    <div class="card-title">
+                        Em promoção
+                    </div>
+                </div>
+
+                <div class="card-value" id="totalPromocoes">
+                    0
+                </div>
+
+                <div class="card-info">
+                    Produtos em promoção
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-top">
+                    <div class="card-icon">👁️</div>
+                    <div class="card-title">
+                        Visualizações
+                    </div>
+                </div>
+
+                <div class="card-value">
+                    0
+                </div>
+
+                <div class="card-info">
+                    Nos últimos 7 dias
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-top">
+                    <div class="card-icon">🛒</div>
+                    <div class="card-title">
+                        Pedidos
+                    </div>
+                </div>
+
+                <div class="card-value">
+                    0
+                </div>
+
+                <div class="card-info">
+                    Pedidos em aberto
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-top">
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">
+                        Faturamento
+                    </div>
+                </div>
+
+                <div class="card-value">
+                    R$ 0,00
+                </div>
+
+                <div class="card-info">
+                    Últimos 7 dias
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRODUTOS -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>Produtos Recentes</h2>
+
+                <span class="link">
+                    Ver todos
+                </span>
+
+            </div>
+
+
+            <div class="table">
+
+                <div class="table-head">
+
+                    <div>Produto</div>
+                    <div>Categoria</div>
+                    <div>Preço</div>
+                    <div>Estoque</div>
+                    <div>Status</div>
+                    <div>Ações</div>
+
+                </div>
+
+                <div id="listaProdutos"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- GRÁFICOS -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <h2>Vendas — Últimos 7 dias</h2>
+
+            </div>
+
+            <div style="
+            height:220px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#aaa;">
+
+                Os dados de vendas aparecerão aqui.
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
 
 </div>
 
 
-<div class="card">
+<!-- =========================
+     MODAL PRODUTO
+========================= -->
 
-<strong>
-R$ 0,00
-</strong>
-
-<span>
-Vendas
-</span>
-
-</div>
-
-
-<div class="card">
-
-<strong>
-0
-</strong>
-
-<span>
-Pedidos
-</span>
-
-</div>
-
-</div>
-
-
-<!-- PRODUTOS -->
-
-<div class="produtos-box">
-
-<h2>
-Produtos
-</h2>
-
-<button
-class="btn-add"
-onclick="adicionarProduto()"
->
-+ Adicionar produto
-</button>
-
-
-<div id="listaProdutos"></div>
-
-</div>
-
-</div>
-
-
-<!-- MODAL -->
-
-<div
-class="modal"
-id="modal"
->
+<div class="modal" id="modalProduto">
 
 <div class="modal-box">
 
+    <div class="modal-header">
 
-<div class="modal-topo">
+        <h2 id="tituloModal">
+            Novo produto
+        </h2>
 
-<h2>
-Editar produto
-</h2>
+        <button class="fechar" onclick="fecharModal()">
+            ×
+        </button>
 
-<button
-class="fechar"
-onclick="fecharModal()"
->
-×
-</button>
+    </div>
 
-</div>
 
+    <div class="form-group">
 
-<div class="campo">
+        <label>Nome do produto</label>
 
-<label>
-Nome do produto
-</label>
+        <input
+            id="nomeProduto"
+            type="text"
+            placeholder="Ex: Conjunto Zandeya">
 
-<input
-id="nome"
-type="text"
->
+    </div>
 
-</div>
 
+    <div class="grid">
 
-<div class="linha">
+        <div class="form-group">
 
-<div class="campo">
+            <label>Preço</label>
 
-<label>
-Preço
-</label>
+            <input
+                id="precoProduto"
+                type="number"
+                step="0.01"
+                placeholder="69.90">
 
-<input
-id="preco"
-type="number"
-step="0.01"
->
+        </div>
 
-</div>
 
+        <div class="form-group">
 
-<div class="campo">
+            <label>Categoria</label>
 
-<label>
-Categoria
-</label>
+            <select id="categoriaProduto">
 
-<input
-id="categoria"
-type="text"
->
+                <option>Conjunto</option>
+                <option>Vestido</option>
+                <option>Blusa</option>
+                <option>Calça</option>
+                <option>Short</option>
+                <option>Saia</option>
+                <option>Macacão</option>
+                <option>Outro</option>
 
-</div>
+            </select>
 
-</div>
+        </div>
 
+    </div>
 
-<div class="campo">
 
-<label>
-Foto 1
-</label>
+    <div class="form-group">
 
-<input
-id="foto1"
-type="text"
-placeholder="Cole o link da foto"
->
+        <label>Cores</label>
 
-</div>
+        <input
+            id="coresProduto"
+            type="text"
+            placeholder="Marrom, Bege, Preto">
 
+    </div>
 
-<div class="campo">
 
-<label>
-Foto 2
-</label>
+    <div class="form-group">
 
-<input
-id="foto2"
-type="text"
-placeholder="Cole o link da foto"
->
+        <label>Tamanhos</label>
 
-</div>
+        <input
+            id="tamanhosProduto"
+            type="text"
+            placeholder="P, M, G">
 
+    </div>
 
-<div class="campo">
 
-<label>
-Foto 3
-</label>
+    <div class="form-group">
 
-<input
-id="foto3"
-type="text"
-placeholder="Cole o link da foto"
->
+        <label>Descrição</label>
 
-</div>
+        <textarea
+            id="descricaoProduto"
+            placeholder="Descrição do produto..."></textarea>
 
+    </div>
 
-<div class="foto-preview">
 
-<img id="preview1">
+    <div class="form-group">
 
-<img id="preview2">
+        <label>Etiqueta</label>
 
-<img id="preview3">
+        <input
+            id="tagProduto"
+            type="text"
+            placeholder="Promoção">
 
-</div>
+    </div>
 
 
-<div class="campo">
+    <!-- FOTOS -->
 
-<label>
-Cores
-</label>
+    <div class="form-group">
 
-<input
-id="cores"
-type="text"
-placeholder="Ex: Rosa, Preto, Branco"
->
+        <label>
+            Fotos do produto
+        </label>
 
-</div>
+        <div class="fotos-container" id="fotosContainer">
 
+        </div>
 
-<div class="campo">
+        <input
+            type="file"
+            id="fotoInput"
+            accept="image/*"
+            multiple
+            onchange="adicionarFotos(event)">
 
-<label>
-Tamanhos
-</label>
+    </div>
 
-<input
-id="tamanhos"
-type="text"
-placeholder="Ex: P, M, G"
->
 
-</div>
+    <div class="modal-footer">
 
+        <button
+            class="btn-cancel"
+            onclick="fecharModal()">
 
-<div class="campo">
+            Cancelar
 
-<label>
-Tag
-</label>
+        </button>
 
-<input
-id="tag"
-type="text"
-placeholder="Ex: Promoção"
->
+        <button
+            class="btn-save"
+            onclick="salvarProduto()">
 
-</div>
+            Salvar produto
 
+        </button>
 
-<div class="campo">
-
-<label>
-Descrição
-</label>
-
-<textarea
-id="descricao"
-></textarea>
-
-</div>
-
-
-<div class="botoes">
-
-<button
-class="btn-cancelar"
-onclick="fecharModal()"
->
-Cancelar
-</button>
-
-<button
-class="btn-salvar"
-onclick="salvarProduto()"
->
-Salvar alterações
-</button>
-
-</div>
-
+    </div>
 
 </div>
 
@@ -638,9 +1086,11 @@ Salvar alterações
 
 <script>
 
-/* PRODUTOS */
+/* ===================================
+   PRODUTOS
+=================================== */
 
-let PRODUTOS = [
+let produtos = [
 
 {
 nome:"Conjunto Zandeya",
@@ -653,469 +1103,508 @@ imagens:[
 "https://i.postimg.cc/W14QkZmZ/IMG-7742.jpg"
 ],
 
-cores:[
-"Marrom",
-"Bege"
-],
-
-tamanhos:[
-"Único — veste do 36 ao 40"
-],
+cores:["Marrom","Bege"],
+tamanhos:["Único — veste do 36 ao 40"],
 
 descricao:
-"Conjunto Zandeya confeccionado em tecido Suplex, com ótimo caimento, conforto e modelagem que valoriza o corpo. Tamanho único, veste do 36 ao 40.",
+"Conjunto Zandeya confeccionado em tecido Suplex, com ótimo caimento, conforto e modelagem que valoriza o corpo.",
 
 tag:"Promoção"
+
 },
 
-
 {
-
 nome:"Conjunto Maresia",
-preco:149.00,
+preco:149,
 categoria:"Conjunto",
 
 imagens:[
-"https://i.postimg.cc/L54mcxDd/IMG-3628.jpg",
-"COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",
-"COLE-AQUI-O-LINK-DA-TERCEIRA-FOTO"
+"https://i.postimg.cc/L54mcxDd/IMG-3628.jpg"
 ],
 
-cores:[
-"estampa da foto"
-],
-
-tamanhos:[
-"Único — veste do 36 ao 40"
-],
+cores:["Estampa da foto"],
+tamanhos:["Único — veste do 36 ao 40"],
 
 descricao:
-"Conjunto Duas Peças, perfeito para dias quentes.",
-
-tag:"Ultimas peças"
-},
-
-
-{
-
-nome:"Conjunto Mafil",
-preco:150.00,
-categoria:"Conjunto",
-
-imagens:[
-"https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg",
-"COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",
-"COLE-AQUI-O-LINK-DA-TERCEIRA-FOTO"
-],
-
-cores:[
-"Preto",
-"Rosa"
-],
-
-tamanhos:[
-"P",
-"M",
-"G"
-],
-
-descricao:
-"Conjunto Duas peças.",
+"Conjunto duas peças, perfeito para dias quentes.",
 
 tag:"Últimas peças"
+
 },
 
+{
+nome:"Conjunto Mafil",
+preco:150,
+categoria:"Conjunto",
+
+imagens:[
+"https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg"
+],
+
+cores:["Preto","Rosa"],
+tamanhos:["P","M","G"],
+
+descricao:"Conjunto duas peças.",
+
+tag:"Últimas peças"
+
+},
 
 {
-
 nome:"Vestido Verão",
-preco:80.00,
+preco:80,
 categoria:"Vestido",
 
 imagens:[
-"https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg",
-"COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO"
+"https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg"
 ],
 
-cores:[
-"Rosa",
-"Preto",
-"Branco"
-],
-
-tamanhos:[
-"P",
-"M",
-"G"
-],
+cores:["Rosa","Preto","Branco"],
+tamanhos:["P","M","G"],
 
 descricao:
 "O vestido perfeito para dias quentes.",
 
 tag:"O mais vendido"
+
 },
 
-
 {
-
 nome:"Conjunto Luxo",
-preco:160.00,
+preco:160,
 categoria:"Conjunto",
 
 imagens:[
 "https://i.postimg.cc/9ffKHv58/EC63DBCD-C2B9-4C31-A4B8-4756586365DE.jpg"
 ],
 
-cores:[
-"Preto",
-"Chocolate"
-],
+cores:["Preto","Chocolate"],
+tamanhos:["P","M","G"],
 
-tamanhos:[
-"P",
-"M",
-"G"
-],
-
-descricao:
-"Conjunto duas peças.",
+descricao:"Conjunto duas peças.",
 
 tag:""
+
 },
 
-
 {
-
 nome:"Conjunto Sophie",
-preco:70.00,
+preco:70,
 categoria:"Conjunto",
 
 imagens:[
 "https://i.postimg.cc/63J3mVFt/B2BCDDAC-D626-4AA3-99D0-9BF61179CA88.png"
 ],
 
-cores:[
-"Rosa",
-"Branco"
-],
-
-tamanhos:[
-"36",
-"38",
-"40"
-],
+cores:["Rosa","Branco"],
+tamanhos:["36","38","40"],
 
 descricao:
 "Conjunto duas peças, tecido fluido.",
 
 tag:"Promoção"
+
 },
 
-
 {
-
 nome:"Vestido Mônaco",
-preco:70.00,
+preco:70,
 categoria:"Vestido",
 
 imagens:[
 "https://i.postimg.cc/jdKf5TgN/C4271E37-C738-44AA-A8A8-E7A278EA6417.jpg"
 ],
 
-cores:[
-"Preto",
-"Rosa",
-"Verde"
-],
-
-tamanhos:[
-"P",
-"M",
-"G"
-],
+cores:["Preto","Rosa","Verde"],
+tamanhos:["P","M","G"],
 
 descricao:
 "Vestido midi Ribana canelada, caimento leve.",
 
 tag:"Promoção"
+
 }
 
 ];
 
 
 let produtoEditando = null;
+let fotosAtuais = [];
 
 
-/* MOSTRAR PRODUTOS */
+/* ===================================
+   RENDERIZAR
+=================================== */
 
-function carregarProdutos(){
+function renderizarProdutos(){
 
-const lista =
-document.getElementById("listaProdutos");
+    const lista =
+        document.getElementById("listaProdutos");
 
-lista.innerHTML="";
+    lista.innerHTML = "";
 
-document.getElementById(
-"totalProdutos"
-).textContent=PRODUTOS.length;
+    produtos.forEach((produto,index)=>{
+
+        const foto =
+            produto.imagens?.[0] || "";
+
+        lista.innerHTML += `
+
+        <div class="product-row">
+
+            <div class="product">
+
+                <img src="${foto}">
+
+                <div class="product-name">
+                    ${produto.nome}
+                </div>
+
+            </div>
+
+            <div>
+                ${produto.categoria || "-"}
+            </div>
+
+            <div class="price">
+                R$ ${Number(produto.preco)
+                .toFixed(2)
+                .replace(".",",")}
+            </div>
+
+            <div class="stock">
+                —
+            </div>
+
+            <div>
+
+                <span class="status">
+                    Ativo
+                </span>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="action"
+                    onclick="editarProduto(${index})">
+
+                    ✏️
+
+                </button>
+
+                <button
+                    class="action delete"
+                    onclick="excluirProduto(${index})">
+
+                    🗑️
+
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
 
 
-PRODUTOS.forEach(
-(produto,index)=>{
-
-const div=
-document.createElement("div");
-
-div.className="produto";
+    document.getElementById("totalProdutos")
+        .textContent = produtos.length;
 
 
-const imagem =
-produto.imagens &&
-produto.imagens.length
-? produto.imagens[0]
-: "";
+    document.getElementById("totalPromocoes")
+        .textContent =
+        produtos.filter(p=>p.tag).length;
 
-
-div.innerHTML=`
-
-<img
-src="${imagem}"
-onerror="this.style.display='none'"
->
-
-<div class="info">
-
-<h3>
-${produto.nome}
-</h3>
-
-<div class="preco">
-R$ ${produto.preco
-.toFixed(2)
-.replace(".",",")}
-</div>
-
-<div class="categoria">
-${produto.categoria || ""}
-</div>
-
-${
-produto.tag
-?
-`<div class="tag">
-${produto.tag}
-</div>`
-:
-""
 }
 
-</div>
 
+/* ===================================
+   NOVO PRODUTO
+=================================== */
 
-<button
-class="btn-editar"
-onclick="editarProduto(${index})"
->
-Editar
-</button>
+function abrirNovoProduto(){
 
-`;
+    produtoEditando = null;
 
+    document.getElementById("tituloModal")
+        .textContent = "Novo produto";
 
-lista.appendChild(div);
+    limparFormulario();
 
-});
+    document.getElementById("modalProduto")
+        .classList.add("aberto");
 
 }
 
 
-/* EDITAR */
+/* ===================================
+   EDITAR
+=================================== */
 
 function editarProduto(index){
 
-produtoEditando=index;
+    produtoEditando = index;
 
-const produto=
-PRODUTOS[index];
+    const produto = produtos[index];
 
+    document.getElementById("tituloModal")
+        .textContent = "Editar produto";
 
-document.getElementById("nome").value=
-produto.nome || "";
+    document.getElementById("nomeProduto")
+        .value = produto.nome || "";
 
+    document.getElementById("precoProduto")
+        .value = produto.preco || "";
 
-document.getElementById("preco").value=
-produto.preco || "";
+    document.getElementById("categoriaProduto")
+        .value = produto.categoria || "Conjunto";
 
+    document.getElementById("coresProduto")
+        .value = (produto.cores || []).join(", ");
 
-document.getElementById("categoria").value=
-produto.categoria || "";
+    document.getElementById("tamanhosProduto")
+        .value = (produto.tamanhos || []).join(", ");
 
+    document.getElementById("descricaoProduto")
+        .value = produto.descricao || "";
 
-document.getElementById("foto1").value=
-produto.imagens?.[0] || "";
+    document.getElementById("tagProduto")
+        .value = produto.tag || "";
 
+    fotosAtuais = [...(produto.imagens || [])];
 
-document.getElementById("foto2").value=
-produto.imagens?.[1] || "";
+    renderizarFotos();
 
-
-document.getElementById("foto3").value=
-produto.imagens?.[2] || "";
-
-
-document.getElementById("cores").value=
-produto.cores
-? produto.cores.join(", ")
-: "";
-
-
-document.getElementById("tamanhos").value=
-produto.tamanhos
-? produto.tamanhos.join(", ")
-: "";
-
-
-document.getElementById("tag").value=
-produto.tag || "";
-
-
-document.getElementById("descricao").value=
-produto.descricao || "";
-
-
-atualizarPreviews();
-
-
-document.getElementById("modal").style.display=
-"block";
+    document.getElementById("modalProduto")
+        .classList.add("aberto");
 
 }
 
 
-/* PREVISUALIZAÇÃO DAS FOTOS */
+/* ===================================
+   FOTOS
+=================================== */
 
-function atualizarPreviews(){
+function renderizarFotos(){
 
-document.getElementById("preview1").src=
-document.getElementById("foto1").value || "";
+    const container =
+        document.getElementById("fotosContainer");
 
-
-document.getElementById("preview2").src=
-document.getElementById("foto2").value || "";
+    container.innerHTML = "";
 
 
-document.getElementById("preview3").src=
-document.getElementById("foto3").value || "";
+    fotosAtuais.forEach((foto,index)=>{
+
+        container.innerHTML += `
+
+        <div class="foto-item">
+
+            <img src="${foto}">
+
+            <button
+                class="remover-foto"
+                onclick="removerFoto(${index})">
+
+                ×
+
+            </button>
+
+        </div>
+
+        `;
+
+    });
+
+
+    container.innerHTML += `
+
+        <button
+            class="adicionar-foto"
+            onclick="document.getElementById('fotoInput').click()">
+
+            ＋<br>
+            Adicionar foto
+
+        </button>
+
+    `;
 
 }
 
 
-document.getElementById("foto1")
-.addEventListener("input",atualizarPreviews);
+function removerFoto(index){
 
-document.getElementById("foto2")
-.addEventListener("input",atualizarPreviews);
+    fotosAtuais.splice(index,1);
 
-document.getElementById("foto3")
-.addEventListener("input",atualizarPreviews);
+    renderizarFotos();
+
+}
 
 
-/* SALVAR */
+function adicionarFotos(event){
+
+    const arquivos = event.target.files;
+
+    [...arquivos].forEach(arquivo=>{
+
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+
+            fotosAtuais.push(e.target.result);
+
+            renderizarFotos();
+
+        };
+
+        reader.readAsDataURL(arquivo);
+
+    });
+
+    event.target.value = "";
+
+}
+
+
+/* ===================================
+   SALVAR
+=================================== */
 
 function salvarProduto(){
 
-if(produtoEditando === null){
-return;
+    const produto = {
+
+        nome:
+        document.getElementById("nomeProduto").value,
+
+        preco:
+        Number(document.getElementById("precoProduto").value),
+
+        categoria:
+        document.getElementById("categoriaProduto").value,
+
+        imagens:
+        [...fotosAtuais],
+
+        cores:
+        document.getElementById("coresProduto")
+        .value
+        .split(",")
+        .map(x=>x.trim())
+        .filter(Boolean),
+
+        tamanhos:
+        document.getElementById("tamanhosProduto")
+        .value
+        .split(",")
+        .map(x=>x.trim())
+        .filter(Boolean),
+
+        descricao:
+        document.getElementById("descricaoProduto")
+        .value,
+
+        tag:
+        document.getElementById("tagProduto")
+        .value
+
+    };
+
+
+    if(!produto.nome){
+
+        alert("Digite o nome do produto.");
+
+        return;
+
+    }
+
+
+    if(produtoEditando === null){
+
+        produtos.unshift(produto);
+
+    }else{
+
+        produtos[produtoEditando] = produto;
+
+    }
+
+
+    renderizarProdutos();
+
+    fecharModal();
+
 }
 
 
-const produto=
-PRODUTOS[produtoEditando];
+/* ===================================
+   EXCLUIR
+=================================== */
+
+function excluirProduto(index){
+
+    if(!confirm(
+        "Deseja realmente excluir este produto?"
+    )) return;
 
 
-produto.nome=
-document.getElementById("nome").value;
+    produtos.splice(index,1);
 
-
-produto.preco=
-Number(
-document.getElementById("preco").value
-);
-
-
-produto.categoria=
-document.getElementById("categoria").value;
-
-
-produto.imagens=[
-document.getElementById("foto1").value,
-document.getElementById("foto2").value,
-document.getElementById("foto3").value
-].filter(Boolean);
-
-
-produto.cores=
-document.getElementById("cores")
-.value
-.split(",")
-.map(x=>x.trim())
-.filter(Boolean);
-
-
-produto.tamanhos=
-document.getElementById("tamanhos")
-.value
-.split(",")
-.map(x=>x.trim())
-.filter(Boolean);
-
-
-produto.tag=
-document.getElementById("tag").value;
-
-
-produto.descricao=
-document.getElementById("descricao").value;
-
-
-fecharModal();
-
-carregarProdutos();
-
-
-alert(
-"Produto atualizado nesta página!"
-);
+    renderizarProdutos();
 
 }
 
 
-/* FECHAR */
+/* ===================================
+   LIMPAR
+=================================== */
+
+function limparFormulario(){
+
+    document.getElementById("nomeProduto").value = "";
+
+    document.getElementById("precoProduto").value = "";
+
+    document.getElementById("categoriaProduto").value =
+        "Conjunto";
+
+    document.getElementById("coresProduto").value = "";
+
+    document.getElementById("tamanhosProduto").value = "";
+
+    document.getElementById("descricaoProduto").value = "";
+
+    document.getElementById("tagProduto").value = "";
+
+    fotosAtuais = [];
+
+    renderizarFotos();
+
+}
+
+
+/* ===================================
+   FECHAR
+=================================== */
 
 function fecharModal(){
 
-document.getElementById("modal").style.display=
-"none";
-
-produtoEditando=null;
+    document.getElementById("modalProduto")
+        .classList.remove("aberto");
 
 }
 
 
-/* ADICIONAR */
+/* ===================================
+   INICIAR
+=================================== */
 
-function adicionarProduto(){
-
-alert(
-"No próximo passo vamos colocar o cadastro completo de novos produtos aqui."
-);
-
-}
-
-
-/* INICIAR */
-
-carregarProdutos();
+renderizarProdutos();
 
 </script>
 

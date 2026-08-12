@@ -318,6 +318,13 @@ body{
     border:1px solid #eee;
     border-radius:14px;
     padding:20px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.card:hover{
+    border-color:#e52b79;
+    background:#fffcfd;
 }
 
 .card-top{
@@ -1065,79 +1072,7 @@ onclick="abrirNovoProduto()">
 
 <div class="cards">
 
-<div class="card">
-
-<div class="card-top">
-
-<div class="card-icon"></div>
-
-<div class="card-title">
-Produtos
-</div>
-
-</div>
-
-<div
-class="card-value"
-id="totalProdutos">
-0
-</div>
-
-<div class="card-info">
-Total de produtos
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-top">
-
-<div class="card-icon"></div>
-
-<div class="card-title">
-Em promoção
-</div>
-
-</div>
-
-<div
-class="card-value"
-id="totalPromocoes">
-0
-</div>
-
-<div class="card-info">
-Produtos em promoção
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-top">
-
-<div class="card-icon"></div>
-
-<div class="card-title">
-Visualizações
-</div>
-
-</div>
-
-<div
-class="card-value"
-id="totalVisualizacoes">
-0
-</div>
-
-<div class="card-info">
-Nos últimos 7 dias
-</div>
-
-</div>
-
-<div class="card">
+<div class="card" onclick="abrirModalPedidos('todos')">
 
 <div class="card-top">
 
@@ -1151,12 +1086,84 @@ Pedidos
 
 <div
 class="card-value"
-id="totalPedidos">
+id="totalPedidosAbertos">
 0
 </div>
 
 <div class="card-info">
-Pedidos em aberto
+Visualizar pedidos
+</div>
+
+</div>
+
+<div class="card" onclick="abrirModalPedidos('despachado')">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Despachado
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalPedidosDespachados">
+0
+</div>
+
+<div class="card-info">
+Em rota de entrega
+</div>
+
+</div>
+
+<div class="card" onclick="abrirModalPedidos('nao_pago')">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Não pago
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalPedidosNaoPagos">
+0
+</div>
+
+<div class="card-info">
+Aguardando pagamento
+</div>
+
+</div>
+
+<div class="card" onclick="abrirModalPedidos('finalizado')">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Finalizado
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalPedidosFinalizados">
+0
+</div>
+
+<div class="card-info">
+Entregues com sucesso
 </div>
 
 </div>
@@ -1180,7 +1187,7 @@ R$ 0,00
 </div>
 
 <div class="card-info">
-Últimos 7 dias
+Faturamento do dia
 </div>
 
 </div>
@@ -1474,6 +1481,20 @@ Salvar produto
 </div>
 
 </div>
+
+<!-- MODAL DE PEDIDOS -->
+<div class="modal" id="modalPedidos">
+<div class="modal-box" style="max-width: 850px;">
+<div class="modal-header">
+<h2 id="tituloModalPedidos">Gerenciar Pedidos</h2>
+<button class="fechar" onclick="fecharModalPedidos()">×</button>
+</div>
+<div id="listaPedidosModal" style="display:flex; flex-direction:column; gap:15px;">
+<!-- Conteúdo dinâmico de pedidos -->
+</div>
+</div>
+</div>
+
 <script type="module">
 
 import {
@@ -1548,12 +1569,14 @@ getFirestore(app);
 
 
 let produtos = [];
+let pedidos = [];
 
 let produtoEditando = null;
 
 let fotosAtuais = [];
 
 let listenerProdutosIniciado = false;
+let listenerPedidosIniciado = false;
 
 /* NOVO: ESTOQUE */
 let estoqueVariacoes = [];
@@ -1588,6 +1611,7 @@ painel.style.display =
 "block";
 
 carregarProdutosFirebase();
+carregarPedidosFirebase();
 
 }else{
 
@@ -1834,6 +1858,151 @@ Verifique as regras do Firestore.
 
 );
 
+}
+
+function carregarPedidosFirebase(){
+if(listenerPedidosIniciado) return;
+listenerPedidosIniciado = true;
+
+onSnapshot(
+collection(db, "pedidos"),
+snapshot => {
+pedidos = snapshot.docs.map(item => ({
+id: item.id,
+...item.data()
+}));
+atualizarCardsPedidos();
+},
+error => {
+console.error("Erro ao carregar pedidos:", error);
+}
+);
+}
+
+window.atualizarCardsPedidos = function() {
+let countAbertos = 0;
+let countDespachados = 0;
+let countNaoPagos = 0;
+let countFinalizados = 0;
+let faturamentoHoje = 0;
+
+const hojeStr = new Date().toISOString().split('T')[0];
+
+pedidos.forEach(p => {
+const st = (p.status || "").toLowerCase();
+const pag = (p.statusPagamento || "").toLowerCase();
+
+if(st === 'despachado' || st === 'enviado') {
+countDespachados++;
+} else if(pag === 'nao pago' || pag === 'pendente') {
+countNaoPagos++;
+} else if(st === 'finalizado' || st === 'entregue') {
+countFinalizados++;
+} else {
+countAbertos++;
+}
+
+// Faturamento do dia
+if(p.criadoEm) {
+// Se houver data, valida se é hoje
+let dataPed = p.criadoEm.toDate ? p.criadoEm.toDate().toISOString().split('T')[0] : '';
+if(dataPed === hojeStr) {
+faturamentoHoje += Number(p.total || p.valor || 0);
+}
+}
+});
+
+document.getElementById("totalPedidosAbertos").textContent = pedidos.length;
+document.getElementById("totalPedidosDespachados").textContent = countDespachados;
+document.getElementById("totalPedidosNaoPagos").textContent = countNaoPagos;
+document.getElementById("totalPedidosFinalizados").textContent = countFinalizados;
+document.getElementById("totalFaturamento").textContent = "R$ " + faturamentoHoje.toFixed(2).replace(".",",");
+}
+
+window.abrirModalPedidos = function(filtro) {
+const modal = document.getElementById("modalPedidos");
+const titulo = document.getElementById("tituloModalPedidos");
+const lista = document.getElementById("listaPedidosModal");
+
+modal.classList.add("aberto");
+lista.innerHTML = "";
+
+let filtrados = pedidos;
+if(filtro === 'despachado') {
+titulo.textContent = "Pedidos Despachados";
+filtrados = pedidos.filter(p => {
+const st = (p.status || "").toLowerCase();
+return st === 'despachado' || st === 'enviado';
+});
+} else if(filtro === 'nao_pago') {
+titulo.textContent = "Pedidos Não Pagos";
+filtrados = pedidos.filter(p => {
+const pag = (p.statusPagamento || "").toLowerCase();
+return pag === 'nao pago' || pag === 'pendente';
+});
+} else if(filtro === 'finalizado') {
+titulo.textContent = "Pedidos Finalizados";
+filtrados = pedidos.filter(p => {
+const st = (p.status || "").toLowerCase();
+return st === 'finalizado' || st === 'entregue';
+});
+} else {
+titulo.textContent = "Todos os Pedidos";
+}
+
+if(filtrados.length === 0) {
+lista.innerHTML = `<div style="text-align:center; color:#888; padding:30px;">Nenhum pedido encontrado nesta categoria.</div>`;
+return;
+}
+
+filtrados.forEach(p => {
+let modelosHtml = "";
+if(p.itens && Array.isArray(p.itens)) {
+p.itens.forEach(item => {
+modelosHtml += `<div>• ${item.nome || 'Produto'} (Qtd: ${item.quantidade || 1}) - Cor: ${item.cor || '-'} / Tam: ${item.tamanho || '-'}</div>`;
+});
+} else {
+modelosHtml = `<div>${p.descricao || 'Pedido realizado na loja'}</div>`;
+}
+
+lista.innerHTML += `
+<div style="border:1px solid #eee; border-radius:10px; padding:15px; background:#fafafa;">
+<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+<strong>Pedido #${p.id.slice(-6)}</strong>
+<span style="color:#e52b79; font-weight:bold;">R$ ${Number(p.total || p.valor || 0).toFixed(2).replace('.',',')}</span>
+</div>
+<div style="font-size:13px; color:#555; display:flex; flex-direction:column; gap:5px; margin-bottom:12px;">
+<div><strong>Cliente:</strong> ${p.cliente || p.nomeCliente || 'Cliente'}</div>
+<div><strong>Modelos / Itens:</strong></div>
+<div style="padding-left:10px;">${modelosHtml}</div>
+<div><strong>Informações de Entrega:</strong> ${p.endereco || p.infoEntrega || 'Endereço não informado'}</div>
+<div><strong>Status de Pagamento:</strong> <span style="color: ${p.statusPagamento === 'Pago' ? 'green' : 'orange'};">${p.statusPagamento || 'Pendente'}</span></div>
+<div><strong>Status do Pedido:</strong> ${p.status || 'Aberto'}</div>
+</div>
+<div style="display:flex; gap:10px;">
+<button class="btn-primary" style="padding:8px 14px; font-size:13px;" onclick="despacharPedido('${p.id}')">Despachar Pedido</button>
+</div>
+</div>
+`;
+});
+}
+
+window.fecharModalPedidos = function() {
+document.getElementById("modalPedidos").classList.remove("aberto");
+}
+
+window.despacharPedido = async function(idPedido) {
+try {
+await updateDoc(doc(db, "pedidos", idPedido), {
+status: "Despachado"
+});
+alert("Pedido despachado com sucesso!");
+fecharModalPedidos();
+carregarPedidosFirebase();
+} catch(e) {
+console.error(e);
+alert("Erro ao despachar o pedido.");
+}
 }
 
 

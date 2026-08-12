@@ -52,11 +52,11 @@ body{
 .logo .nome{
     font-family:Georgia, serif;
     font-size:34px;
-    color:#d62973;
+    color:#e52b79;
 }
 
 .logo .sub{
-    color:#d62973;
+    color:#e52b79;
     letter-spacing:4px;
     font-size:12px;
     margin-top:-4px;
@@ -69,13 +69,6 @@ body{
     margin-bottom:30px;
 }
 
-.admin-foto{
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    object-fit:cover;
-}
-
 .admin strong{
     display:block;
     font-size:15px;
@@ -83,7 +76,7 @@ body{
 
 .admin span{
     display:block;
-    color:#d62973;
+    color:#e52b79;
     font-size:13px;
     margin-top:4px;
 }
@@ -102,17 +95,14 @@ body{
     text-align:left;
     font-size:15px;
     cursor:pointer;
+    color:#171717;
+    transition:.2s;
 }
 
 .menu button:hover,
 .menu button.ativo{
     background:#fff0f6;
-    color:#d62973;
-}
-
-.menu-icon{
-    width:25px;
-    display:inline-block;
+    color:#e52b79;
 }
 
 .whatsapp-box{
@@ -127,7 +117,7 @@ body{
 }
 
 .whatsapp-box strong{
-    color:#d62973;
+    color:#e52b79;
     display:block;
     margin-bottom:5px;
 }
@@ -154,16 +144,13 @@ body{
 .topbar-left{
     font-size:18px;
     font-weight:bold;
+    color:#e52b79;
 }
 
 .topbar-right{
     display:flex;
     align-items:center;
     gap:25px;
-}
-
-.notification{
-    font-size:22px;
 }
 
 .account{
@@ -236,14 +223,10 @@ body{
 }
 
 .card-icon{
-    width:42px;
-    height:42px;
+    width:10px;
+    height:10px;
     border-radius:50%;
-    background:#fff0f6;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
+    background:#e52b79;
 }
 
 .card-title{
@@ -355,16 +338,19 @@ body{
 }
 
 .action{
-    width:42px;
+    min-width:42px;
     height:38px;
     border:1px solid #ddd;
     background:#fff;
     border-radius:8px;
     cursor:pointer;
+    font-size:12px;
+    padding:0 8px;
 }
 
 .action:hover{
     background:#fff0f6;
+    color:#e52b79;
 }
 
 .delete:hover{
@@ -502,6 +488,10 @@ body{
     font-size:13px;
 }
 
+.adicionar-foto:hover{
+    background:#ffeaf3;
+}
+
 #fotoInput{
     display:none;
 }
@@ -528,6 +518,10 @@ body{
     border-radius:8px;
     padding:12px 25px;
     cursor:pointer;
+}
+
+.btn-save:hover{
+    background:#c91d63;
 }
 
 /* =========================
@@ -616,6 +610,7 @@ body{
     .fotos-container{
         grid-template-columns:repeat(2,1fr);
     }
+
 }
 
 </style>
@@ -635,6 +630,7 @@ body{
     </div>
 
     <div class="admin">
+
         <div style="
         width:48px;
         height:48px;
@@ -643,68 +639,74 @@ body{
         display:flex;
         align-items:center;
         justify-content:center;
-        font-size:22px;">
-        👩🏻
+        font-size:14px;
+        color:#e52b79;
+        font-weight:bold;">
+            TC
         </div>
 
         <div>
             <strong>Olá, Thay!</strong>
             <span>Administrador</span>
         </div>
+
     </div>
 
     <div class="menu">
 
-        <button class="ativo">
-            <span class="menu-icon">▦</span>
+        <button class="ativo"
+        onclick="menuNavegar('Dashboard', this)">
             Dashboard
         </button>
 
-        <button>
-            <span class="menu-icon">🛍️</span>
+        <button
+        onclick="menuNavegar('Produtos', this)">
             Produtos
         </button>
 
-        <button>
-            <span class="menu-icon">▱</span>
+        <button
+        onclick="menuNavegar('Categorias', this)">
             Categorias
         </button>
 
-        <button>
-            <span class="menu-icon">🛒</span>
+        <button
+        onclick="menuNavegar('Pedidos', this)">
             Pedidos
         </button>
 
-        <button>
-            <span class="menu-icon">👥</span>
+        <button
+        onclick="menuNavegar('Clientes', this)">
             Clientes
         </button>
 
-        <button>
-            <span class="menu-icon">🏷️</span>
+        <button
+        onclick="menuNavegar('Cupons', this)">
             Cupons
         </button>
 
-        <button>
-            <span class="menu-icon">⚙️</span>
+        <button
+        onclick="menuNavegar('Configurações', this)">
             Configurações
         </button>
 
-        <button>
-            <span class="menu-icon">🖼️</span>
+        <button
+        onclick="menuNavegar('Banners', this)">
             Banners
         </button>
 
-        <button>
-            <span class="menu-icon">↪</span>
+        <button
+        onclick="menuNavegar('Sair', this)">
             Sair
         </button>
 
     </div>
 
     <div class="whatsapp-box">
-        <strong>💬 Atendimento via WhatsApp</strong>
+
+        <strong>Atendimento via WhatsApp</strong>
+
         (44) 99772-0350
+
     </div>
 
 </aside>
@@ -716,15 +718,11 @@ body{
 
     <header class="topbar">
 
-        <div class="topbar-left">
-    ☰ &nbsp; Thay Costa
-</div>
+        <div class="topbar-left" id="tituloTopo">
+            Thay Costa
+        </div>
 
         <div class="topbar-right">
-
-            <div class="notification">
-                ♡
-            </div>
 
             <div class="account">
                 LaLabela Boutique
@@ -740,12 +738,23 @@ body{
         <div class="welcome">
 
             <div>
-                <h1>Bem-vinda de volta, Thay! 💕</h1>
-                <p>Aqui está o resumo da sua loja hoje.</p>
+
+                <h1>
+                    Bem-vinda de volta, Thay!
+                </h1>
+
+                <p>
+                    Aqui está o resumo da sua loja hoje.
+                </p>
+
             </div>
 
-            <button class="btn-primary" onclick="abrirNovoProduto()">
-                ＋ Novo Produto
+            <button
+            class="btn-primary"
+            onclick="abrirNovoProduto()">
+
+                + Novo Produto
+
             </button>
 
         </div>
@@ -758,11 +767,18 @@ body{
             <div class="card">
 
                 <div class="card-top">
-                    <div class="card-icon">🛍️</div>
-                    <div class="card-title">Produtos</div>
+
+                    <div class="card-icon"></div>
+
+                    <div class="card-title">
+                        Produtos
+                    </div>
+
                 </div>
 
-                <div class="card-value" id="totalProdutos">
+                <div
+                class="card-value"
+                id="totalProdutos">
                     0
                 </div>
 
@@ -776,13 +792,18 @@ body{
             <div class="card">
 
                 <div class="card-top">
-                    <div class="card-icon">🏷️</div>
+
+                    <div class="card-icon"></div>
+
                     <div class="card-title">
                         Em promoção
                     </div>
+
                 </div>
 
-                <div class="card-value" id="totalPromocoes">
+                <div
+                class="card-value"
+                id="totalPromocoes">
                     0
                 </div>
 
@@ -796,10 +817,13 @@ body{
             <div class="card">
 
                 <div class="card-top">
-                    <div class="card-icon">👁️</div>
+
+                    <div class="card-icon"></div>
+
                     <div class="card-title">
                         Visualizações
                     </div>
+
                 </div>
 
                 <div class="card-value">
@@ -816,10 +840,13 @@ body{
             <div class="card">
 
                 <div class="card-top">
-                    <div class="card-icon">🛒</div>
+
+                    <div class="card-icon"></div>
+
                     <div class="card-title">
                         Pedidos
                     </div>
+
                 </div>
 
                 <div class="card-value">
@@ -836,10 +863,13 @@ body{
             <div class="card">
 
                 <div class="card-top">
-                    <div class="card-icon">💰</div>
+
+                    <div class="card-icon"></div>
+
                     <div class="card-title">
                         Faturamento
                     </div>
+
                 </div>
 
                 <div class="card-value">
@@ -857,13 +887,19 @@ body{
 
         <!-- PRODUTOS -->
 
-        <section class="section">
+        <section
+        class="section"
+        id="secaoProdutos">
 
             <div class="section-header">
 
-                <h2>Produtos Recentes</h2>
+                <h2>
+                    Produtos Recentes
+                </h2>
 
-                <span class="link">
+                <span
+                class="link"
+                onclick="verTodosProdutos()">
                     Ver todos
                 </span>
 
@@ -896,7 +932,9 @@ body{
 
             <div class="section-header">
 
-                <h2>Vendas — Últimos 7 dias</h2>
+                <h2>
+                    Vendas — Últimos 7 dias
+                </h2>
 
             </div>
 
@@ -924,7 +962,9 @@ body{
      MODAL PRODUTO
 ========================= -->
 
-<div class="modal" id="modalProduto">
+<div
+class="modal"
+id="modalProduto">
 
 <div class="modal-box">
 
@@ -934,7 +974,9 @@ body{
             Novo produto
         </h2>
 
-        <button class="fechar" onclick="fecharModal()">
+        <button
+        class="fechar"
+        onclick="fecharModal()">
             ×
         </button>
 
@@ -943,12 +985,14 @@ body{
 
     <div class="form-group">
 
-        <label>Nome do produto</label>
+        <label>
+            Nome do produto
+        </label>
 
         <input
-            id="nomeProduto"
-            type="text"
-            placeholder="Ex: Conjunto Zandeya">
+        id="nomeProduto"
+        type="text"
+        placeholder="Ex: Conjunto Zandeya">
 
     </div>
 
@@ -957,20 +1001,24 @@ body{
 
         <div class="form-group">
 
-            <label>Preço</label>
+            <label>
+                Preço
+            </label>
 
             <input
-                id="precoProduto"
-                type="number"
-                step="0.01"
-                placeholder="69.90">
+            id="precoProduto"
+            type="number"
+            step="0.01"
+            placeholder="69.90">
 
         </div>
 
 
         <div class="form-group">
 
-            <label>Categoria</label>
+            <label>
+                Categoria
+            </label>
 
             <select id="categoriaProduto">
 
@@ -992,47 +1040,55 @@ body{
 
     <div class="form-group">
 
-        <label>Cores</label>
+        <label>
+            Cores
+        </label>
 
         <input
-            id="coresProduto"
-            type="text"
-            placeholder="Marrom, Bege, Preto">
+        id="coresProduto"
+        type="text"
+        placeholder="Marrom, Bege, Preto">
 
     </div>
 
 
     <div class="form-group">
 
-        <label>Tamanhos</label>
+        <label>
+            Tamanhos
+        </label>
 
         <input
-            id="tamanhosProduto"
-            type="text"
-            placeholder="P, M, G">
+        id="tamanhosProduto"
+        type="text"
+        placeholder="P, M, G">
 
     </div>
 
 
     <div class="form-group">
 
-        <label>Descrição</label>
+        <label>
+            Descrição
+        </label>
 
         <textarea
-            id="descricaoProduto"
-            placeholder="Descrição do produto..."></textarea>
+        id="descricaoProduto"
+        placeholder="Descrição do produto..."></textarea>
 
     </div>
 
 
     <div class="form-group">
 
-        <label>Etiqueta</label>
+        <label>
+            Etiqueta
+        </label>
 
         <input
-            id="tagProduto"
-            type="text"
-            placeholder="Promoção">
+        id="tagProduto"
+        type="text"
+        placeholder="Promoção">
 
     </div>
 
@@ -1045,16 +1101,17 @@ body{
             Fotos do produto
         </label>
 
-        <div class="fotos-container" id="fotosContainer">
-
+        <div
+        class="fotos-container"
+        id="fotosContainer">
         </div>
 
         <input
-            type="file"
-            id="fotoInput"
-            accept="image/*"
-            multiple
-            onchange="adicionarFotos(event)">
+        type="file"
+        id="fotoInput"
+        accept="image/*"
+        multiple
+        onchange="adicionarFotos(event)">
 
     </div>
 
@@ -1062,16 +1119,16 @@ body{
     <div class="modal-footer">
 
         <button
-            class="btn-cancel"
-            onclick="fecharModal()">
+        class="btn-cancel"
+        onclick="fecharModal()">
 
             Cancelar
 
         </button>
 
         <button
-            class="btn-save"
-            onclick="salvarProduto()">
+        class="btn-save"
+        onclick="salvarProduto()">
 
             Salvar produto
 
@@ -1104,7 +1161,10 @@ imagens:[
 ],
 
 cores:["Marrom","Bege"],
-tamanhos:["Único — veste do 36 ao 40"],
+
+tamanhos:[
+"Único — veste do 36 ao 40"
+],
 
 descricao:
 "Conjunto Zandeya confeccionado em tecido Suplex, com ótimo caimento, conforto e modelagem que valoriza o corpo.",
@@ -1123,7 +1183,10 @@ imagens:[
 ],
 
 cores:["Estampa da foto"],
-tamanhos:["Único — veste do 36 ao 40"],
+
+tamanhos:[
+"Único — veste do 36 ao 40"
+],
 
 descricao:
 "Conjunto duas peças, perfeito para dias quentes.",
@@ -1142,9 +1205,15 @@ imagens:[
 ],
 
 cores:["Preto","Rosa"],
-tamanhos:["P","M","G"],
 
-descricao:"Conjunto duas peças.",
+tamanhos:[
+"P",
+"M",
+"G"
+],
+
+descricao:
+"Conjunto duas peças.",
 
 tag:"Últimas peças"
 
@@ -1159,8 +1228,17 @@ imagens:[
 "https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg"
 ],
 
-cores:["Rosa","Preto","Branco"],
-tamanhos:["P","M","G"],
+cores:[
+"Rosa",
+"Preto",
+"Branco"
+],
+
+tamanhos:[
+"P",
+"M",
+"G"
+],
 
 descricao:
 "O vestido perfeito para dias quentes.",
@@ -1178,10 +1256,19 @@ imagens:[
 "https://i.postimg.cc/9ffKHv58/EC63DBCD-C2B9-4C31-A4B8-4756586365DE.jpg"
 ],
 
-cores:["Preto","Chocolate"],
-tamanhos:["P","M","G"],
+cores:[
+"Preto",
+"Chocolate"
+],
 
-descricao:"Conjunto duas peças.",
+tamanhos:[
+"P",
+"M",
+"G"
+],
+
+descricao:
+"Conjunto duas peças.",
 
 tag:""
 
@@ -1196,8 +1283,16 @@ imagens:[
 "https://i.postimg.cc/63J3mVFt/B2BCDDAC-D626-4AA3-99D0-9BF61179CA88.png"
 ],
 
-cores:["Rosa","Branco"],
-tamanhos:["36","38","40"],
+cores:[
+"Rosa",
+"Branco"
+],
+
+tamanhos:[
+"36",
+"38",
+"40"
+],
 
 descricao:
 "Conjunto duas peças, tecido fluido.",
@@ -1215,8 +1310,17 @@ imagens:[
 "https://i.postimg.cc/jdKf5TgN/C4271E37-C738-44AA-A8A8-E7A278EA6417.jpg"
 ],
 
-cores:["Preto","Rosa","Verde"],
-tamanhos:["P","M","G"],
+cores:[
+"Preto",
+"Rosa",
+"Verde"
+],
+
+tamanhos:[
+"P",
+"M",
+"G"
+],
 
 descricao:
 "Vestido midi Ribana canelada, caimento leve.",
@@ -1233,7 +1337,7 @@ let fotosAtuais = [];
 
 
 /* ===================================
-   RENDERIZAR
+   RENDERIZAR PRODUTOS
 =================================== */
 
 function renderizarProdutos(){
@@ -1254,7 +1358,9 @@ function renderizarProdutos(){
 
             <div class="product">
 
-                <img src="${foto}">
+                <img
+                src="${foto}"
+                alt="${produto.nome}">
 
                 <div class="product-name">
                     ${produto.nome}
@@ -1287,18 +1393,18 @@ function renderizarProdutos(){
             <div class="actions">
 
                 <button
-                    class="action"
-                    onclick="editarProduto(${index})">
+                class="action"
+                onclick="editarProduto(${index})">
 
-                    ✏️
+                    Editar
 
                 </button>
 
                 <button
-                    class="action delete"
-                    onclick="excluirProduto(${index})">
+                class="action delete"
+                onclick="excluirProduto(${index})">
 
-                    🗑️
+                    Excluir
 
                 </button>
 
@@ -1318,6 +1424,83 @@ function renderizarProdutos(){
     document.getElementById("totalPromocoes")
         .textContent =
         produtos.filter(p=>p.tag).length;
+
+}
+
+
+/* ===================================
+   MENU
+=================================== */
+
+function menuNavegar(nome, botao){
+
+    document.querySelectorAll(".menu button")
+        .forEach(btn=>{
+            btn.classList.remove("ativo");
+        });
+
+    botao.classList.add("ativo");
+
+    const tituloTopo =
+        document.getElementById("tituloTopo");
+
+    if(nome === "Dashboard"){
+
+        tituloTopo.textContent =
+            "Thay Costa";
+
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+        return;
+    }
+
+
+    if(nome === "Produtos"){
+
+        tituloTopo.textContent =
+            "Thay Costa";
+
+        const secao =
+            document.getElementById("secaoProdutos");
+
+        secao.scrollIntoView({
+            behavior:"smooth"
+        });
+
+        return;
+    }
+
+
+    tituloTopo.textContent =
+        nome;
+
+    if(nome !== "Sair"){
+
+        alert(
+            nome +
+            " será configurado nesta próxima etapa."
+        );
+
+    }
+
+}
+
+
+/* ===================================
+   VER TODOS
+=================================== */
+
+function verTodosProdutos(){
+
+    const secao =
+        document.getElementById("secaoProdutos");
+
+    secao.scrollIntoView({
+        behavior:"smooth"
+    });
 
 }
 
@@ -1364,10 +1547,12 @@ function editarProduto(index){
         .value = produto.categoria || "Conjunto";
 
     document.getElementById("coresProduto")
-        .value = (produto.cores || []).join(", ");
+        .value =
+        (produto.cores || []).join(", ");
 
     document.getElementById("tamanhosProduto")
-        .value = (produto.tamanhos || []).join(", ");
+        .value =
+        (produto.tamanhos || []).join(", ");
 
     document.getElementById("descricaoProduto")
         .value = produto.descricao || "";
@@ -1375,7 +1560,8 @@ function editarProduto(index){
     document.getElementById("tagProduto")
         .value = produto.tag || "";
 
-    fotosAtuais = [...(produto.imagens || [])];
+    fotosAtuais =
+        [...(produto.imagens || [])];
 
     renderizarFotos();
 
@@ -1403,11 +1589,13 @@ function renderizarFotos(){
 
         <div class="foto-item">
 
-            <img src="${foto}">
+            <img
+            src="${foto}"
+            alt="Foto ${index + 1}">
 
             <button
-                class="remover-foto"
-                onclick="removerFoto(${index})">
+            class="remover-foto"
+            onclick="removerFoto(${index})">
 
                 ×
 
@@ -1423,10 +1611,12 @@ function renderizarFotos(){
     container.innerHTML += `
 
         <button
-            class="adicionar-foto"
-            onclick="document.getElementById('fotoInput').click()">
+        type="button"
+        class="adicionar-foto"
+        onclick="document.getElementById('fotoInput').click()">
 
-            ＋<br>
+            +
+            <br>
             Adicionar foto
 
         </button>
@@ -1435,6 +1625,10 @@ function renderizarFotos(){
 
 }
 
+
+/* ===================================
+   REMOVER FOTO
+=================================== */
 
 function removerFoto(index){
 
@@ -1445,21 +1639,30 @@ function removerFoto(index){
 }
 
 
+/* ===================================
+   ADICIONAR FOTOS
+=================================== */
+
 function adicionarFotos(event){
 
-    const arquivos = event.target.files;
+    const arquivos =
+        event.target.files;
 
     [...arquivos].forEach(arquivo=>{
 
-        const reader = new FileReader();
+        const reader =
+            new FileReader();
 
-        reader.onload = function(e){
+        reader.onload =
+            function(e){
 
-            fotosAtuais.push(e.target.result);
+                fotosAtuais.push(
+                    e.target.result
+                );
 
-            renderizarFotos();
+                renderizarFotos();
 
-        };
+            };
 
         reader.readAsDataURL(arquivo);
 
@@ -1479,37 +1682,50 @@ function salvarProduto(){
     const produto = {
 
         nome:
-        document.getElementById("nomeProduto").value,
+        document
+        .getElementById("nomeProduto")
+        .value
+        .trim(),
 
         preco:
-        Number(document.getElementById("precoProduto").value),
+        Number(
+            document
+            .getElementById("precoProduto")
+            .value
+        ),
 
         categoria:
-        document.getElementById("categoriaProduto").value,
+        document
+        .getElementById("categoriaProduto")
+        .value,
 
         imagens:
         [...fotosAtuais],
 
         cores:
-        document.getElementById("coresProduto")
+        document
+        .getElementById("coresProduto")
         .value
         .split(",")
         .map(x=>x.trim())
         .filter(Boolean),
 
         tamanhos:
-        document.getElementById("tamanhosProduto")
+        document
+        .getElementById("tamanhosProduto")
         .value
         .split(",")
         .map(x=>x.trim())
         .filter(Boolean),
 
         descricao:
-        document.getElementById("descricaoProduto")
+        document
+        .getElementById("descricaoProduto")
         .value,
 
         tag:
-        document.getElementById("tagProduto")
+        document
+        .getElementById("tagProduto")
         .value
 
     };
@@ -1517,7 +1733,9 @@ function salvarProduto(){
 
     if(!produto.nome){
 
-        alert("Digite o nome do produto.");
+        alert(
+            "Digite o nome do produto."
+        );
 
         return;
 
@@ -1530,7 +1748,8 @@ function salvarProduto(){
 
     }else{
 
-        produtos[produtoEditando] = produto;
+        produtos[produtoEditando] =
+            produto;
 
     }
 
@@ -1550,7 +1769,11 @@ function excluirProduto(index){
 
     if(!confirm(
         "Deseja realmente excluir este produto?"
-    )) return;
+    )){
+
+        return;
+
+    }
 
 
     produtos.splice(index,1);
@@ -1561,25 +1784,38 @@ function excluirProduto(index){
 
 
 /* ===================================
-   LIMPAR
+   LIMPAR FORMULÁRIO
 =================================== */
 
 function limparFormulario(){
 
-    document.getElementById("nomeProduto").value = "";
+    document
+    .getElementById("nomeProduto")
+    .value = "";
 
-    document.getElementById("precoProduto").value = "";
+    document
+    .getElementById("precoProduto")
+    .value = "";
 
-    document.getElementById("categoriaProduto").value =
-        "Conjunto";
+    document
+    .getElementById("categoriaProduto")
+    .value = "Conjunto";
 
-    document.getElementById("coresProduto").value = "";
+    document
+    .getElementById("coresProduto")
+    .value = "";
 
-    document.getElementById("tamanhosProduto").value = "";
+    document
+    .getElementById("tamanhosProduto")
+    .value = "";
 
-    document.getElementById("descricaoProduto").value = "";
+    document
+    .getElementById("descricaoProduto")
+    .value = "";
 
-    document.getElementById("tagProduto").value = "";
+    document
+    .getElementById("tagProduto")
+    .value = "";
 
     fotosAtuais = [];
 
@@ -1589,15 +1825,37 @@ function limparFormulario(){
 
 
 /* ===================================
-   FECHAR
+   FECHAR MODAL
 =================================== */
 
 function fecharModal(){
 
-    document.getElementById("modalProduto")
-        .classList.remove("aberto");
+    document
+    .getElementById("modalProduto")
+    .classList
+    .remove("aberto");
 
 }
+
+
+/* ===================================
+   FECHAR CLICANDO FORA
+=================================== */
+
+document
+.getElementById("modalProduto")
+.addEventListener(
+    "click",
+    function(event){
+
+        if(event.target === this){
+
+            fecharModal();
+
+        }
+
+    }
+);
 
 
 /* ===================================

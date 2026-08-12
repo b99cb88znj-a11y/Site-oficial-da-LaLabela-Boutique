@@ -1,994 +1,308 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>LaLabela Boutique — Painel</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Administrativo - LaLabela</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-
-*{
-    box-sizing:border-box;
+:root{
+    --wine:#ed1760;
+    --wine-dark:#c21250;
+    --blush:#F8BBD0;
+    --line:rgba(0,0,0,0.1);
 }
-
+*{ box-sizing: border-box; }
 body{
     margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#fafafa;
-    color:#171717;
-}
-
-#telaLogin{
-    position:fixed;
-    inset:0;
-    background:linear-gradient(135deg,#fff5f9,#ffffff);
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    background:#f4f6f8;
+    font-family:'Jost',sans-serif;
+    color:#333;
     padding:20px;
-    z-index:99999;
 }
-
-.login-box{
-    width:100%;
-    max-width:420px;
+.admin-container{
+    max-width:1100px;
+    margin:0 auto;
+}
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
     background:#fff;
-    border:1px solid #eee;
-    border-radius:22px;
-    padding:35px;
-    box-shadow:0 15px 50px rgba(0,0,0,.08);
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
-
-.login-logo{
-    text-align:center;
-    margin-bottom:30px;
-}
-
-.login-logo .nome{
-    font-family:Georgia,serif;
-    font-size:38px;
-    color:#e52b79;
-}
-
-.login-logo .sub{
-    color:#e52b79;
-    letter-spacing:5px;
-    font-size:11px;
-    margin-top:-3px;
-}
-
-.login-box h2{
-    text-align:center;
-    margin:0 0 8px;
+header h1{
+    margin:0;
     font-size:24px;
+    color:var(--wine);
 }
-
-.login-subtitulo{
-    text-align:center;
-    color:#888;
-    font-size:14px;
-    margin-bottom:25px;
-}
-
-.login-group{
-    margin-bottom:18px;
-}
-
-.login-group label{
-    display:block;
-    font-size:13px;
-    font-weight:bold;
-    margin-bottom:7px;
-}
-
-.login-group input{
-    width:100%;
-    border:1px solid #ddd;
-    border-radius:10px;
-    padding:14px;
-    font-size:15px;
-    outline:none;
-}
-
-.login-group input:focus{
-    border-color:#e52b79;
-}
-
-#btnLogin{
-    width:100%;
-    border:0;
-    background:#e52b79;
+.btn-novo{
+    background:var(--wine);
     color:#fff;
-    border-radius:10px;
-    padding:14px;
-    font-size:15px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-#btnLogin:hover{
-    background:#c91d63;
-}
-
-#btnLogin:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-}
-
-#erroLogin{
-    display:none;
-    margin-top:15px;
-    background:#fff0f0;
-    color:#d00000;
-    border-radius:8px;
-    padding:12px;
-    font-size:13px;
-    text-align:center;
-}
-
-#carregandoLogin{
-    display:none;
-    text-align:center;
-    color:#888;
-    margin-top:15px;
-    font-size:13px;
-}
-
-#painel{
-    display:none;
-}
-
-.layout{
-    display:flex;
-    min-height:100vh;
-}
-
-.sidebar{
-    width:260px;
-    background:#fff;
-    border-right:1px solid #eee;
-    position:fixed;
-    left:0;
-    top:0;
-    bottom:0;
-    padding:25px 18px;
-    z-index:20;
-}
-
-.logo{
-    text-align:center;
-    margin-bottom:35px;
-}
-
-.logo .nome{
-    font-family:Georgia,serif;
-    font-size:34px;
-    color:#e52b79;
-}
-
-.logo .sub{
-    color:#e52b79;
-    letter-spacing:4px;
-    font-size:12px;
-    margin-top:-4px;
-}
-
-.admin{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:30px;
-}
-
-.admin strong{
-    display:block;
-    font-size:15px;
-}
-
-.admin span{
-    display:block;
-    color:#e52b79;
-    font-size:13px;
-    margin-top:4px;
-}
-
-.menu{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
-}
-
-.menu button{
-    border:0;
-    background:transparent;
-    padding:14px;
-    border-radius:10px;
-    text-align:left;
-    font-size:15px;
-    cursor:pointer;
-    color:#171717;
-    transition:.2s;
-}
-
-.menu button:hover,
-.menu button.ativo{
-    background:#fff0f6;
-    color:#e52b79;
-}
-
-.whatsapp-box{
-    position:absolute;
-    bottom:20px;
-    left:18px;
-    right:18px;
-    background:#fff0f6;
-    padding:18px;
-    border-radius:10px;
-    font-size:13px;
-}
-
-.whatsapp-box strong{
-    color:#e52b79;
-    display:block;
-    margin-bottom:5px;
-}
-
-.main{
-    margin-left:260px;
-    width:calc(100% - 260px);
-}
-
-.topbar{
-    height:70px;
-    background:#fff;
-    border-bottom:1px solid #eee;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 30px;
-}
-
-.topbar-left{
-    font-size:18px;
-    font-weight:bold;
-    color:#e52b79;
-}
-
-.topbar-right{
-    display:flex;
-    align-items:center;
-    gap:25px;
-}
-
-.account{
-    border-left:1px solid #eee;
-    padding-left:20px;
+    border:none;
+    padding:10px 18px;
     font-size:14px;
-}
-
-.content{
-    padding:32px;
-}
-
-.welcome{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-}
-
-.welcome h1{
-    margin:0;
-    font-size:27px;
-}
-
-.welcome p{
-    color:#777;
-    margin:7px 0 0;
-}
-
-.btn-primary{
-    background:#e52b79;
-    color:#fff;
-    border:0;
-    border-radius:8px;
-    padding:13px 22px;
-    font-size:15px;
+    font-weight:600;
     cursor:pointer;
+    border-radius:4px;
+    text-decoration:none;
+    transition:background .2s;
 }
-
-.btn-primary:hover{
-    background:#c91d63;
+.btn-novo:hover{
+    background:var(--wine-dark);
 }
-
-.cards{
+.stats-grid{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
     gap:15px;
     margin-bottom:25px;
 }
-
-.card{
+.stat-card{
     background:#fff;
-    border:1px solid #eee;
-    border-radius:14px;
     padding:20px;
+    border-radius:8px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
-
-.card-top{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:12px;
-}
-
-.card-icon{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:#e52b79;
-}
-
-.card-title{
+.stat-card h3{
+    margin:0 0 8px;
     font-size:14px;
+    color:#777;
+    text-transform:uppercase;
 }
-
-.card-value{
-    font-size:26px;
-    font-weight:bold;
-    margin-top:8px;
-}
-
-.card-info{
-    color:#888;
-    font-size:12px;
-    margin-top:5px;
-}
-
-.section{
-    background:#fff;
-    border:1px solid #eee;
-    border-radius:14px;
-    overflow:hidden;
-    margin-bottom:25px;
-    display:none; /* Controlado por abas */
-}
-
-.section.ativo{
-    display:block;
-}
-
-.section-header{
-    padding:20px 25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #eee;
-}
-
-.section-header h2{
+.stat-card .valor{
+    font-size:24px;
+    font-weight:600;
+    color:#111;
     margin:0;
-    font-size:20px;
 }
-
-.link{
-    color:#d62973;
-    cursor:pointer;
+.card-tabela{
+    background:#fff;
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+.card-tabela h2{
+    margin-top:0;
+    font-size:20px;
+    margin-bottom:15px;
+}
+.tabela-responsiva{
+    width:100%;
+    overflow-x:auto;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+th, td{
+    padding:12px 15px;
+    text-align:left;
+    border-bottom:1px solid var(--line);
     font-size:14px;
 }
-
-.table{
-    width:100%;
-}
-
-.table-head,
-.product-row{
-    display:grid;
-    grid-template-columns:
-    2.5fr 1.2fr 1fr 1fr 1fr 150px;
-    align-items:center;
-    padding:12px 25px;
-}
-
-.table-head{
-    background:#fff8fb;
+th{
+    background:#fafafa;
+    font-weight:600;
     color:#555;
-    font-size:13px;
+    text-transform:uppercase;
+    font-size:12px;
 }
-
-.product-row{
-    border-top:1px solid #eee;
-}
-
-.product{
-    display:flex;
-    align-items:center;
-    gap:15px;
-}
-
-.product img{
-    width:62px;
-    height:62px;
+td img{
+    width:45px;
+    height:55px;
     object-fit:cover;
-    border-radius:9px;
-    background:#f5f5f5;
+    border-radius:4px;
+    vertical-align:middle;
+    margin-right:10px;
 }
-
-.product-name{
+.badge-status{
+    padding:4px 8px;
+    border-radius:12px;
+    font-size:12px;
     font-weight:500;
 }
-
-.price{
-    font-weight:bold;
+.badge-ativo{
+    background:#e1f5fe;
+    color:#0288d1;
 }
-
-.stock{
-    color:#29934a;
-    font-weight:600;
-}
-
-.status{
-    display:inline-block;
-    background:#e9f8ed;
-    color:#29934a;
-    border-radius:20px;
-    padding:6px 12px;
-    font-size:12px;
-    width:max-content;
-}
-
-.status-pendente{
-    background:#fff8e1;
-    color:#f57f17;
-}
-
-.status-despachado{
-    background:#e3f2fd;
-    color:#1976d2;
-}
-
-.actions{
-    display:flex;
-    gap:7px;
-}
-
-.action{
-    min-width:42px;
-    height:38px;
+.acoes-btns button{
+    background:none;
     border:1px solid #ddd;
-    background:#fff;
-    border-radius:8px;
+    padding:6px 10px;
+    border-radius:4px;
     cursor:pointer;
     font-size:12px;
-    padding:0 8px;
+    margin-right:5px;
+    transition:all .2s;
+}
+.acoes-btns button:hover{
+    background:#eee;
+}
+.acoes-btns button.btn-excluir{
+    color:#d32f2f;
+    border-color:#ffcdd2;
+}
+.acoes-btns button.btn-excluir:hover{
+    background:#ffebee;
 }
 
-.action:hover{
-    background:#fff0f6;
-    color:#e52b79;
-}
-
-.delete:hover{
-    background:#fff0f0;
-    color:red;
-}
-
-.carregando-produtos{
-    padding:50px;
-    text-align:center;
-    color:#888;
-}
-
-.sem-produtos{
-    padding:50px;
-    text-align:center;
-    color:#888;
-}
-
-/* ESTOQUE */
-
-.estoque-box{
-    border:1px solid #eee;
-    border-radius:12px;
-    padding:15px;
-    background:#fff8fb;
-    margin-top:8px;
-}
-
-.estoque-topo{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom:12px;
-}
-
-.estoque-total{
-    font-weight:bold;
-    color:#e52b79;
-}
-
-.btn-estoque{
-    border:1px solid #e52b79;
-    background:#fff;
-    color:#e52b79;
-    border-radius:8px;
-    padding:9px 12px;
-    cursor:pointer;
-    font-size:13px;
-    font-weight:bold;
-}
-
-.btn-estoque:hover{
-    background:#fff0f6;
-}
-
-.estoque-lista{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-}
-
-.estoque-linha{
-    display:grid;
-    grid-template-columns:1fr 1fr 110px 38px;
-    gap:8px;
-    align-items:center;
-}
-
-.estoque-linha input{
-    width:100%;
-    border:1px solid #ddd;
-    border-radius:8px;
-    padding:9px;
-    font-size:13px;
-    background:#fff;
-}
-
-.remover-estoque{
-    height:36px;
-    width:36px;
-    border:1px solid #ddd;
-    background:#fff;
-    border-radius:8px;
-    color:#d00000;
-    cursor:pointer;
-}
-
-.remover-estoque:hover{
-    background:#fff0f0;
-}
-
-.estoque-vazio{
-    font-size:13px;
-    color:#888;
-    padding:8px 0;
-}
-
-.estoque-ajuda{
-    font-size:12px;
-    color:#888;
-    margin-top:8px;
-    line-height:1.4;
-}
-
-.modal{
-    display:none;
+/* Modal de Cadastro/Edição */
+#modalForm{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.45);
-    z-index:100;
+    background:rgba(0,0,0,0.5);
+    display:none;
     align-items:center;
     justify-content:center;
-    padding:20px;
+    z-index:999;
+    padding:15px;
 }
-
-.modal.aberto{
+#modalForm.aberto{
     display:flex;
 }
-
-.modal-box{
+.modal-content{
     background:#fff;
     width:100%;
-    max-width:700px;
-    max-height:92vh;
-    overflow:auto;
-    border-radius:18px;
-    padding:28px;
+    max-width:550px;
+    padding:25px;
+    border-radius:8px;
+    max-height:90vh;
+    overflow-y:auto;
 }
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
+.modal-content h3{
+    margin-top:0;
+    margin-bottom:20px;
 }
-
-.modal-header h2{
-    margin:0;
-}
-
-.fechar{
-    border:0;
-    background:#f3f3f3;
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    font-size:20px;
-    cursor:pointer;
-}
-
 .form-group{
-    margin-bottom:17px;
+    margin-bottom:15px;
 }
-
 .form-group label{
     display:block;
     font-size:13px;
-    font-weight:bold;
-    margin-bottom:7px;
+    font-weight:500;
+    margin-bottom:5px;
 }
-
-.form-group input,
-.form-group textarea,
-.form-group select{
+.form-group input, .form-group textarea, .form-group select{
     width:100%;
-    border:1px solid #ddd;
-    border-radius:9px;
-    padding:12px;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    font-family:'Jost',sans-serif;
     font-size:14px;
 }
-
-.form-group textarea{
-    min-height:100px;
-    resize:vertical;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-}
-
-.fotos-container{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-top:10px;
-}
-
-.foto-item{
-    position:relative;
-    height:130px;
-}
-
-.foto-item img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    border-radius:10px;
-    border:1px solid #ddd;
-}
-
-.remover-foto{
-    position:absolute;
-    top:5px;
-    right:5px;
-    width:28px;
-    height:28px;
-    border:0;
-    border-radius:50%;
-    background:#fff;
-    color:#e00000;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.adicionar-foto{
-    height:130px;
-    border:2px dashed #e52b79;
-    border-radius:10px;
-    background:#fff7fa;
-    color:#e52b79;
-    cursor:pointer;
-    font-size:13px;
-}
-
-.adicionar-foto:hover{
-    background:#ffeaf3;
-}
-
-#fotoInput{
-    display:none;
-}
-
-.modal-footer{
+.modal-acoes-form{
     display:flex;
     justify-content:flex-end;
     gap:10px;
-    margin-top:25px;
+    margin-top:20px;
 }
-
-.btn-cancel{
-    border:1px solid #ddd;
-    background:#fff;
-    border-radius:8px;
-    padding:12px 20px;
+.modal-acoes-form button{
+    padding:10px 20px;
+    border:none;
+    border-radius:4px;
     cursor:pointer;
+    font-weight:600;
 }
-
-.btn-save{
-    border:0;
-    background:#e52b79;
-    color:#fff;
-    border-radius:8px;
-    padding:12px 25px;
-    cursor:pointer;
-}
-
-.btn-save:hover{
-    background:#c91d63;
-}
-
-.btn-save:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-}
-
-/* ESTILO DA JANELA DE ETIQUETA */
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    #etiquetaImpressao, #etiquetaImpressao * {
-        visibility: visible;
-    }
-    #etiquetaImpressao {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        padding: 20px;
-        background: #fff;
-    }
-}
-
-@media(max-width:1100px){
-    .sidebar{ width:220px; }
-    .main{ margin-left:220px; width:calc(100% - 220px); }
-    .cards{ grid-template-columns:repeat(2,1fr); }
-}
-
-@media(max-width:700px){
-    .sidebar{ display:none; }
-    .main{ margin-left:0; width:100%; }
-    .content{ padding:18px; }
-    .topbar{ padding:0 18px; }
-    .cards{ grid-template-columns:1fr 1fr; }
-}
-
+.btn-salvar{ background:var(--wine); color:#fff; }
+.btn-cancelar{ background:#ddd; color:#333; }
 </style>
-
 </head>
-
 <body>
 
-<div id="telaLogin">
-    <div class="login-box">
-        <div class="login-logo">
-            <div class="nome">LaLabela</div>
-            <div class="sub">BOUTIQUE</div>
+<div class="admin-container">
+    <header>
+        <h1>Painel LaLabela</h1>
+        <button class="btn-novo" onclick="abrirModalNovo()">+ Novo Produto</button>
+    </header>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total de produtos</h3>
+            <p class="valor" id="totalProdutos">0</p>
         </div>
-        <h2>Acesso administrativo</h2>
-        <div class="login-subtitulo">Entre para acessar o painel da sua loja.</div>
-        <div class="login-group">
-            <label>E-mail</label>
-            <input id="emailLogin" type="email" placeholder="seuemail@gmail.com" autocomplete="email">
+        <div class="stat-card">
+            <h3>Pedidos realizados</h3>
+            <p class="valor" id="totalPedidos">0</p>
         </div>
-        <div class="login-group">
-            <label>Senha</label>
-            <input id="senhaLogin" type="password" placeholder="Digite sua senha" autocomplete="current-password">
+        <div class="stat-card">
+            <h3>Faturamento Total</h3>
+            <p class="valor" id="totalFaturamento">R$ 0,00</p>
         </div>
-        <button id="btnLogin" onclick="fazerLogin()">Entrar no painel</button>
-        <div id="carregandoLogin">Verificando acesso...</div>
-        <div id="erroLogin">E-mail ou senha incorretos.</div>
+    </div>
+
+    <div class="card-tabela">
+        <h2>Produtos Cadastrados</h2>
+        <div class="tabela-responsiva">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaProdutosBody">
+                    <tr><td colspan="6" style="text-align:center; color:#777;">Carregando produtos...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<div id="painel">
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="logo">
-                <div class="nome">LaLabela</div>
-                <div class="sub">BOUTIQUE</div>
-            </div>
-            <div class="admin">
-                <div style="width:48px; height:48px; border-radius:50%; background:#ffe4ef; display:flex; align-items:center; justify-content:center; font-size:14px; color:#e52b79; font-weight:bold;">TC</div>
-                <div>
-                    <strong>Olá, Thay!</strong>
-                    <span>Administrador</span>
-                </div>
-            </div>
-            <div class="menu">
-                <button class="ativo" onclick="menuNavegar('Dashboard',this)">Dashboard</button>
-                <button onclick="menuNavegar('Produtos',this)">Produtos</button>
-                <button onclick="menuNavegar('Pedidos',this)">Pedidos</button>
-                <button onclick="menuNavegar('Categorias',this)">Categorias</button>
-                <button onclick="menuNavegar('Clientes',this)">Clientes</button>
-                <button onclick="menuNavegar('Cupons',this)">Cupons</button>
-                <button onclick="menuNavegar('Configurações',this)">Configurações</button>
-                <button onclick="menuNavegar('Banners',this)">Banners</button>
-                <button onclick="fazerLogout()">Sair</button>
-            </div>
-            <div class="whatsapp-box">
-                <strong>Atendimento via WhatsApp</strong>
-                (44) 99772-0350
-            </div>
-        </aside>
-
-        <main class="main">
-            <header class="topbar">
-                <div class="topbar-left" id="tituloTopo">Thay Costa</div>
-                <div class="topbar-right">
-                    <div class="account">LaLabela Boutique</div>
-                </div>
-            </header>
-
-            <div class="content">
-                
-                <!-- SEÇÃO DASHBOARD -->
-                <div id="secaoDashboard" class="secao-painel">
-                    <div class="welcome">
-                        <div>
-                            <h1>Bem-vinda de volta, Thay!</h1>
-                            <p>Aqui está o resumo da sua loja hoje.</p>
-                        </div>
-                        <button class="btn-primary" onclick="abrirNovoProduto()">+ Novo Produto</button>
-                    </div>
-
-                    <div class="cards">
-                        <div class="card">
-                            <div class="card-top"><div class="card-icon"></div><div class="card-title">Produtos</div></div>
-                            <div class="card-value" id="totalProdutos">0</div>
-                            <div class="card-info">Total de produtos</div>
-                        </div>
-                        <div class="card">
-                            <div class="card-top"><div class="card-icon"></div><div class="card-title">Em promoção</div></div>
-                            <div class="card-value" id="totalPromocoes">0</div>
-                            <div class="card-info">Produtos em promoção</div>
-                        </div>
-                        <div class="card">
-                            <div class="card-top"><div class="card-icon"></div><div class="card-title">Pedidos</div></div>
-                            <div class="card-value" id="totalPedidos">0</div>
-                            <div class="card-info">Pedidos realizados</div>
-                        </div>
-                        <div class="card">
-                            <div class="card-top"><div class="card-icon"></div><div class="card-title">Faturamento</div></div>
-                            <div class="card-value" id="totalFaturamento">R$ 0,00</div>
-                            <div class="card-info">Total geral</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SEÇÃO PRODUTOS -->
-                <section class="section ativo" id="secaoProdutos">
-                    <div class="section-header">
-                        <h2>Produtos Cadastrados</h2>
-                        <span class="link" onclick="abrirNovoProduto()">+ Novo Produto</span>
-                    </div>
-                    <div class="table">
-                        <div class="table-head">
-                            <div>Produto</div>
-                            <div>Categoria</div>
-                            <div>Preço</div>
-                            <div>Estoque</div>
-                            <div>Status</div>
-                            <div>Ações</div>
-                        </div>
-                        <div id="listaProdutos">
-                            <div class="carregando-produtos">Carregando produtos...</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SEÇÃO PEDIDOS INTEGRADA -->
-                <section class="section" id="secaoPedidos">
-                    <div class="section-header">
-                        <h2>Gerenciamento de Pedidos & Despachos</h2>
-                    </div>
-                    <div class="table" style="padding: 20px;">
-                        <div id="listaPedidosAdmin">
-                            <div class="carregando-produtos">Carregando pedidos das clientes...</div>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-        </main>
-    </div>
-</div>
-
-<!-- MODAL DE PRODUTO -->
-<div class="modal" id="modalProduto">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h2 id="tituloModal">Novo produto</h2>
-            <button class="fechar" onclick="fecharModal()">×</button>
+<!-- MODAL CADASTRO / EDIÇÃO -->
+<div id="modalForm">
+    <div class="modal-content">
+        <h3 id="modalTitulo">Novo Produto</h3>
+        <input type="hidden" id="produtoId">
+        <div class="form-group">
+            <label>Nome do Produto</label>
+            <input type="text" id="inputNome" placeholder="Ex: Conjunto Mel">
         </div>
         <div class="form-group">
-            <label>Nome do produto</label>
-            <input id="nomeProduto" type="text" placeholder="Ex: Conjunto Mel">
-        </div>
-        <div class="grid">
-            <div class="form-group">
-                <label>Preço</label>
-                <input id="precoProduto" type="number" step="0.01" placeholder="120.00">
-            </div>
-            <div class="form-group">
-                <label>Categoria</label>
-                <select id="categoriaProduto">
-                    <option>Conjunto</option>
-                    <option>Vestido</option>
-                    <option>Blusa</option>
-                    <option>Calça</option>
-                    <option>Short</option>
-                    <option>Saia</option>
-                    <option>Macacão</option>
-                    <option>Outro</option>
-                </select>
-            </div>
+            <label>Categoria</label>
+            <select id="inputCategoria">
+                <option value="Conjunto">Conjunto</option>
+                <option value="Vestido">Vestido</option>
+                <option value="Blusas">Blusas</option>
+                <option value="Calça">Calça</option>
+                <option value="Short">Shorts</option>
+                <option value="Lançamento">Lançamento</option>
+                <option value="Promoção">Promoção</option>
+            </select>
         </div>
         <div class="form-group">
-            <label>Cores</label>
-            <input id="coresProduto" type="text" placeholder="Branco, Preto">
+            <label>Preço (R$)</label>
+            <input type="text" id="inputPreco" placeholder="120,00">
         </div>
         <div class="form-group">
-            <label>Tamanhos</label>
-            <input id="tamanhosProduto" type="text" placeholder="P, M, G">
+            <label>Estoque</label>
+            <input type="number" id="inputEstoque" value="10">
         </div>
         <div class="form-group">
-            <label>Estoque por cor e tamanho</label>
-            <div class="estoque-box">
-                <div class="estoque-topo">
-                    <div class="estoque-total">Total: <span id="estoqueTotal">0</span> unidade(s)</div>
-                    <button type="button" class="btn-estoque" onclick="gerarVariacoesEstoque()">Gerar combinações</button>
-                </div>
-                <div id="estoqueLista" class="estoque-lista"></div>
-            </div>
+            <label>Link da Imagem (URL)</label>
+            <input type="text" id="inputImagem" placeholder="https://exemplo.com/foto.jpg">
         </div>
         <div class="form-group">
             <label>Descrição</label>
-            <textarea id="descricaoProduto" placeholder="Descrição do produto..."></textarea>
+            <textarea id="inputDescricao" rows="3" placeholder="Detalhes do tecido, caimento..."></textarea>
         </div>
-        <div class="form-group">
-            <label>Etiqueta / Tag</label>
-            <input id="tagProduto" type="text" placeholder="Promoção">
-        </div>
-        <div class="form-group">
-            <label>Fotos do produto</label>
-            <div class="fotos-container" id="fotosContainer"></div>
-            <input type="file" id="fotoInput" accept="image/*" multiple onchange="adicionarFotos(event)">
-        </div>
-        <div class="modal-footer">
-            <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
-            <button class="btn-save" id="btnSalvarProduto" onclick="salvarProduto()">Salvar produto</button>
+        <div class="modal-acoes-form">
+            <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+            <button class="btn-salvar" onclick="salvarProduto()">Salvar Produto</button>
         </div>
     </div>
 </div>
 
-<!-- MODAL OCULTO PARA IMPRESSÃO DE ETIQUETA -->
-<div id="etiquetaImpressao" style="display:none;"></div>
-
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
@@ -999,366 +313,128 @@ const firebaseConfig = {
     appId: "1:642045507952:web:8953c11428090b4a41b7b5"
 };
 
-const CLOUDINARY_CLOUD_NAME = "ddhdmddq";
-const CLOUDINARY_UPLOAD_PRESET = "lalabela_produtos";
-const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload";
-
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
 
-let produtos = [];
-let pedidos = [];
-let produtoEditando = null;
-let fotosAtuais = [];
-let estoqueVariacoes = [];
+let listaGlobalProdutos = [];
 
-const telaLogin = document.getElementById("telaLogin");
-const painel = document.getElementById("painel");
-const erroLogin = document.getElementById("erroLogin");
-const carregandoLogin = document.getElementById("carregandoLogin");
-const btnLogin = document.getElementById("btnLogin");
-
-onAuthStateChanged(auth, usuario => {
-    if(usuario){
-        telaLogin.style.display = "none";
-        painel.style.display = "block";
-        carregarProdutosFirebase();
-        carregarPedidosFirebase();
-    } else {
-        telaLogin.style.display = "flex";
-        painel.style.display = "none";
+// Carregar Produtos em Tempo Real
+onSnapshot(collection(db, "produtos"), snapshot => {
+    listaGlobalProdutos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    document.getElementById("totalProdutos").textContent = listaGlobalProdutos.length;
+    
+    const tbody = document.getElementById("tabelaProdutosBody");
+    if(listaGlobalProdutos.length === 0){
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Nenhum produto cadastrado.</td></tr>`;
+        return;
     }
+
+    tbody.innerHTML = listaGlobalProdutos.map(p => {
+        const img = (p.imagens && p.imagens[0]) || p.imagem || "https://via.placeholder.com/50x60?text=Foto";
+        const precoNum = Number(p.preco || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+        return `
+            <tr>
+                <td><img src="${img}" alt=""> ${p.nome || "Produto"}</td>
+                <td>${p.categoria || "Geral"}</td>
+                <td>${precoNum}</td>
+                <td>${p.estoque || 0}</td>
+                <td><span class="badge-status badge-ativo">Ativo</span></td>
+                <td class="acoes-btns">
+                    <button onclick="editarProduto('${p.id}')">Editar</button>
+                    <button class="btn-excluir" onclick="deletarProduto('${p.id}')">Excluir</button>
+                </td>
+            </tr>
+        `;
+    }).join("");
 });
 
-window.fazerLogin = async function(){
-    const email = document.getElementById("emailLogin").value.trim();
-    const senha = document.getElementById("senhaLogin").value;
-    erroLogin.style.display = "none";
-
-    if(!email || !senha){
-        erroLogin.textContent = "Digite seu e-mail e sua senha.";
-        erroLogin.style.display = "block";
-        return;
-    }
-
-    btnLogin.disabled = true;
-    carregandoLogin.style.display = "block";
-
-    try{
-        await signInWithEmailAndPassword(auth, email, senha);
-    } catch(error){
-        erroLogin.textContent = "E-mail ou senha incorretos.";
-        erroLogin.style.display = "block";
-    } finally {
-        btnLogin.disabled = false;
-        carregandoLogin.style.display = "none";
-    }
-};
-
-window.fazerLogout = async function(){
-    if(confirm("Deseja realmente sair do painel?")){
-        await signOut(auth);
-    }
-};
-
-function carregarProdutosFirebase(){
-    onSnapshot(collection(db,"produtos"), snapshot => {
-        produtos = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
-        renderizarProdutos();
+// Carregar Pedidos para estatísticas
+onSnapshot(collection(db, "pedidos"), snapshot => {
+    document.getElementById("totalPedidos").textContent = snapshot.size;
+    let faturamentoTotal = 0;
+    snapshot.docs.forEach(d => {
+        const data = d.data();
+        faturamentoTotal += Number(data.total || 0);
     });
-}
-
-function carregarPedidosFirebase(){
-    onSnapshot(collection(db,"pedidos"), snapshot => {
-        pedidos = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
-        renderizarPedidosAdmin();
-    });
-}
-
-window.renderizarPedidosAdmin = function(){
-    const container = document.getElementById("listaPedidosAdmin");
-    document.getElementById("totalPedidos").textContent = pedidos.length;
-
-    let faturamentoTotal = pedidos.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
     document.getElementById("totalFaturamento").textContent = faturamentoTotal.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+});
 
-    if(pedidos.length === 0){
-        container.innerHTML = `<div class="sem-produtos">Nenhum pedido realizado pelas clientes até o momento.</div>`;
-        return;
-    }
+window.abrirModalNovo = function(){
+    document.getElementById("produtoId").value = "";
+    document.getElementById("modalTitulo").textContent = "Novo Produto";
+    document.getElementById("inputNome").value = "";
+    document.getElementById("inputPreco").value = "";
+    document.getElementById("inputEstoque").value = "10";
+    document.getElementById("inputImagem").value = "";
+    document.getElementById("inputDescricao").value = "";
+    document.getElementById("modalForm").classList.add("aberto");
+}
 
-    container.innerHTML = pedidos.map(pedido => `
-        <div style="background:#fff; border:1px solid #eee; border-radius:12px; padding:20px; margin-bottom:15px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
-                <strong>Cliente: ${pedido.nome || 'Não informado'}</strong>
-                <span class="status ${pedido.status === 'Despachado' ? 'status-despachado' : 'status-pendente'}">${pedido.status || 'Pendente'}</span>
-            </div>
-            <p style="margin:5px 0;"><strong>WhatsApp:</strong> <a href="https://wa.me/55${(pedido.whatsapp||'').replace(/\D/g,'')}" target="_blank" style="color:#e52b79;">${pedido.whatsapp}</a></p>
-            <p style="margin:5px 0;"><strong>Endereço / Cidade:</strong> ${pedido.endereco || ''}, ${pedido.cidade || ''}</p>
-            <p style="margin:5px 0;"><strong>Forma de Pagamento:</strong> ${pedido.pagamento || 'Pix/Cartão'} (${pedido.statusPagamento || 'Aguardando'})</p>
-            <p style="margin:5px 0;"><strong>Obs. de Horário:</strong> <span style="color:#d62973; font-weight:bold;">${pedido.obsHorario || 'Nenhuma observação de horário informada'}</span></p>
-            
-            <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="action" onclick="imprimirEtiquetaPedido('${pedido.id}')">🖨️ Imprimir Etiqueta</button>
-                <button class="action" onclick="mudarStatusPedido('${pedido.id}', 'Despachado')">🚚 Marcar como Despachado</button>
-            </div>
-        </div>
-    `).join('');
-};
+window.fecharModal = function(){
+    document.getElementById("modalForm").classList.remove("aberto");
+}
 
-window.mudarStatusPedido = async function(idPedido, novoStatus){
-    try {
-        await updateDoc(doc(db, "pedidos", idPedido), { status: novoStatus });
-        alert("Status do pedido atualizado para: " + novoStatus);
-    } catch(e) {
-        alert("Erro ao atualizar status.");
-    }
-};
-
-window.imprimirEtiquetaPedido = function(idPedido){
-    const pedido = pedidos.find(p => p.id === idPedido);
-    if(!pedido) return;
-
-    const bloco = document.getElementById("etiquetaImpressao");
-    bloco.style.display = "block";
-    bloco.innerHTML = `
-        <div style="font-family: Arial; padding: 20px; border: 2px dashed #000; max-width: 400px; margin: 0 auto;">
-            <h2 style="text-align:center; margin:0 0 10px;">LaLabela Boutique</h2>
-            <hr style="border:1px dashed #000;">
-            <p><strong>Destinatário:</strong> ${pedido.nome}</p>
-            <p><strong>WhatsApp:</strong> ${pedido.whatsapp}</p>
-            <p><strong>Endereço:</strong> ${pedido.endereco}</p>
-            <p><strong>Cidade:</strong> ${pedido.cidade}/PR</p>
-            <p><strong>Horário Preferencial:</strong> ${pedido.obsHorario || 'Não informado'}</p>
-            <hr style="border:1px dashed #000;">
-            <p style="text-align:center; font-size:12px;">Entrega Local - Paranavaí / São João do Caiuá</p>
-        </div>
-    `;
-    window.print();
-    bloco.style.display = "none";
-};
-
-window.renderizarProdutos = function(){
-    const lista = document.getElementById("listaProdutos");
-    lista.innerHTML = "";
-    document.getElementById("totalProdutos").textContent = produtos.length;
-    document.getElementById("totalPromocoes").textContent = produtos.filter(p => p.tag && p.tag.trim() !== "").length;
-
-    if(produtos.length === 0){
-        lista.innerHTML = `<div class="sem-produtos">Nenhum produto cadastrado.</div>`;
-        return;
-    }
-
-    produtos.forEach((produto, index) => {
-        const foto = produto.imagens && produto.imagens[0] ? produto.imagens[0] : "";
-        let totalEstoque = produto.estoqueVariacoes ? produto.estoqueVariacoes.reduce((s,i)=>s+(Number(i.quantidade)||0),0) : (Number(produto.estoque)||0);
-
-        lista.innerHTML += `
-            <div class="product-row">
-                <div class="product">
-                    ${foto ? `<img src="${foto}" alt="">` : `<div style="width:62px;height:62px;background:#f3f3f3;border-radius:9px;display:flex;align-items:center;justify-content:center;">🛍️</div>`}
-                    <div class="product-name">${produto.nome || "Sem nome"}</div>
-                </div>
-                <div>${produto.categoria || "-"}</div>
-                <div class="price">R$ ${Number(produto.preco || 0).toFixed(2).replace(".",",")}</div>
-                <div class="stock">${totalEstoque}</div>
-                <div><span class="status">Ativo</span></div>
-                <div class="actions">
-                    <button class="action" onclick="editarProduto(${index})">Editar</button>
-                    <button class="action delete" onclick="excluirProduto(${index})">Excluir</button>
-                </div>
-            </div>
-        `;
-    });
-};
-
-window.menuNavegar = function(nome, botao){
-    document.querySelectorAll(".menu button").forEach(btn => btn.classList.remove("ativo"));
-    if(botao) botao.classList.add("ativo");
-
-    document.querySelectorAll(".content > div, .content > section").forEach(sec => sec.classList.remove("ativo", "secao-painel"));
-
-    if(nome === "Dashboard"){
-        document.getElementById("secaoDashboard").classList.add("secao-painel", "ativo");
-        document.getElementById("secaoProdutos").classList.add("ativo");
-    } else if(nome === "Produtos"){
-        document.getElementById("secaoProdutos").classList.add("ativo");
-    } else if(nome === "Pedidos"){
-        document.getElementById("secaoPedidos").classList.add("ativo");
-    } else {
-        document.getElementById("secaoProdutos").classList.add("ativo");
-        alert(nome + " estará disponível em breve.");
-    }
-};
-
-window.abrirNovoProduto = function(){
-    produtoEditando = null;
-    document.getElementById("tituloModal").textContent = "Novo produto";
-    limparFormulario();
-    document.getElementById("modalProduto").classList.add("aberto");
-};
-
-window.editarProduto = function(index){
-    const produto = produtos[index];
-    if(!produto) return;
-    produtoEditando = index;
-    document.getElementById("tituloModal").textContent = "Editar produto";
-    document.getElementById("nomeProduto").value = produto.nome || "";
-    document.getElementById("precoProduto").value = produto.preco || "";
-    document.getElementById("categoriaProduto").value = produto.categoria || "Conjunto";
-    document.getElementById("coresProduto").value = Array.isArray(produto.cores) ? produto.cores.join(", ") : "";
-    document.getElementById("tamanhosProduto").value = Array.isArray(produto.tamanhos) ? produto.tamanhos.join(", ") : "";
-    document.getElementById("descricaoProduto").value = produto.descricao || "";
-    document.getElementById("tagProduto").value = produto.tag || "";
-    estoqueVariacoes = Array.isArray(produto.estoqueVariacoes) ? produto.estoqueVariacoes : [];
-    renderizarEstoque();
-    fotosAtuais = Array.isArray(produto.imagens) ? [...produto.imagens] : [];
-    renderizarFotos();
-    document.getElementById("modalProduto").classList.add("aberto");
-};
-
-window.gerarVariacoesEstoque = function(){
-    const cores = document.getElementById("coresProduto").value.split(",").map(i=>i.trim()).filter(Boolean);
-    const tamanhos = document.getElementById("tamanhosProduto").value.split(",").map(i=>i.trim()).filter(Boolean);
-    if(!cores.length || !tamanhos.length){ alert("Preencha Cores e Tamanhos."); return; }
-    
-    estoqueVariacoes = [];
-    cores.forEach(c => {
-        tamanhos.forEach(t => {
-            estoqueVariacoes.push({ cor: c, tamanho: t, quantidade: 0 });
-        });
-    });
-    renderizarEstoque();
-};
-
-window.renderizarEstoque = function(){
-    const lista = document.getElementById("estoqueLista");
-    lista.innerHTML = "";
-    let total = 0;
-    estoqueVariacoes.forEach((item, index) => {
-        total += Number(item.quantidade) || 0;
-        lista.innerHTML += `
-            <div class="estoque-linha">
-                <input type="text" value="${item.cor}" onchange="estoqueVariacoes[${index}].cor=this.value">
-                <input type="text" value="${item.tamanho}" onchange="estoqueVariacoes[${index}].tamanho=this.value">
-                <input type="number" min="0" value="${item.quantidade}" onchange="estoqueVariacoes[${index}].quantidade=Number(this.value); atualizarTotalEstoque();">
-                <button type="button" class="remover-estoque" onclick="estoqueVariacoes.splice(${index},1); renderizarEstoque();">×</button>
-            </div>
-        `;
-    });
-    document.getElementById("estoqueTotal").textContent = total;
-};
-
-window.atualizarTotalEstoque = function(){
-    let total = estoqueVariacoes.reduce((s,i)=>s+(Number(i.quantidade)||0),0);
-    document.getElementById("estoqueTotal").textContent = total;
-};
-
-window.renderizarFotos = function(){
-    const container = document.getElementById("fotosContainer");
-    container.innerHTML = "";
-    fotosAtuais.forEach((foto, index) => {
-        let preview = typeof foto === "string" ? foto : foto.preview;
-        container.innerHTML += `
-            <div class="foto-item">
-                <img src="${preview}" alt="">
-                <button type="button" class="remover-foto" onclick="fotosAtuais.splice(${index},1); renderizarFotos();">×</button>
-            </div>
-        `;
-    });
-    container.innerHTML += `<button type="button" class="adicionar-foto" onclick="document.getElementById('fotoInput').click()">+<br>Foto</button>`;
-};
-
-window.adicionarFotos = function(event){
-    [...event.target.files].forEach(file => {
-        fotosAtuais.push({ file, preview: URL.createObjectURL(file) });
-    });
-    renderizarFotos();
-};
-
-async function enviarFotoCloudinary(file){
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-    const res = await fetch(CLOUDINARY_UPLOAD_URL, { method: "POST", body: formData });
-    const data = await res.json();
-    return data.secure_url;
+window.editarProduto = function(id){
+    const p = listaGlobalProdutos.find(item => item.id === id);
+    if(!p) return;
+    document.getElementById("produtoId").value = p.id;
+    document.getElementById("modalTitulo").textContent = "Editar Produto";
+    document.getElementById("inputNome").value = p.nome || "";
+    document.getElementById("inputCategoria").value = p.categoria || "Conjunto";
+    document.getElementById("inputPreco").value = p.preco || "";
+    document.getElementById("inputEstoque").value = p.estoque || 10;
+    document.getElementById("inputImagem").value = (p.imagens && p.imagens[0]) || p.imagem || "";
+    document.getElementById("inputDescricao").value = p.descricao || "";
+    document.getElementById("modalForm").classList.add("aberto");
 }
 
 window.salvarProduto = async function(){
-    const btn = document.getElementById("btnSalvarProduto");
-    const nome = document.getElementById("nomeProduto").value.trim();
-    const preco = Number(document.getElementById("precoProduto").value);
-    
-    if(!nome || !preco){ alert("Preencha o nome e o preço."); return; }
+    const id = document.getElementById("produtoId").value;
+    const nome = document.getElementById("inputNome").value.trim();
+    const categoria = document.getElementById("inputCategoria").value;
+    let precoStr = document.getElementById("inputPreco").value.replace("R$", "").replace(/\./g, "").replace(",", ".").trim();
+    const preco = Number(precoStr) || 0;
+    const estoque = Number(document.getElementById("inputEstoque").value) || 0;
+    const imagem = document.getElementById("inputImagem").value.trim();
+    const descricao = document.getElementById("inputDescricao").value.trim();
 
-    btn.disabled = true;
-    btn.textContent = "Salvando...";
+    if(!nome){
+        alert("Informe o nome do produto.");
+        return;
+    }
 
-    try{
-        const imagens = [];
-        for(const foto of fotosAtuais){
-            if(typeof foto === "string") imagens.push(foto);
-            else imagens.push(await enviarFotoCloudinary(foto.file));
-        }
+    const dadosProduto = {
+        nome,
+        categoria,
+        preco,
+        estoque,
+        imagens: [imagem],
+        descricao
+    };
 
-        const produto = {
-            nome,
-            preco,
-            categoria: document.getElementById("categoriaProduto").value,
-            imagens,
-            cores: document.getElementById("coresProduto").value.split(",").map(i=>i.trim()).filter(Boolean),
-            tamanhos: document.getElementById("tamanhosProduto").value.split(",").map(i=>i.trim()).filter(Boolean),
-            estoqueVariacoes,
-            estoque: estoqueVariacoes.reduce((s,i)=>s+i.quantidade,0),
-            descricao: document.getElementById("descricaoProduto").value.trim(),
-            tag: document.getElementById("tagProduto").value.trim()
-        };
-
-        if(produtoEditando === null){
-            await addDoc(collection(db, "produtos"), { ...produto, criadoEm: serverTimestamp() });
-            alert("Produto cadastrado com sucesso!");
+    try {
+        if(id){
+            await updateDoc(doc(db, "produtos", id), dadosProduto);
         } else {
-            await updateDoc(doc(db, "produtos", produtos[produtoEditando].id), produto);
-            alert("Produto atualizado com sucesso!");
+            await addDoc(collection(db, "produtos"), dadosProduto);
         }
         fecharModal();
     } catch(e) {
-        alert("Erro ao salvar produto.");
-    } finally {
-        btn.disabled = false;
-        btn.textContent = "Salvar produto";
+        console.error("Erro ao salvar:", e);
+        alert("Erro ao salvar o produto.");
     }
-};
+}
 
-window.excluirProduto = async function(index){
-    if(confirm("Deseja realmente excluir este produto?")){
-        await deleteDoc(doc(db, "produtos", produtos[index].id));
-        alert("Excluído com sucesso!");
+window.deletarProduto = async function(id){
+    if(confirm("Tem certeza que deseja excluir este produto?")){
+        try {
+            await deleteDoc(doc(db, "produtos", id));
+        } catch(e) {
+            console.error("Erro ao excluir:", e);
+        }
     }
-};
-
-window.limparFormulario = function(){
-    document.getElementById("nomeProduto").value = "";
-    document.getElementById("precoProduto").value = "";
-    document.getElementById("coresProduto").value = "";
-    document.getElementById("tamanhosProduto").value = "";
-    document.getElementById("descricaoProduto").value = "";
-    document.getElementById("tagProduto").value = "";
-    estoqueVariacoes = [];
-    renderizarEstoque();
-    fotosAtuais = [];
-    renderizarFotos();
-};
-
-window.fecharModal = function(){
-    document.getElementById("modalProduto").classList.remove("aberto");
-};
-
-renderizarFotos();
-renderizarEstoque();
-
+}
 </script>
+
 </body>
 </html>

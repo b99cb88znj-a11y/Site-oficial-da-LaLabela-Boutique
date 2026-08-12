@@ -376,7 +376,7 @@ header{
 
 
 /* =========================================================
-   GRID & CARDS (COM ENQUADRAMENTO PERFEITO)
+   GRID & CARDS
 ========================================================= */
 
 .grid{
@@ -433,7 +433,7 @@ header{
     padding:12px 10px 14px;
     display:flex;
     flex-direction:column;
-    gap:6px;
+    gap:8px;
     flex:1;
 }
 
@@ -449,34 +449,27 @@ header{
     min-height:2.4em;
 }
 
-.price-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-top:auto;
-    padding-top:6px;
-    gap:6px;
-}
-
 .price{
     font-family:'Jost',sans-serif;
-    font-size:1rem;
+    font-size:1.15rem;
     font-weight:500;
     color:#000;
-    white-space:nowrap;
+    margin:4px 0;
 }
 
 .add-btn{
     background:#F8BBD0;
     border:1px solid #000;
     color:#000;
-    padding:7px 10px;
-    font-size:.68rem;
-    letter-spacing:.05em;
+    width:100%;
+    padding:10px;
+    font-size:.76rem;
+    letter-spacing:.08em;
     text-transform:uppercase;
     cursor:pointer;
     transition:all .2s ease;
-    white-space:nowrap;
+    margin-top:auto;
+    text-align:center;
 }
 
 .add-btn:hover{
@@ -662,11 +655,11 @@ header{
     display:flex;
     flex-direction:column;
     gap:6px;
-    margin-top:6px;
+    margin-top:4px;
 }
 
 .opcoes-produto label{
-    font-size:.65rem;
+    font-size:.68rem;
     color:#000!important;
     text-transform:uppercase;
     letter-spacing:.05em;
@@ -1738,15 +1731,13 @@ function montarVitrine(){
                     
                     ${cores.length || tamanhos.length ? `
                         <div class="opcoes-produto" onclick="event.stopPropagation()">
-                            ${cores.length ? `<div><label>Cor</label><select id="cor-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
-                            ${tamanhos.length ? `<div><label>Tamanho</label><select id="tamanho-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
+                            ${cores.length ? `<div><label>Cor — Opcional</label><select id="cor-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
+                            ${tamanhos.length ? `<div><label>Tamanho — Opcional</label><select id="tamanho-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
                         </div>
                     ` : ""}
 
-                    <div class="price-row">
-                        <span class="price">${formatarPreco(p.preco)}</span>
-                        <button class="add-btn" id="add-${i}" onclick="adicionarAoCarrinho(${i})" type="button">Adicionar</button>
-                    </div>
+                    <div class="price">${formatarPreco(p.preco)}</div>
+                    <button class="add-btn" id="add-${i}" onclick="adicionarAoCarrinho(${i})" type="button">Adicionar</button>
                 </div>
             </div>
         `;
@@ -1780,8 +1771,8 @@ function abrirDetalhesProduto(i){
             
             ${cores.length || tamanhos.length ? `
                 <div class="opcoes-produto">
-                    ${cores.length ? `<div><label>Cor</label><select id="cor-modal-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
-                    ${tamanhos.length ? `<div><label>Tamanho</label><select id="tamanho-modal-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
+                    ${cores.length ? `<div><label>Cor — Opcional</label><select id="cor-modal-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
+                    ${tamanhos.length ? `<div><label>Tamanho — Opcional</label><select id="tamanho-modal-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
                 </div>
             ` : ""}
 

@@ -16,12 +16,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-
 <style>
-
-/* =========================================================
-   TELA DE BOAS-VINDAS
-========================================================= */
 
 #telaBoasVindas{
     position:fixed;
@@ -68,11 +63,6 @@
     }
 }
 
-
-/* =========================================================
-   BASE
-========================================================= */
-
 :root{
     --cream:#FFFFFF;
     --wine:#E91E63;
@@ -112,11 +102,6 @@ a{
     color:inherit;
 }
 
-
-/* =========================================================
-   RIBBON
-========================================================= */
-
 .ribbon{
     display:flex;
     align-items:center;
@@ -144,11 +129,6 @@ a{
     background:linear-gradient(90deg,var(--line),transparent);
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
-
 header{
     position:sticky;
     top:0;
@@ -167,9 +147,6 @@ header{
     align-items:center;
     padding:0 18px;
 }
-
-
-/* CATEGORIA */
 
 .menu-categoria-topo{
     justify-self:start;
@@ -191,9 +168,6 @@ header{
     line-height:1;
 }
 
-
-/* LOGO */
-
 .brand-wrap{
     justify-self:center;
     display:flex;
@@ -213,32 +187,37 @@ header{
     white-space:nowrap;
 }
 
-
-/* SACOLA */
+/* SACOLA ROSA PINK */
 
 .cart-btn{
     justify-self:end;
     position:relative;
     display:flex;
     align-items:center;
+    justify-content:center;
     gap:7px;
-    background:none;
-    color:#E91E63;
+    background:#ed1764;
+    color:#fff;
     border:none;
-    padding:8px 0;
+    padding:9px 16px;
     font-family:'Jost',sans-serif;
     font-size:13px;
     font-weight:500;
     cursor:pointer;
+    border-radius:4px;
 }
 
 .cart-btn:hover{
-    color:#C2185B;
+    background:#C2185B;
+}
+
+.texto-sacola{
+    display:block;
 }
 
 .cart-count{
-    background:#E91E63;
-    color:#fff;
+    background:#fff;
+    color:#ed1764;
     font-size:10px;
     min-width:18px;
     height:18px;
@@ -247,12 +226,8 @@ header{
     align-items:center;
     justify-content:center;
     padding:0 4px;
+    font-weight:600;
 }
-
-
-/* =========================================================
-   HORÁRIO
-========================================================= */
 
 .hours-bar{
     background:var(--wine);
@@ -273,11 +248,6 @@ header{
     font-style:italic;
     font-size:.76rem;
 }
-
-
-/* =========================================================
-   HERO
-========================================================= */
 
 .hero{
     max-width:1180px;
@@ -307,11 +277,6 @@ header{
     line-height:1.6;
 }
 
-
-/* =========================================================
-   LOJA
-========================================================= */
-
 .shop{
     max-width:1180px;
     margin:0 auto;
@@ -323,11 +288,6 @@ header{
     font-size:1.9rem;
     margin-bottom:6px;
 }
-
-
-/* =========================================================
-   PESQUISA
-========================================================= */
 
 .barra-pesquisa{
     width:90%;
@@ -392,11 +352,6 @@ header{
     bottom:-5px;
     transform:rotate(45deg);
 }
-
-
-/* =========================================================
-   GRID
-========================================================= */
 
 .grid{
     display:grid;
@@ -486,6 +441,17 @@ header{
     color:#000;
 }
 
+.estoque-produto{
+    font-size:.75rem;
+    color:#555;
+    margin-top:2px;
+}
+
+.estoque-produto.sem-estoque{
+    color:#E91E63;
+    font-weight:600;
+}
+
 .add-btn{
     background:#F8BBD0;
     border:1px solid #000;
@@ -509,10 +475,12 @@ header{
     color:#fff;
 }
 
-
-/* =========================================================
-   GALERIA
-========================================================= */
+.add-btn:disabled{
+    background:#ddd;
+    border-color:#bbb;
+    color:#777;
+    cursor:not-allowed;
+}
 
 .galeria-produto{
     position:relative;
@@ -549,11 +517,6 @@ header{
     right:10px;
 }
 
-
-/* =========================================================
-   OPÇÕES
-========================================================= */
-
 .opcoes-produto{
     display:flex;
     flex-direction:column;
@@ -585,11 +548,6 @@ header{
     border-color:#ed1764;
 }
 
-
-/* =========================================================
-   MENSAGENS DE PRODUTOS
-========================================================= */
-
 .mensagem-produtos{
     width:100%;
     text-align:center;
@@ -616,11 +574,6 @@ header{
     display:block;
     margin-bottom:8px;
 }
-
-
-/* =========================================================
-   CARRINHO
-========================================================= */
 
 .overlay{
     position:fixed;
@@ -721,6 +674,11 @@ header{
     color:rgba(42,36,32,.55);
 }
 
+.item-opcoes{
+    font-size:.72rem;
+    color:#555;
+}
+
 .qty-row{
     display:flex;
     align-items:center;
@@ -729,13 +687,20 @@ header{
 }
 
 .qty-row button{
-    width:22px;
-    height:22px;
+    width:28px;
+    height:28px;
     border:1px solid var(--line);
     background:#fff;
     cursor:pointer;
-    font-size:.85rem;
+    font-size:.95rem;
     line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.qty-row button:hover{
+    background:#F8BBD0;
 }
 
 .qty-row span{
@@ -852,11 +817,6 @@ header{
     flex:none;
 }
 
-
-/* =========================================================
-   ENTREGA
-========================================================= */
-
 .delivery-info{
     max-width:760px;
     margin:0 auto;
@@ -892,11 +852,6 @@ header{
     text-transform:uppercase;
     text-decoration:none;
 }
-
-
-/* =========================================================
-   RODAPÉ
-========================================================= */
 
 .rodape{
     background-color:#ed1760;
@@ -938,11 +893,6 @@ header{
     text-align:center;
     font-size:15px;
 }
-
-
-/* =========================================================
-   MENU CATEGORIAS
-========================================================= */
 
 .menu-categorias{
     position:fixed;
@@ -1010,9 +960,6 @@ header{
     background:#F8BBD0;
 }
 
-
-/* FUNDO */
-
 .fundo-categorias{
     position:fixed;
     inset:0;
@@ -1027,11 +974,6 @@ header{
     opacity:1;
     visibility:visible;
 }
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
 
 @media(max-width:700px){
 
@@ -1069,8 +1011,7 @@ header{
         font-size:2.05rem;
     }
 
-    .menu-categoria-topo,
-    .cart-btn{
+    .menu-categoria-topo{
         font-size:0;
     }
 
@@ -1078,15 +1019,14 @@ header{
         font-size:25px;
     }
 
-    .cart-btn::before{
-        content:"🛍️";
-        font-size:23px;
-        line-height:1;
+    .cart-btn{
+        font-size:12px;
+        padding:8px 10px;
     }
 
     .cart-count{
         font-size:10px;
-        margin-left:-5px;
+        margin-left:0;
     }
 
     .hero{
@@ -1125,13 +1065,7 @@ header{
 </style>
 </head>
 
-
 <body>
-
-
-<!-- =========================================================
-     BOAS-VINDAS
-========================================================= -->
 
 <div id="telaBoasVindas">
 
@@ -1148,11 +1082,6 @@ header{
 
 </div>
 
-
-<!-- =========================================================
-     HEADER
-========================================================= -->
-
 <header>
 
     <div class="nav">
@@ -1166,7 +1095,6 @@ header{
             <span>Categoria</span>
         </button>
 
-
         <a href="#" class="brand-wrap">
 
             <span class="brand">
@@ -1175,10 +1103,10 @@ header{
 
         </a>
 
-
         <button
             class="cart-btn"
             onclick="openCart()"
+            type="button"
         >
 
             <span class="texto-sacola">
@@ -1196,7 +1124,6 @@ header{
 
     </div>
 
-
     <div class="hours-bar">
 
         <span>
@@ -1210,11 +1137,6 @@ header{
     </div>
 
 </header>
-
-
-<!-- =========================================================
-     HERO
-========================================================= -->
 
 <section class="hero">
 
@@ -1233,7 +1155,6 @@ header{
 
 </section>
 
-
 <div class="ribbon">
 
     <svg
@@ -1251,11 +1172,6 @@ header{
 
 </div>
 
-
-<!-- =========================================================
-     PRODUTOS
-========================================================= -->
-
 <section
     class="shop"
     id="shop"
@@ -1264,9 +1180,6 @@ header{
     <h2 class="serif">
         Nossa Coleção
     </h2>
-
-
-    <!-- PESQUISA -->
 
     <div class="barra-pesquisa">
 
@@ -1288,16 +1201,12 @@ header{
 
     </div>
 
-
-    <!-- PRODUTOS DO FIREBASE -->
-
     <div
         class="grid"
         id="productGrid"
     ></div>
 
 </section>
-
 
 <div class="ribbon">
 
@@ -1315,11 +1224,6 @@ header{
     </svg>
 
 </div>
-
-
-<!-- =========================================================
-     ENTREGA
-========================================================= -->
 
 <section
     class="delivery-info"
@@ -1358,13 +1262,7 @@ header{
 
 </section>
 
-
-<!-- =========================================================
-     RODAPÉ
-========================================================= -->
-
 <footer class="rodape">
-
 
     <div class="rodape-coluna">
 
@@ -1382,7 +1280,6 @@ header{
 
     </div>
 
-
     <div class="rodape-coluna">
 
         <div class="rodape-icone">
@@ -1398,7 +1295,6 @@ header{
         </p>
 
     </div>
-
 
     <div class="rodape-coluna">
 
@@ -1420,7 +1316,6 @@ header{
 
     </div>
 
-
     <div class="rodape-coluna">
 
         <div class="rodape-icone">
@@ -1437,19 +1332,12 @@ header{
 
     </div>
 
-
 </footer>
-
-
-<!-- =========================================================
-     MENU CATEGORIAS
-========================================================= -->
 
 <div
     class="fundo-categorias"
     id="fundoCategorias"
 ></div>
-
 
 <div
     class="menu-categorias"
@@ -1464,11 +1352,9 @@ header{
         ×
     </button>
 
-
     <h2>
         Categorias
     </h2>
-
 
     <div class="lista-categorias">
 
@@ -1532,17 +1418,11 @@ header{
 
 </div>
 
-
-<!-- =========================================================
-     CARRINHO
-========================================================= -->
-
 <div
     class="overlay"
     id="overlay"
     onclick="closeCart()"
 ></div>
-
 
 <div
     class="drawer"
@@ -1558,21 +1438,19 @@ header{
         <button
             class="close-btn"
             onclick="closeCart()"
+            type="button"
         >
             &times;
         </button>
 
     </div>
 
-
     <div
         class="drawer-items"
         id="drawerItems"
     ></div>
 
-
     <div class="drawer-foot">
-
 
         <div class="ship-block">
 
@@ -1592,9 +1470,7 @@ header{
 
         </div>
 
-
         <div class="totals">
-
 
             <div class="payment-block">
 
@@ -1624,7 +1500,6 @@ header{
 
             </div>
 
-
             <div class="row">
 
                 <span>
@@ -1637,7 +1512,6 @@ header{
 
             </div>
 
-
             <div class="row">
 
                 <span>
@@ -1649,7 +1523,6 @@ header{
                 </span>
 
             </div>
-
 
             <div class="row grand">
 
@@ -1665,11 +1538,11 @@ header{
 
         </div>
 
-
         <button
             class="checkout-btn"
             id="checkoutBtn"
             onclick="finalizarNoWhatsapp()"
+            type="button"
         >
 
             <svg
@@ -1693,35 +1566,15 @@ header{
 
 </div>
 
-
-<!-- =========================================================
-     JAVASCRIPT PRINCIPAL
-========================================================= -->
-
 <script>
 
-/* =========================================================
-   CONFIGURAÇÕES
-========================================================= */
-
 const WHATSAPP_NUMERO = "5544997720350";
-
-
-/* =========================================================
-   PRODUTOS
-   AGORA VÊM DO FIREBASE
-========================================================= */
 
 let PRODUTOS = [];
 
 let carrinho = [];
 
 let categoriaAtual = "todos";
-
-
-/* =========================================================
-   FRETES
-========================================================= */
 
 const FRETE_OPCOES = [
 
@@ -1763,7 +1616,6 @@ const FRETE_OPCOES = [
 
 ];
 
-
 const NOMES_DIAS_SEMANA = [
     "domingo",
     "segunda-feira",
@@ -1773,11 +1625,6 @@ const NOMES_DIAS_SEMANA = [
     "sexta-feira",
     "sábado"
 ];
-
-
-/* =========================================================
-   FUNÇÕES GERAIS
-========================================================= */
 
 function escaparHTML(valor){
 
@@ -1791,8 +1638,8 @@ function escaparHTML(valor){
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
-}
 
+}
 
 function formatarPreco(valor){
 
@@ -1805,12 +1652,8 @@ function formatarPreco(valor){
             currency:"BRL"
         }
     );
+
 }
-
-
-/* =========================================================
-   DATA DE ENTREGA
-========================================================= */
 
 function proximaDataParaDiaSemana(diaSemanaAlvo){
 
@@ -1828,8 +1671,8 @@ function proximaDataParaDiaSemana(diaSemanaAlvo){
     );
 
     return data;
-}
 
+}
 
 function formatarDataCurta(data){
 
@@ -1843,9 +1686,9 @@ function formatarDataCurta(data){
 
 }
 
-
 /* =========================================================
-   NORMALIZAR PRODUTO DO FIREBASE
+   NORMALIZAR PRODUTO
+   AGORA TAMBÉM LÊ O ESTOQUE DO PAINEL
 ========================================================= */
 
 function normalizarProduto(doc){
@@ -1859,11 +1702,6 @@ function normalizarProduto(doc){
         dados.fotosProduto ||
         [];
 
-
-    /*
-      Se o painel salvar apenas uma imagem
-    */
-
     if(!Array.isArray(imagens)){
 
         imagens = [
@@ -1871,11 +1709,6 @@ function normalizarProduto(doc){
         ];
 
     }
-
-
-    /*
-      Aceita também "imagem"
-    */
 
     if(
         imagens.length === 0 &&
@@ -1888,11 +1721,6 @@ function normalizarProduto(doc){
 
     }
 
-
-    /*
-      Remove links vazios
-    */
-
     imagens = imagens
         .filter(
             imagem =>
@@ -1900,11 +1728,6 @@ function normalizarProduto(doc){
                 String(imagem).trim() !== "" &&
                 !String(imagem).includes("COLE-AQUI")
         );
-
-
-    /*
-      Se houver URL em campo foto
-    */
 
     if(
         imagens.length === 0 &&
@@ -1917,16 +1740,10 @@ function normalizarProduto(doc){
 
     }
 
-
-    /*
-      CORES
-    */
-
     let cores =
         dados.cores ||
         dados.cor ||
         [];
-
 
     if(!Array.isArray(cores)){
 
@@ -1945,17 +1762,11 @@ function normalizarProduto(doc){
 
     }
 
-
-    /*
-      TAMANHOS
-    */
-
     let tamanhos =
         dados.tamanhos ||
         dados.tamanho ||
         dados.tamanhosDisponiveis ||
         [];
-
 
     if(!Array.isArray(tamanhos)){
 
@@ -1974,18 +1785,12 @@ function normalizarProduto(doc){
 
     }
 
-
-    /*
-      PREÇO
-    */
-
     let preco =
         dados.preco ??
         dados.preço ??
         dados.valor ??
         dados.price ??
         0;
-
 
     if(typeof preco === "string"){
 
@@ -1997,13 +1802,7 @@ function normalizarProduto(doc){
 
     }
 
-
     preco = Number(preco) || 0;
-
-
-    /*
-      NOME
-    */
 
     const nome =
         dados.nome ||
@@ -2012,30 +1811,15 @@ function normalizarProduto(doc){
         dados.title ||
         "Produto";
 
-
-    /*
-      CATEGORIA
-    */
-
     const categoria =
         dados.categoria ||
         dados.category ||
         "";
 
-
-    /*
-      DESCRIÇÃO
-    */
-
     const descricao =
         dados.descricao ||
         dados.description ||
         "";
-
-
-    /*
-      TAG
-    */
 
     const tag =
         dados.tag ||
@@ -2043,6 +1827,38 @@ function normalizarProduto(doc){
         dados.badge ||
         "";
 
+    /* =====================================================
+       ESTOQUE
+       Aceita estoque, stock, quantidadeEstoque,
+       qtdEstoque ou quantidade
+    ===================================================== */
+
+    let estoque =
+        dados.estoque ??
+        dados.stock ??
+        dados.quantidadeEstoque ??
+        dados.qtdEstoque ??
+        dados.quantidade ??
+        0;
+
+    if(typeof estoque === "string"){
+
+        estoque = estoque
+            .replace(",",".")
+            .trim();
+
+    }
+
+    estoque = Number(estoque);
+
+    if(!Number.isFinite(estoque)){
+        estoque = 0;
+    }
+
+    estoque = Math.max(
+        0,
+        Math.floor(estoque)
+    );
 
     return {
 
@@ -2062,12 +1878,13 @@ function normalizarProduto(doc){
 
         descricao:String(descricao),
 
-        tag:String(tag)
+        tag:String(tag),
+
+        estoque:estoque
 
     };
 
 }
-
 
 /* =========================================================
    MONTAR VITRINE
@@ -2078,11 +1895,9 @@ function montarVitrine(){
     const grid =
         document.getElementById("productGrid");
 
-
     if(!grid){
         return;
     }
-
 
     if(PRODUTOS.length === 0){
 
@@ -2108,7 +1923,6 @@ function montarVitrine(){
         return;
     }
 
-
     grid.innerHTML = PRODUTOS
         .map((p,i) => {
 
@@ -2117,19 +1931,18 @@ function montarVitrine(){
                     ? p.imagens
                     : [];
 
-
             const imagemPrincipal =
                 imagens[0] ||
                 "https://via.placeholder.com/600x750?text=LaLabela";
 
-
             const cores =
                 p.cores || [];
-
 
             const tamanhos =
                 p.tamanhos || [];
 
+            const semEstoque =
+                p.estoque <= 0;
 
             return `
 
@@ -2140,9 +1953,7 @@ function montarVitrine(){
                     data-tag="${escaparHTML(p.tag)}"
                 >
 
-
                     <div class="img-wrap galeria-produto">
-
 
                         ${
                             p.tag
@@ -2156,23 +1967,14 @@ function montarVitrine(){
                             ""
                         }
 
-
                         <img
-
                             id="foto-principal-${i}"
-
                             class="imagem-principal"
-
                             src="${escaparHTML(imagemPrincipal)}"
-
                             alt="${escaparHTML(p.nome)}"
-
                             loading="lazy"
-
                             onerror="this.src='https://via.placeholder.com/600x750?text=Imagem+indisponível';"
-
                         >
-
 
                         ${
                             imagens.length > 1
@@ -2180,26 +1982,17 @@ function montarVitrine(){
                             `
 
                                 <button
-
                                     class="seta-galeria seta-esquerda"
-
                                     onclick="mudarFoto(${i},-1)"
-
                                     type="button"
-
                                 >
                                     ‹
                                 </button>
 
-
                                 <button
-
                                     class="seta-galeria seta-direita"
-
                                     onclick="mudarFoto(${i},1)"
-
                                     type="button"
-
                                 >
                                     ›
                                 </button>
@@ -2209,22 +2002,27 @@ function montarVitrine(){
                             ""
                         }
 
-
                     </div>
 
-
                     <div class="card-body">
-
 
                         <h3>
                             ${escaparHTML(p.nome)}
                         </h3>
 
-
                         <div class="desc">
                             ${escaparHTML(p.descricao)}
                         </div>
 
+                        <div class="estoque-produto ${semEstoque ? "sem-estoque" : ""}">
+
+                            ${
+                                semEstoque
+                                ? "Produto esgotado"
+                                : `Estoque: ${p.estoque} unidade${p.estoque === 1 ? "" : "s"}`
+                            }
+
+                        </div>
 
                         ${
                             cores.length || tamanhos.length
@@ -2232,7 +2030,6 @@ function montarVitrine(){
                             `
 
                                 <div class="opcoes-produto">
-
 
                                     ${
                                         cores.length
@@ -2245,9 +2042,7 @@ function montarVitrine(){
                                                     Cor — opcional
                                                 </label>
 
-                                                <select
-                                                    id="cor-${i}"
-                                                >
+                                                <select id="cor-${i}">
 
                                                     <option value="">
                                                         Não informar
@@ -2276,7 +2071,6 @@ function montarVitrine(){
                                         ""
                                     }
 
-
                                     ${
                                         tamanhos.length
                                         ?
@@ -2288,9 +2082,7 @@ function montarVitrine(){
                                                     Tamanho — opcional
                                                 </label>
 
-                                                <select
-                                                    id="tamanho-${i}"
-                                                >
+                                                <select id="tamanho-${i}">
 
                                                     <option value="">
                                                         Não informar
@@ -2319,7 +2111,6 @@ function montarVitrine(){
                                         ""
                                     }
 
-
                                 </div>
 
                             `
@@ -2327,37 +2118,31 @@ function montarVitrine(){
                             ""
                         }
 
-
                         <div class="price-row">
-
 
                             <span class="price">
                                 ${formatarPreco(p.preco)}
                             </span>
 
-
                             <button
-
                                 class="add-btn"
-
                                 id="add-${i}"
-
                                 onclick="adicionarAoCarrinho(${i})"
-
                                 type="button"
-
+                                ${semEstoque ? "disabled" : ""}
                             >
 
-                                Adicionar
+                                ${
+                                    semEstoque
+                                    ? "Esgotado"
+                                    : "Adicionar"
+                                }
 
                             </button>
 
-
                         </div>
 
-
                     </div>
-
 
                 </div>
 
@@ -2366,15 +2151,9 @@ function montarVitrine(){
         })
         .join("");
 
-
     aplicarFiltros();
 
 }
-
-
-/* =========================================================
-   GALERIA
-========================================================= */
 
 function selecionarFoto(
     produtoIndex,
@@ -2384,37 +2163,30 @@ function selecionarFoto(
     const produto =
         PRODUTOS[produtoIndex];
 
-
     if(!produto){
         return;
     }
 
-
     const imagens =
         produto.imagens || [];
-
 
     const principal =
         document.getElementById(
             `foto-principal-${produtoIndex}`
         );
 
-
     if(!principal){
         return;
     }
-
 
     if(!imagens[fotoIndex]){
         return;
     }
 
-
     principal.src =
         imagens[fotoIndex];
 
 }
-
 
 function mudarFoto(
     produtoIndex,
@@ -2424,31 +2196,25 @@ function mudarFoto(
     const produto =
         PRODUTOS[produtoIndex];
 
-
     if(!produto){
         return;
     }
 
-
     const imagens =
         produto.imagens || [];
-
 
     if(imagens.length <= 1){
         return;
     }
-
 
     const principal =
         document.getElementById(
             `foto-principal-${produtoIndex}`
         );
 
-
     if(!principal){
         return;
     }
-
 
     let indiceAtual =
         imagens.findIndex(
@@ -2457,26 +2223,21 @@ function mudarFoto(
                 principal.src.endsWith(imagem)
         );
 
-
     if(indiceAtual < 0){
         indiceAtual = 0;
     }
 
-
     let novoIndice =
         indiceAtual + direcao;
-
 
     if(novoIndice < 0){
         novoIndice =
             imagens.length - 1;
     }
 
-
     if(novoIndice >= imagens.length){
         novoIndice = 0;
     }
-
 
     selecionarFoto(
         produtoIndex,
@@ -2485,11 +2246,6 @@ function mudarFoto(
 
 }
 
-
-/* =========================================================
-   FRETE
-========================================================= */
-
 function montarFrete(){
 
     const select =
@@ -2497,11 +2253,9 @@ function montarFrete(){
             "shipSelect"
         );
 
-
     if(!select){
         return;
     }
-
 
     select.innerHTML =
         FRETE_OPCOES
@@ -2517,61 +2271,99 @@ function montarFrete(){
 
 }
 
-
 /* =========================================================
    CARRINHO
+   CORRIGIDO
 ========================================================= */
 
 function criarChaveItem(item){
 
-    return `${item.nome}|${item.cor || ""}|${item.tamanho || ""}`;
+    return `${item.produtoId || item.nome}|${item.cor || ""}|${item.tamanho || ""}`;
 
 }
 
+function quantidadeNoCarrinho(produtoId){
+
+    return carrinho.reduce(
+        (total,item) => {
+
+            if(item.produtoId === produtoId){
+                return total + item.qtd;
+            }
+
+            return total;
+
+        },
+        0
+    );
+
+}
 
 function adicionarAoCarrinho(i){
 
     const p =
         PRODUTOS[i];
 
-
     if(!p){
         return;
     }
 
+    if(p.estoque <= 0){
+
+        alert(
+            "Este produto está esgotado."
+        );
+
+        return;
+
+    }
 
     const corElement =
         document.getElementById(
             `cor-${i}`
         );
 
-
     const tamanhoElement =
         document.getElementById(
             `tamanho-${i}`
         );
-
 
     const cor =
         corElement
         ? corElement.value
         : "";
 
-
     const tamanho =
         tamanhoElement
         ? tamanhoElement.value
         : "";
 
+    const chave =
+        `${p.id || p.nome}|${cor}|${tamanho}`;
 
     const existente =
         carrinho.find(
             item =>
-                item.nome === p.nome &&
-                item.cor === cor &&
-                item.tamanho === tamanho
+                criarChaveItem(item) === chave
         );
 
+    const quantidadeAtualProduto =
+        quantidadeNoCarrinho(
+            p.id || p.nome
+        );
+
+    if(
+        quantidadeAtualProduto >=
+        p.estoque
+    ){
+
+        alert(
+            `Você já adicionou todo o estoque disponível deste produto. Estoque: ${p.estoque}.`
+        );
+
+        return;
+
+    }
 
     if(existente){
 
@@ -2580,6 +2372,9 @@ function adicionarAoCarrinho(i){
     }else{
 
         carrinho.push({
+
+            produtoId:
+                p.id || p.nome,
 
             nome:p.nome,
 
@@ -2600,32 +2395,32 @@ function adicionarAoCarrinho(i){
 
     }
 
-
     const btn =
         document.getElementById(
             `add-${i}`
         );
 
-
     if(btn){
 
         btn.textContent =
-            "Adicionado ✓";
+            "Adicionado";
 
         btn.classList.add("added");
 
-
         setTimeout(() => {
 
-            btn.textContent =
-                "Adicionar";
+            if(!btn.disabled){
 
-            btn.classList.remove("added");
+                btn.textContent =
+                    "Adicionar";
+
+                btn.classList.remove("added");
+
+            }
 
         },1200);
 
     }
-
 
     atualizarCarrinho();
 
@@ -2633,58 +2428,99 @@ function adicionarAoCarrinho(i){
 
 }
 
+/* =========================================================
+   ALTERAR QUANTIDADE
+   CORREÇÃO DOS BOTÕES + E -
+========================================================= */
 
-function alterarQtd(
-    chave,
+function alterarQtdPorIndice(
+    indice,
     delta
 ){
 
     const item =
-        carrinho.find(
-            i =>
-                criarChaveItem(i) === chave
-        );
-
+        carrinho[indice];
 
     if(!item){
         return;
     }
 
+    const produto =
+        PRODUTOS.find(
+            p =>
+                (p.id || p.nome) ===
+                item.produtoId
+        );
 
-    item.qtd += delta;
+    if(delta > 0){
 
+        if(!produto){
 
-    if(item.qtd <= 0){
+            return;
 
-        carrinho =
-            carrinho.filter(
-                i =>
-                    criarChaveItem(i) !== chave
+        }
+
+        const totalProduto =
+            quantidadeNoCarrinho(
+                item.produtoId
             );
+
+        if(
+            totalProduto >=
+            produto.estoque
+        ){
+
+            alert(
+                `Não há mais unidades disponíveis. Estoque: ${produto.estoque}.`
+            );
+
+            return;
+
+        }
 
     }
 
+    item.qtd += delta;
 
-    atualizarCarrinho();
+    if(item.qtd <= 0){
 
-}
-
-
-function removerItem(
-    chave
-){
-
-    carrinho =
-        carrinho.filter(
-            i =>
-                criarChaveItem(i) !== chave
+        carrinho.splice(
+            indice,
+            1
         );
 
+    }
 
     atualizarCarrinho();
 
 }
 
+/* =========================================================
+   REMOVER ITEM
+   CORREÇÃO DO BOTÃO REMOVER
+========================================================= */
+
+function removerItemPorIndice(
+    indice
+){
+
+    if(
+        indice < 0 ||
+        indice >= carrinho.length
+    ){
+
+        return;
+
+    }
+
+    carrinho.splice(
+        indice,
+        1
+    );
+
+    atualizarCarrinho();
+
+}
 
 /* =========================================================
    ATUALIZAR CARRINHO
@@ -2697,7 +2533,6 @@ function atualizarCarrinho(){
             "cartCount"
         );
 
-
     if(cartCount){
 
         cartCount.textContent =
@@ -2709,17 +2544,14 @@ function atualizarCarrinho(){
 
     }
 
-
     const wrap =
         document.getElementById(
             "drawerItems"
         );
 
-
     if(!wrap){
         return;
     }
-
 
     if(carrinho.length === 0){
 
@@ -2731,7 +2563,7 @@ function atualizarCarrinho(){
 
                 <br>
 
-                Escolha suas peças favoritas ✂️
+                Escolha suas peças favoritas.
 
             </div>
 
@@ -2741,14 +2573,9 @@ function atualizarCarrinho(){
 
         wrap.innerHTML =
             carrinho
-            .map(item => {
-
-                const chave =
-                    criarChaveItem(item);
-
+            .map((item,index) => {
 
                 const opcoes = [];
-
 
                 if(item.cor){
 
@@ -2758,7 +2585,6 @@ function atualizarCarrinho(){
 
                 }
 
-
                 if(item.tamanho){
 
                     opcoes.push(
@@ -2767,106 +2593,70 @@ function atualizarCarrinho(){
 
                 }
 
-
                 return `
 
                     <div class="item">
 
-
                         <img
-
                             src="${escaparHTML(item.imagem)}"
-
                             alt="${escaparHTML(item.nome)}"
-
                             onerror="this.src='https://via.placeholder.com/100x120?text=Produto';"
-
                         >
-
 
                         <div class="item-info">
 
-
                             <span class="name">
-
                                 ${escaparHTML(item.nome)}
-
                             </span>
-
 
                             <span class="unit-price">
-
                                 ${formatarPreco(item.preco)}
                                 / un.
-
                             </span>
-
 
                             ${
                                 opcoes.length
                                 ?
                                 `
-
                                     <span class="item-opcoes">
-
                                         ${opcoes.join(" • ")}
-
                                     </span>
-
                                 `
                                 :
                                 ""
                             }
 
-
                             <div class="qty-row">
 
-
                                 <button
-
-                                    onclick="alterarQtd(${JSON.stringify(chave)},-1)"
-
+                                    onclick="alterarQtdPorIndice(${index},-1)"
                                     type="button"
-
                                 >
                                     −
                                 </button>
-
 
                                 <span>
                                     ${item.qtd}
                                 </span>
 
-
                                 <button
-
-                                    onclick="alterarQtd(${JSON.stringify(chave)},1)"
-
+                                    onclick="alterarQtdPorIndice(${index},1)"
                                     type="button"
-
                                 >
                                     +
                                 </button>
 
-
                                 <button
-
                                     class="remove-btn"
-
-                                    onclick="removerItem(${JSON.stringify(chave)})"
-
+                                    onclick="removerItemPorIndice(${index})"
                                     type="button"
-
                                 >
                                     remover
                                 </button>
 
-
                             </div>
 
-
                         </div>
-
 
                         <div class="item-total">
 
@@ -2875,7 +2665,6 @@ function atualizarCarrinho(){
                             )}
 
                         </div>
-
 
                     </div>
 
@@ -2886,15 +2675,9 @@ function atualizarCarrinho(){
 
     }
 
-
     renderTotals();
 
 }
-
-
-/* =========================================================
-   TOTAIS
-========================================================= */
 
 function getSubtotal(){
 
@@ -2906,46 +2689,37 @@ function getSubtotal(){
 
 }
 
-
 function renderTotals(){
 
     const subtotal =
         getSubtotal();
-
 
     const select =
         document.getElementById(
             "shipSelect"
         );
 
-
     if(!select){
         return;
     }
 
-
     const idx =
         Number(select.value || 0);
 
-
     const opcao =
         FRETE_OPCOES[idx];
-
 
     if(!opcao){
         return;
     }
 
-
     let frete =
         opcao.valor;
-
 
     let freteTexto =
         frete === 0
         ? "Grátis"
         : formatarPreco(frete);
-
 
     if(
         opcao.gratisAcima > 0 &&
@@ -2958,7 +2732,6 @@ function renderTotals(){
 
     }
 
-
     if(opcao.consultar){
 
         freteTexto =
@@ -2966,10 +2739,8 @@ function renderTotals(){
 
     }
 
-
     let notaTexto =
         opcao.nota || "";
-
 
     if(
         opcao.diaSemana !== null &&
@@ -2980,7 +2751,6 @@ function renderTotals(){
             proximaDataParaDiaSemana(
                 opcao.diaSemana
             );
-
 
         notaTexto +=
             ` Próxima entrega: ${
@@ -2993,12 +2763,10 @@ function renderTotals(){
 
     }
 
-
     document.getElementById(
         "subtotalVal"
     ).textContent =
         formatarPreco(subtotal);
-
 
     document.getElementById(
         "freightVal"
@@ -3007,12 +2775,10 @@ function renderTotals(){
         ? freteTexto
         : "—";
 
-
     document.getElementById(
         "shipNote"
     ).textContent =
         notaTexto;
-
 
     const totalNumerico =
         subtotal +
@@ -3022,7 +2788,6 @@ function renderTotals(){
             : frete
         );
 
-
     document.getElementById(
         "totalVal"
     ).textContent =
@@ -3030,22 +2795,15 @@ function renderTotals(){
             totalNumerico
         );
 
-
     const btn =
         document.getElementById(
             "checkoutBtn"
         );
 
-
     btn.disabled =
         carrinho.length === 0;
 
 }
-
-
-/* =========================================================
-   ABRIR / FECHAR CARRINHO
-========================================================= */
 
 function openCart(){
 
@@ -3053,13 +2811,11 @@ function openCart(){
         .getElementById("drawer")
         .classList.add("open");
 
-
     document
         .getElementById("overlay")
         .classList.add("open");
 
 }
-
 
 function closeCart(){
 
@@ -3067,17 +2823,15 @@ function closeCart(){
         .getElementById("drawer")
         .classList.remove("open");
 
-
     document
         .getElementById("overlay")
         .classList.remove("open");
 
 }
 
-
-/* =========================================================
-   WHATSAPP
-========================================================= */
+   <!-- =========================================================
+     WHATSAPP
+========================================================= -->
 
 function finalizarNoWhatsapp(){
 
@@ -3085,12 +2839,8 @@ function finalizarNoWhatsapp(){
         return;
     }
 
-
     const pagamento =
-        document.getElementById(
-            "paymentSelect"
-        ).value;
-
+        document.getElementById("paymentSelect").value;
 
     if(!pagamento){
 
@@ -3099,29 +2849,21 @@ function finalizarNoWhatsapp(){
         );
 
         return;
-
     }
-
 
     const idx =
         Number(
-            document.getElementById(
-                "shipSelect"
-            ).value || 0
+            document.getElementById("shipSelect").value || 0
         );
-
 
     const opcao =
         FRETE_OPCOES[idx];
 
-
     const subtotal =
         getSubtotal();
 
-
     let frete =
         opcao.valor;
-
 
     if(
         opcao.gratisAcima > 0 &&
@@ -3132,7 +2874,6 @@ function finalizarNoWhatsapp(){
 
     }
 
-
     let msg =
         "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
 
@@ -3142,7 +2883,6 @@ function finalizarNoWhatsapp(){
         msg +=
             `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
 
-
         if(item.cor){
 
             msg +=
@@ -3150,14 +2890,12 @@ function finalizarNoWhatsapp(){
 
         }
 
-
         if(item.tamanho){
 
             msg +=
                 `   Tamanho: ${item.tamanho}\n`;
 
         }
-
 
         msg += "\n";
 
@@ -3181,7 +2919,6 @@ function finalizarNoWhatsapp(){
             proximaDataParaDiaSemana(
                 opcao.diaSemana
             );
-
 
         msg +=
             ` (próxima entrega: ${formatarDataCurta(proximaData)} - ${NOMES_DIAS_SEMANA[opcao.diaSemana]})`;
@@ -3280,22 +3017,21 @@ function aplicarFiltros(){
         }
 
 
-        const texto =
-            `
+        const texto = `
 
-                ${produto.nome}
+            ${produto.nome}
 
-                ${produto.descricao}
+            ${produto.descricao}
 
-                ${produto.categoria}
+            ${produto.categoria}
 
-                ${produto.tag}
+            ${produto.tag}
 
-                ${(produto.cores || []).join(" ")}
+            ${(produto.cores || []).join(" ")}
 
-                ${(produto.tamanhos || []).join(" ")}
+            ${(produto.tamanhos || []).join(" ")}
 
-            `.toLowerCase();
+        `.toLowerCase();
 
 
         const correspondePesquisa =
@@ -3456,14 +3192,9 @@ document
         )}`;
 
 
-</script>
-
-
-<!-- =========================================================
-     SERVICE WORKER
-========================================================= -->
-
-<script>
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
 
 if("serviceWorker" in navigator){
 
@@ -3479,12 +3210,13 @@ if("serviceWorker" in navigator){
 
 }
 
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
 </script>
 
-
-<!-- =========================================================
-     FIREBASE
-========================================================= -->
 
 <script type="module">
 
@@ -3492,13 +3224,11 @@ import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-
 import {
     getFirestore,
     collection,
     onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
 
 import {
     getAuth,
@@ -3536,13 +3266,11 @@ const firebaseConfig = {
 
 
 /* =========================================================
-   INICIALIZAR FIREBASE
+   INICIAR FIREBASE
 ========================================================= */
 
 const app =
-    initializeApp(
-        firebaseConfig
-    );
+    initializeApp(firebaseConfig);
 
 
 const db =
@@ -3552,8 +3280,6 @@ const db =
 const auth =
     getAuth(app);
 
-
-/* Disponibiliza globalmente */
 
 window.firebaseApp =
     app;
@@ -3570,37 +3296,36 @@ window.firebaseAuth =
 ========================================================= */
 
 window.fazerLoginFirebase =
-    async function(email, senha){
+async function(email, senha){
 
-        try{
+    try{
 
-            const resultado =
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    senha
-                );
-
-
-            console.log(
-                "Login realizado com sucesso!"
+        const resultado =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                senha
             );
 
+        console.log(
+            "Login realizado:",
+            resultado.user.email
+        );
 
-            return resultado.user;
+        return resultado.user;
 
-        }catch(erro){
+    }catch(erro){
 
-            console.error(
-                "Erro ao fazer login:",
-                erro
-            );
+        console.error(
+            "Erro no login:",
+            erro
+        );
 
-            throw erro;
+        throw erro;
 
-        }
+    }
 
-    };
+};
 
 
 /* =========================================================
@@ -3608,30 +3333,30 @@ window.fazerLoginFirebase =
 ========================================================= */
 
 window.sairFirebase =
-    async function(){
+async function(){
 
-        try{
+    try{
 
-            await signOut(auth);
+        await signOut(auth);
 
-            console.log(
-                "Usuário saiu da conta."
-            );
+        console.log(
+            "Usuário saiu da conta."
+        );
 
-        }catch(erro){
+    }catch(erro){
 
-            console.error(
-                "Erro ao sair:",
-                erro
-            );
+        console.error(
+            "Erro ao sair:",
+            erro
+        );
 
-        }
+    }
 
-    };
+};
 
 
 /* =========================================================
-   LOGIN OBSERVER
+   OBSERVADOR DE LOGIN
 ========================================================= */
 
 onAuthStateChanged(
@@ -3658,7 +3383,812 @@ onAuthStateChanged(
 
 
 /* =========================================================
-   CARREGAR PRODUTOS DO PAINEL
+   PREPARAR PRODUTO
+   LÊ O ESTOQUE DO FIRESTORE
+========================================================= */
+
+function prepararProduto(doc){
+
+    const dados =
+        doc.data();
+
+
+    /* IMAGENS */
+
+    let imagens =
+        dados.imagens ||
+        dados.images ||
+        dados.fotos ||
+        dados.fotosProduto ||
+        [];
+
+
+    if(!Array.isArray(imagens)){
+
+        imagens = [
+            imagens
+        ];
+
+    }
+
+
+    if(
+        imagens.length === 0 &&
+        dados.imagem
+    ){
+
+        imagens = [
+            dados.imagem
+        ];
+
+    }
+
+
+    if(
+        imagens.length === 0 &&
+        dados.foto
+    ){
+
+        imagens = [
+            dados.foto
+        ];
+
+    }
+
+
+    imagens =
+        imagens.filter(
+            imagem =>
+                imagem &&
+                String(imagem).trim() !== "" &&
+                !String(imagem).includes("COLE-AQUI")
+        );
+
+
+    /* CORES */
+
+    let cores =
+        dados.cores ||
+        dados.cor ||
+        [];
+
+
+    if(!Array.isArray(cores)){
+
+        cores =
+            String(cores)
+            .split(",")
+            .map(v => v.trim())
+            .filter(Boolean);
+
+    }
+
+
+    /* TAMANHOS */
+
+    let tamanhos =
+        dados.tamanhos ||
+        dados.tamanho ||
+        dados.tamanhosDisponiveis ||
+        [];
+
+
+    if(!Array.isArray(tamanhos)){
+
+        tamanhos =
+            String(tamanhos)
+            .split(",")
+            .map(v => v.trim())
+            .filter(Boolean);
+
+    }
+
+
+    /* PREÇO */
+
+    let preco =
+        dados.preco ??
+        dados.preço ??
+        dados.valor ??
+        dados.price ??
+        0;
+
+
+    if(typeof preco === "string"){
+
+        preco =
+            preco
+            .replace("R$","")
+            .replace(/\./g,"")
+            .replace(",",".")
+            .trim();
+
+    }
+
+
+    preco =
+        Number(preco) || 0;
+
+
+    /* =====================================================
+       ESTOQUE
+    ===================================================== */
+
+    let estoque =
+        dados.estoque ??
+        dados.estoqueAtual ??
+        dados.quantidade ??
+        dados.qtdEstoque ??
+        dados.stock ??
+        0;
+
+
+    if(typeof estoque === "string"){
+
+        estoque =
+            estoque
+            .replace(",",".")
+            .trim();
+
+    }
+
+
+    estoque =
+        Number(estoque);
+
+
+    if(!Number.isFinite(estoque)){
+
+        estoque = 0;
+
+    }
+
+
+    estoque =
+        Math.max(
+            0,
+            Math.floor(estoque)
+        );
+
+
+    /* NOME */
+
+    const nome =
+        dados.nome ||
+        dados.name ||
+        dados.titulo ||
+        dados.title ||
+        "Produto";
+
+
+    /* CATEGORIA */
+
+    const categoria =
+        dados.categoria ||
+        dados.category ||
+        "";
+
+
+    /* DESCRIÇÃO */
+
+    const descricao =
+        dados.descricao ||
+        dados.description ||
+        "";
+
+
+    /* TAG */
+
+    const tag =
+        dados.tag ||
+        dados.etiqueta ||
+        dados.badge ||
+        "";
+
+
+    return {
+
+        id:doc.id,
+
+        nome:String(nome),
+
+        preco:preco,
+
+        estoque:estoque,
+
+        categoria:String(categoria),
+
+        imagens:imagens,
+
+        cores:cores,
+
+        tamanhos:tamanhos,
+
+        descricao:String(descricao),
+
+        tag:String(tag)
+
+    };
+
+}
+
+
+/* =========================================================
+   MOSTRAR PRODUTOS
+========================================================= */
+
+function mostrarProdutosComEstoque(){
+
+    const grid =
+        document.getElementById(
+            "productGrid"
+        );
+
+
+    if(!grid){
+        return;
+    }
+
+
+    if(PRODUTOS.length === 0){
+
+        grid.innerHTML = `
+
+            <div
+                class="mensagem-produtos"
+                style="grid-column:1/-1;"
+            >
+
+                <div class="icone">
+                    🛍️
+                </div>
+
+                Nenhum produto disponível.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        PRODUTOS
+        .map((p,i) => {
+
+            const imagens =
+                p.imagens || [];
+
+
+            const imagem =
+                imagens[0] ||
+                "https://via.placeholder.com/600x750?text=LaLabela";
+
+
+            const estoque =
+                Number(p.estoque) || 0;
+
+
+            const semEstoque =
+                estoque <= 0;
+
+
+            const cores =
+                p.cores || [];
+
+
+            const tamanhos =
+                p.tamanhos || [];
+
+
+            return `
+
+                <div
+                    class="card"
+                    data-produto-index="${i}"
+                    data-categoria="${escaparHTML(p.categoria)}"
+                    data-tag="${escaparHTML(p.tag)}"
+                >
+
+
+                    <div class="img-wrap galeria-produto">
+
+
+                        ${
+                            p.tag
+                            ?
+                            `
+                                <span class="badge">
+                                    ${escaparHTML(p.tag)}
+                                </span>
+                            `
+                            :
+                            ""
+                        }
+
+
+                        ${
+                            semEstoque
+                            ?
+                            `
+                                <span
+                                    class="badge"
+                                    style="
+                                        left:auto;
+                                        right:12px;
+                                    "
+                                >
+                                    Esgotado
+                                </span>
+                            `
+                            :
+                            ""
+                        }
+
+
+                        <img
+                            id="foto-principal-${i}"
+                            class="imagem-principal"
+                            src="${escaparHTML(imagem)}"
+                            alt="${escaparHTML(p.nome)}"
+                            loading="lazy"
+                            onerror="this.src='https://via.placeholder.com/600x750?text=Imagem+indisponível';"
+                        >
+
+
+                        ${
+                            imagens.length > 1
+                            ?
+                            `
+
+                                <button
+                                    class="seta-galeria seta-esquerda"
+                                    onclick="mudarFoto(${i},-1)"
+                                    type="button"
+                                >
+                                    ‹
+                                </button>
+
+
+                                <button
+                                    class="seta-galeria seta-direita"
+                                    onclick="mudarFoto(${i},1)"
+                                    type="button"
+                                >
+                                    ›
+                                </button>
+
+                            `
+                            :
+                            ""
+                        }
+
+
+                    </div>
+
+
+                    <div class="card-body">
+
+
+                        <h3>
+                            ${escaparHTML(p.nome)}
+                        </h3>
+
+
+                        <div class="desc">
+                            ${escaparHTML(p.descricao)}
+                        </div>
+
+
+                        ${
+                            cores.length || tamanhos.length
+                            ?
+                            `
+
+                                <div class="opcoes-produto">
+
+
+                                    ${
+                                        cores.length
+                                        ?
+                                        `
+
+                                            <div>
+
+                                                <label>
+                                                    Cor — opcional
+                                                </label>
+
+                                                <select id="cor-${i}">
+
+                                                    <option value="">
+                                                        Não informar
+                                                    </option>
+
+                                                    ${
+                                                        cores
+                                                        .map(cor => `
+
+                                                            <option
+                                                                value="${escaparHTML(cor)}"
+                                                            >
+                                                                ${escaparHTML(cor)}
+                                                            </option>
+
+                                                        `)
+                                                        .join("")
+                                                    }
+
+                                                </select>
+
+                                            </div>
+
+                                        `
+                                        :
+                                        ""
+                                    }
+
+
+                                    ${
+                                        tamanhos.length
+                                        ?
+                                        `
+
+                                            <div>
+
+                                                <label>
+                                                    Tamanho — opcional
+                                                </label>
+
+                                                <select id="tamanho-${i}">
+
+                                                    <option value="">
+                                                        Não informar
+                                                    </option>
+
+                                                    ${
+                                                        tamanhos
+                                                        .map(tamanho => `
+
+                                                            <option
+                                                                value="${escaparHTML(tamanho)}"
+                                                            >
+                                                                ${escaparHTML(tamanho)}
+                                                            </option>
+
+                                                        `)
+                                                        .join("")
+                                                    }
+
+                                                </select>
+
+                                            </div>
+
+                                        `
+                                        :
+                                        ""
+                                    }
+
+
+                                </div>
+
+                            `
+                            :
+                            ""
+                        }
+
+
+                        <div
+                            style="
+                                font-size:.78rem;
+                                color:#666;
+                                margin-top:5px;
+                            "
+                        >
+
+                            ${
+                                semEstoque
+                                ?
+                                "Produto esgotado"
+                                :
+                                `Estoque disponível: ${estoque}`
+                            }
+
+                        </div>
+
+
+                        <div class="price-row">
+
+
+                            <span class="price">
+                                ${formatarPreco(p.preco)}
+                            </span>
+
+
+                            <button
+                                class="add-btn"
+                                id="add-${i}"
+                                onclick="adicionarAoCarrinho(${i})"
+                                type="button"
+                                ${semEstoque ? "disabled" : ""}
+                            >
+
+                                ${
+                                    semEstoque
+                                    ?
+                                    "Esgotado"
+                                    :
+                                    "Adicionar"
+                                }
+
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+
+    aplicarFiltros();
+
+}
+
+
+/* =========================================================
+   ADICIONAR AO CARRINHO
+   RESPEITANDO O ESTOQUE
+========================================================= */
+
+window.adicionarAoCarrinho =
+function(i){
+
+    const p =
+        PRODUTOS[i];
+
+
+    if(!p){
+        return;
+    }
+
+
+    const estoque =
+        Number(p.estoque) || 0;
+
+
+    if(estoque <= 0){
+
+        alert(
+            "Este produto está esgotado."
+        );
+
+        return;
+
+    }
+
+
+    const corElement =
+        document.getElementById(
+            `cor-${i}`
+        );
+
+
+    const tamanhoElement =
+        document.getElementById(
+            `tamanho-${i}`
+        );
+
+
+    const cor =
+        corElement
+        ? corElement.value
+        : "";
+
+
+    const tamanho =
+        tamanhoElement
+        ? tamanhoElement.value
+        : "";
+
+
+    const existente =
+        carrinho.find(
+            item =>
+                item.id === p.id &&
+                item.cor === cor &&
+                item.tamanho === tamanho
+        );
+
+
+    const quantidadeAtual =
+        existente
+        ? existente.qtd
+        : 0;
+
+
+    if(
+        quantidadeAtual >= estoque
+    ){
+
+        alert(
+            `Você atingiu o limite disponível. Estoque: ${estoque}.`
+        );
+
+        return;
+
+    }
+
+
+    if(existente){
+
+        existente.qtd += 1;
+
+    }else{
+
+        carrinho.push({
+
+            id:p.id,
+
+            nome:p.nome,
+
+            preco:p.preco,
+
+            imagem:
+                p.imagens && p.imagens.length
+                ? p.imagens[0]
+                : "",
+
+            qtd:1,
+
+            estoque:estoque,
+
+            cor:cor,
+
+            tamanho:tamanho
+
+        });
+
+    }
+
+
+    const btn =
+        document.getElementById(
+            `add-${i}`
+        );
+
+
+    if(btn){
+
+        btn.textContent =
+            "Adicionado ✓";
+
+        btn.classList.add(
+            "added"
+        );
+
+
+        setTimeout(() => {
+
+            if(
+                Number(p.estoque) > 0
+            ){
+
+                btn.textContent =
+                    "Adicionar";
+
+            }
+
+            btn.classList.remove(
+                "added"
+            );
+
+        },1200);
+
+    }
+
+
+    atualizarCarrinho();
+
+    openCart();
+
+};
+
+
+/* =========================================================
+   ALTERAR QUANTIDADE
+========================================================= */
+
+window.alterarQtd =
+function(chave,delta){
+
+    const item =
+        carrinho.find(
+            i =>
+                criarChaveItem(i) === chave
+        );
+
+
+    if(!item){
+        return;
+    }
+
+
+    const produto =
+        PRODUTOS.find(
+            p =>
+                p.id === item.id
+        );
+
+
+    const estoque =
+        produto
+        ? Number(produto.estoque) || 0
+        : Number(item.estoque) || 0;
+
+
+    if(
+        delta > 0 &&
+        item.qtd >= estoque
+    ){
+
+        alert(
+            `Não é possível adicionar mais. Estoque disponível: ${estoque}.`
+        );
+
+        return;
+
+    }
+
+
+    item.qtd += delta;
+
+
+    if(item.qtd <= 0){
+
+        carrinho =
+            carrinho.filter(
+                i =>
+                    criarChaveItem(i) !== chave
+            );
+
+    }
+
+
+    atualizarCarrinho();
+
+};
+
+
+/* =========================================================
+   REMOVER ITEM
+========================================================= */
+
+window.removerItem =
+function(chave){
+
+    carrinho =
+        carrinho.filter(
+            i =>
+                criarChaveItem(i) !== chave
+        );
+
+
+    atualizarCarrinho();
+
+};
+
+
+/* =========================================================
+   CARREGAR PRODUTOS DO FIREBASE
 ========================================================= */
 
 function carregarProdutosDoFirebase(){
@@ -3668,10 +4198,6 @@ function carregarProdutosDoFirebase(){
             "productGrid"
         );
 
-
-    /*
-      Mensagem enquanto carrega
-    */
 
     grid.innerHTML = `
 
@@ -3691,22 +4217,12 @@ function carregarProdutosDoFirebase(){
     `;
 
 
-    /*
-      AQUI ESTÁ A PARTE PRINCIPAL:
-      O SITE BUSCA A COLEÇÃO "produtos"
-    */
-
     const produtosRef =
         collection(
             db,
             "produtos"
         );
 
-
-    /*
-      onSnapshot deixa a vitrine
-      atualizando automaticamente.
-    */
 
     onSnapshot(
 
@@ -3719,7 +4235,7 @@ function carregarProdutosDoFirebase(){
                 PRODUTOS =
                     snapshot.docs.map(
                         doc =>
-                            normalizarProduto(doc)
+                            prepararProduto(doc)
                     );
 
 
@@ -3729,7 +4245,69 @@ function carregarProdutosDoFirebase(){
                 );
 
 
-                montarVitrine();
+                mostrarProdutosComEstoque();
+
+
+                /*
+                 * SE O ESTOQUE MUDAR NO PAINEL,
+                 * O CARRINHO TAMBÉM SERÁ ATUALIZADO.
+                 */
+
+                carrinho =
+                    carrinho.filter(item => {
+
+                        const produtoAtual =
+                            PRODUTOS.find(
+                                p =>
+                                    p.id === item.id
+                            );
+
+
+                        if(!produtoAtual){
+
+                            return false;
+
+                        }
+
+
+                        const novoEstoque =
+                            Number(
+                                produtoAtual.estoque
+                            ) || 0;
+
+
+                        if(novoEstoque <= 0){
+
+                            return false;
+
+                        }
+
+
+                        if(
+                            item.qtd >
+                            novoEstoque
+                        ){
+
+                            item.qtd =
+                                novoEstoque;
+
+                        }
+
+
+                        item.estoque =
+                            novoEstoque;
+
+
+                        item.preco =
+                            produtoAtual.preco;
+
+
+                        return true;
+
+                    });
+
+
+                atualizarCarrinho();
 
 
             }catch(erro){
@@ -3751,7 +4329,7 @@ function carregarProdutosDoFirebase(){
         erro => {
 
             console.error(
-                "Erro ao buscar produtos no Firebase:",
+                "Erro ao buscar produtos:",
                 erro
             );
 
@@ -3791,17 +4369,10 @@ function mostrarErroFirebase(erro){
         mensagem =
             "O Firebase bloqueou o acesso aos produtos.";
 
-
-    }else if(
-        erro &&
-        erro.code === "failed-precondition"
-    ){
-
-        mensagem =
-            "O Firebase informou que falta uma configuração.";
+    }
 
 
-    }else if(
+    if(
         erro &&
         erro.code === "unavailable"
     ){
@@ -3828,7 +4399,7 @@ function mostrarErroFirebase(erro){
             </strong>
 
             <div>
-                Verifique a conexão com o Firebase.
+                Verifique as regras do Firestore.
             </div>
 
         </div>
@@ -3839,7 +4410,7 @@ function mostrarErroFirebase(erro){
 
 
 /* =========================================================
-   INICIAR BUSCA
+   INICIAR FIREBASE
 ========================================================= */
 
 carregarProdutosDoFirebase();
@@ -3849,8 +4420,14 @@ console.log(
     "Firebase conectado!"
 );
 
+
 console.log(
-    "Vitrine conectada à coleção Firestore: produtos"
+    "Vitrine conectada à coleção produtos."
+);
+
+
+console.log(
+    "Estoque conectado à vitrine."
 );
 
 </script>

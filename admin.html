@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>LaLabela Boutique - Painel</title>
 
@@ -14,21 +17,24 @@
 
 body{
   margin:0;
-  font-family:Arial, sans-serif;
   background:#f7f7f7;
+  font-family:Arial,sans-serif;
   color:#222;
 }
+
+/* CABEÇALHO */
 
 header{
   background:#f20b68;
   color:white;
   text-align:center;
-  padding:35px 20px;
+  padding:32px 20px;
 }
 
 header h1{
   margin:0;
   font-size:34px;
+  font-weight:bold;
 }
 
 header p{
@@ -36,60 +42,71 @@ header p{
   font-size:20px;
 }
 
+/* CONTAINER */
+
 .container{
   max-width:1000px;
   margin:auto;
-  padding:25px 18px;
+  padding:30px 18px;
 }
+
+/* RESUMO */
 
 .resumo{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:15px;
+  gap:18px;
   margin-bottom:30px;
 }
 
 .card{
   background:white;
-  border-radius:20px;
-  padding:25px;
+  border-radius:22px;
+  padding:28px 20px;
   text-align:center;
-  box-shadow:0 8px 25px rgba(0,0,0,.08);
+  box-shadow:0 8px 25px rgba(0,0,0,.07);
 }
 
 .card strong{
   display:block;
   color:#f20b68;
-  font-size:35px;
+  font-size:38px;
+  margin-bottom:8px;
 }
 
 .card span{
   color:#777;
-  font-size:18px;
+  font-size:19px;
 }
+
+/* PRODUTOS */
 
 .produtos-box{
   background:white;
   border-radius:25px;
-  padding:25px;
-  box-shadow:0 8px 25px rgba(0,0,0,.08);
+  padding:28px;
+  box-shadow:0 8px 25px rgba(0,0,0,.07);
 }
 
 .produtos-box h2{
-  margin-top:0;
-  font-size:28px;
+  margin:0 0 25px;
+  font-size:30px;
 }
 
+/* BOTÃO ADICIONAR */
+
 .btn-add{
+  border:0;
   background:#f20b68;
   color:white;
-  border:0;
-  padding:15px 25px;
-  border-radius:14px;
+  padding:17px 27px;
+  border-radius:15px;
   font-size:18px;
   cursor:pointer;
   margin-bottom:25px;
 }
+
+/* PRODUTO */
 
 .produto{
   display:flex;
@@ -100,14 +117,14 @@ header p{
 }
 
 .produto:last-child{
-  border-bottom:0;
+  border-bottom:none;
 }
 
 .produto img{
-  width:140px;
-  height:170px;
+  width:145px;
+  height:175px;
   object-fit:cover;
-  border-radius:15px;
+  border-radius:16px;
   background:#eee;
 }
 
@@ -117,39 +134,171 @@ header p{
 
 .info h3{
   margin:0 0 8px;
-  font-size:22px;
+  font-size:23px;
 }
 
 .preco{
   color:#f20b68;
   font-size:21px;
   font-weight:bold;
+  margin-bottom:7px;
 }
 
 .categoria{
   color:#777;
-  margin-top:6px;
+  font-size:17px;
 }
 
 .tag{
   display:inline-block;
-  background:#fce0eb;
-  color:#f20b68;
-  padding:5px 10px;
+  margin-top:9px;
+  padding:6px 12px;
   border-radius:20px;
-  margin-top:8px;
-  font-size:13px;
+  background:#fbdce9;
+  color:#d90058;
+  font-size:14px;
 }
+
+/* EDITAR */
 
 .btn-editar{
   background:#222;
   color:white;
   border:0;
-  padding:13px 20px;
-  border-radius:12px;
-  font-size:16px;
+  padding:14px 20px;
+  border-radius:13px;
+  font-size:17px;
   cursor:pointer;
 }
+
+/* MODAL */
+
+.modal{
+  display:none;
+  position:fixed;
+  z-index:999;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.55);
+  overflow:auto;
+  padding:25px 15px;
+}
+
+.modal-box{
+  background:white;
+  max-width:650px;
+  margin:auto;
+  border-radius:25px;
+  padding:25px;
+}
+
+.modal-topo{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.modal-topo h2{
+  margin:0;
+  font-size:27px;
+}
+
+.fechar{
+  border:0;
+  background:#eee;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  font-size:24px;
+  cursor:pointer;
+}
+
+/* FORMULÁRIO */
+
+.campo{
+  margin-bottom:18px;
+}
+
+.campo label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:7px;
+  font-size:16px;
+}
+
+.campo input,
+.campo textarea,
+.campo select{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:14px;
+  font-size:16px;
+  outline:none;
+}
+
+.campo textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.linha{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+/* FOTOS */
+
+.foto-preview{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:10px;
+}
+
+.foto-preview img{
+  width:100%;
+  height:130px;
+  object-fit:cover;
+  border-radius:12px;
+  background:#eee;
+}
+
+/* BOTÕES DO MODAL */
+
+.botoes{
+  display:flex;
+  gap:12px;
+  margin-top:25px;
+}
+
+.btn-salvar{
+  flex:1;
+  border:0;
+  background:#f20b68;
+  color:white;
+  padding:16px;
+  border-radius:13px;
+  font-size:17px;
+  cursor:pointer;
+}
+
+.btn-cancelar{
+  flex:1;
+  border:0;
+  background:#eee;
+  color:#222;
+  padding:16px;
+  border-radius:13px;
+  font-size:17px;
+  cursor:pointer;
+}
+
+/* MOBILE */
 
 @media(max-width:700px){
 
@@ -162,12 +311,12 @@ header p{
   }
 
   .produto img{
-    width:100px;
-    height:130px;
+    width:105px;
+    height:135px;
   }
 
   .info h3{
-    font-size:18px;
+    font-size:19px;
   }
 
   .preco{
@@ -175,16 +324,26 @@ header p{
   }
 
   .btn-editar{
-    padding:10px 12px;
+    padding:10px 13px;
     font-size:14px;
+  }
+
+  .linha{
+    grid-template-columns:1fr;
+  }
+
+  .produtos-box{
+    padding:22px 16px;
   }
 
 }
 
 </style>
+
 </head>
 
 <body>
+
 
 <header>
 
@@ -198,33 +357,66 @@ header p{
 <div class="container">
 
 
+<!-- RESUMO -->
+
 <div class="resumo">
 
 <div class="card">
-<strong id="totalProdutos">0</strong>
-<span>Produtos</span>
+
+<strong id="totalProdutos">
+0
+</strong>
+
+<span>
+Produtos
+</span>
+
 </div>
+
 
 <div class="card">
-<strong>R$ 0,00</strong>
-<span>Vendas</span>
+
+<strong>
+R$ 0,00
+</strong>
+
+<span>
+Vendas
+</span>
+
 </div>
+
 
 <div class="card">
-<strong>0</strong>
-<span>Pedidos</span>
-</div>
+
+<strong>
+0
+</strong>
+
+<span>
+Pedidos
+</span>
 
 </div>
 
+</div>
+
+
+<!-- PRODUTOS -->
 
 <div class="produtos-box">
 
-<h2>Produtos</h2>
+<h2>
+Produtos
+</h2>
 
-<button class="btn-add" onclick="adicionarProduto()">
+<button
+class="btn-add"
+onclick="adicionarProduto()"
+>
 + Adicionar produto
 </button>
+
 
 <div id="listaProdutos"></div>
 
@@ -233,9 +425,222 @@ header p{
 </div>
 
 
+<!-- MODAL -->
+
+<div
+class="modal"
+id="modal"
+>
+
+<div class="modal-box">
+
+
+<div class="modal-topo">
+
+<h2>
+Editar produto
+</h2>
+
+<button
+class="fechar"
+onclick="fecharModal()"
+>
+×
+</button>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Nome do produto
+</label>
+
+<input
+id="nome"
+type="text"
+>
+
+</div>
+
+
+<div class="linha">
+
+<div class="campo">
+
+<label>
+Preço
+</label>
+
+<input
+id="preco"
+type="number"
+step="0.01"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Categoria
+</label>
+
+<input
+id="categoria"
+type="text"
+>
+
+</div>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Foto 1
+</label>
+
+<input
+id="foto1"
+type="text"
+placeholder="Cole o link da foto"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Foto 2
+</label>
+
+<input
+id="foto2"
+type="text"
+placeholder="Cole o link da foto"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Foto 3
+</label>
+
+<input
+id="foto3"
+type="text"
+placeholder="Cole o link da foto"
+>
+
+</div>
+
+
+<div class="foto-preview">
+
+<img id="preview1">
+
+<img id="preview2">
+
+<img id="preview3">
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Cores
+</label>
+
+<input
+id="cores"
+type="text"
+placeholder="Ex: Rosa, Preto, Branco"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Tamanhos
+</label>
+
+<input
+id="tamanhos"
+type="text"
+placeholder="Ex: P, M, G"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Tag
+</label>
+
+<input
+id="tag"
+type="text"
+placeholder="Ex: Promoção"
+>
+
+</div>
+
+
+<div class="campo">
+
+<label>
+Descrição
+</label>
+
+<textarea
+id="descricao"
+></textarea>
+
+</div>
+
+
+<div class="botoes">
+
+<button
+class="btn-cancelar"
+onclick="fecharModal()"
+>
+Cancelar
+</button>
+
+<button
+class="btn-salvar"
+onclick="salvarProduto()"
+>
+Salvar alterações
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
 <script>
 
-const PRODUTOS = [
+/* PRODUTOS */
+
+let PRODUTOS = [
 
 {
 nome:"Conjunto Zandeya",
@@ -248,7 +653,10 @@ imagens:[
 "https://i.postimg.cc/W14QkZmZ/IMG-7742.jpg"
 ],
 
-cores:["Marrom","Bege"],
+cores:[
+"Marrom",
+"Bege"
+],
 
 tamanhos:[
 "Único — veste do 36 ao 40"
@@ -260,12 +668,11 @@ descricao:
 tag:"Promoção"
 },
 
+
 {
 
 nome:"Conjunto Maresia",
-
 preco:149.00,
-
 categoria:"Conjunto",
 
 imagens:[
@@ -288,12 +695,11 @@ descricao:
 tag:"Ultimas peças"
 },
 
+
 {
 
 nome:"Conjunto Mafil",
-
 preco:150.00,
-
 categoria:"Conjunto",
 
 imagens:[
@@ -319,12 +725,11 @@ descricao:
 tag:"Últimas peças"
 },
 
+
 {
 
 nome:"Vestido Verão",
-
 preco:80.00,
-
 categoria:"Vestido",
 
 imagens:[
@@ -350,12 +755,11 @@ descricao:
 tag:"O mais vendido"
 },
 
+
 {
 
 nome:"Conjunto Luxo",
-
 preco:160.00,
-
 categoria:"Conjunto",
 
 imagens:[
@@ -379,12 +783,11 @@ descricao:
 tag:""
 },
 
+
 {
 
 nome:"Conjunto Sophie",
-
 preco:70.00,
-
 categoria:"Conjunto",
 
 imagens:[
@@ -408,12 +811,11 @@ descricao:
 tag:"Promoção"
 },
 
+
 {
 
 nome:"Vestido Mônaco",
-
 preco:70.00,
-
 categoria:"Vestido",
 
 imagens:[
@@ -441,24 +843,35 @@ tag:"Promoção"
 ];
 
 
+let produtoEditando = null;
+
+
+/* MOSTRAR PRODUTOS */
+
 function carregarProdutos(){
 
-const lista = document.getElementById("listaProdutos");
+const lista =
+document.getElementById("listaProdutos");
 
 lista.innerHTML="";
 
-document.getElementById("totalProdutos").textContent =
-PRODUTOS.length;
+document.getElementById(
+"totalProdutos"
+).textContent=PRODUTOS.length;
 
 
-PRODUTOS.forEach((produto,index)=>{
+PRODUTOS.forEach(
+(produto,index)=>{
 
-const div=document.createElement("div");
+const div=
+document.createElement("div");
 
 div.className="produto";
 
+
 const imagem =
-produto.imagens && produto.imagens.length
+produto.imagens &&
+produto.imagens.length
 ? produto.imagens[0]
 : "";
 
@@ -472,23 +885,32 @@ onerror="this.style.display='none'"
 
 <div class="info">
 
-<h3>${produto.nome}</h3>
+<h3>
+${produto.nome}
+</h3>
 
 <div class="preco">
-R$ ${produto.preco.toFixed(2).replace(".",",")}
+R$ ${produto.preco
+.toFixed(2)
+.replace(".",",")}
 </div>
 
 <div class="categoria">
 ${produto.categoria || ""}
 </div>
 
-${produto.tag ? `
-<div class="tag">
+${
+produto.tag
+?
+`<div class="tag">
 ${produto.tag}
-</div>
-` : ""}
+</div>`
+:
+""
+}
 
 </div>
+
 
 <button
 class="btn-editar"
@@ -499,6 +921,7 @@ Editar
 
 `;
 
+
 lista.appendChild(div);
 
 });
@@ -506,26 +929,191 @@ lista.appendChild(div);
 }
 
 
+/* EDITAR */
+
 function editarProduto(index){
 
-const produto=PRODUTOS[index];
+produtoEditando=index;
+
+const produto=
+PRODUTOS[index];
+
+
+document.getElementById("nome").value=
+produto.nome || "";
+
+
+document.getElementById("preco").value=
+produto.preco || "";
+
+
+document.getElementById("categoria").value=
+produto.categoria || "";
+
+
+document.getElementById("foto1").value=
+produto.imagens?.[0] || "";
+
+
+document.getElementById("foto2").value=
+produto.imagens?.[1] || "";
+
+
+document.getElementById("foto3").value=
+produto.imagens?.[2] || "";
+
+
+document.getElementById("cores").value=
+produto.cores
+? produto.cores.join(", ")
+: "";
+
+
+document.getElementById("tamanhos").value=
+produto.tamanhos
+? produto.tamanhos.join(", ")
+: "";
+
+
+document.getElementById("tag").value=
+produto.tag || "";
+
+
+document.getElementById("descricao").value=
+produto.descricao || "";
+
+
+atualizarPreviews();
+
+
+document.getElementById("modal").style.display=
+"block";
+
+}
+
+
+/* PREVISUALIZAÇÃO DAS FOTOS */
+
+function atualizarPreviews(){
+
+document.getElementById("preview1").src=
+document.getElementById("foto1").value || "";
+
+
+document.getElementById("preview2").src=
+document.getElementById("foto2").value || "";
+
+
+document.getElementById("preview3").src=
+document.getElementById("foto3").value || "";
+
+}
+
+
+document.getElementById("foto1")
+.addEventListener("input",atualizarPreviews);
+
+document.getElementById("foto2")
+.addEventListener("input",atualizarPreviews);
+
+document.getElementById("foto3")
+.addEventListener("input",atualizarPreviews);
+
+
+/* SALVAR */
+
+function salvarProduto(){
+
+if(produtoEditando === null){
+return;
+}
+
+
+const produto=
+PRODUTOS[produtoEditando];
+
+
+produto.nome=
+document.getElementById("nome").value;
+
+
+produto.preco=
+Number(
+document.getElementById("preco").value
+);
+
+
+produto.categoria=
+document.getElementById("categoria").value;
+
+
+produto.imagens=[
+document.getElementById("foto1").value,
+document.getElementById("foto2").value,
+document.getElementById("foto3").value
+].filter(Boolean);
+
+
+produto.cores=
+document.getElementById("cores")
+.value
+.split(",")
+.map(x=>x.trim())
+.filter(Boolean);
+
+
+produto.tamanhos=
+document.getElementById("tamanhos")
+.value
+.split(",")
+.map(x=>x.trim())
+.filter(Boolean);
+
+
+produto.tag=
+document.getElementById("tag").value;
+
+
+produto.descricao=
+document.getElementById("descricao").value;
+
+
+fecharModal();
+
+carregarProdutos();
+
 
 alert(
-"Aqui vamos colocar a edição do produto: "
-+ produto.nome
+"Produto atualizado nesta página!"
 );
 
 }
 
+
+/* FECHAR */
+
+function fecharModal(){
+
+document.getElementById("modal").style.display=
+"none";
+
+produtoEditando=null;
+
+}
+
+
+/* ADICIONAR */
 
 function adicionarProduto(){
 
 alert(
-"Aqui vamos colocar o cadastro de novos produtos."
+"No próximo passo vamos colocar o cadastro completo de novos produtos aqui."
 );
 
 }
 
+
+/* INICIAR */
 
 carregarProdutos();
 

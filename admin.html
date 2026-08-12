@@ -33,209 +33,119 @@ body{
 ===================================================== */
 
 #telaLogin{
-
     position:fixed;
-
     inset:0;
-
-    background:
-    linear-gradient(
-        135deg,
-        #fff5f9,
-        #ffffff
-    );
-
+    background:linear-gradient(135deg,#fff5f9,#ffffff);
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     padding:20px;
-
     z-index:99999;
-
 }
 
 .login-box{
-
     width:100%;
-
     max-width:420px;
-
     background:#fff;
-
     border:1px solid #eee;
-
     border-radius:22px;
-
     padding:35px;
-
-    box-shadow:
-    0 15px 50px rgba(0,0,0,.08);
-
+    box-shadow:0 15px 50px rgba(0,0,0,.08);
 }
 
 .login-logo{
-
     text-align:center;
-
     margin-bottom:30px;
-
 }
 
 .login-logo .nome{
-
     font-family:Georgia,serif;
-
     font-size:38px;
-
     color:#e52b79;
-
 }
 
 .login-logo .sub{
-
     color:#e52b79;
-
     letter-spacing:5px;
-
     font-size:11px;
-
     margin-top:-3px;
-
 }
 
 .login-box h2{
-
     text-align:center;
-
     margin:0 0 8px;
-
     font-size:24px;
-
 }
 
 .login-subtitulo{
-
     text-align:center;
-
     color:#888;
-
     font-size:14px;
-
     margin-bottom:25px;
-
 }
 
 .login-group{
-
     margin-bottom:18px;
-
 }
 
 .login-group label{
-
     display:block;
-
     font-size:13px;
-
     font-weight:bold;
-
     margin-bottom:7px;
-
 }
 
 .login-group input{
-
     width:100%;
-
     border:1px solid #ddd;
-
     border-radius:10px;
-
     padding:14px;
-
     font-size:15px;
-
     outline:none;
-
 }
 
 .login-group input:focus{
-
     border-color:#e52b79;
-
 }
 
 #btnLogin{
-
     width:100%;
-
     border:0;
-
     background:#e52b79;
-
-    color:white;
-
+    color:#fff;
     border-radius:10px;
-
     padding:14px;
-
     font-size:15px;
-
     font-weight:bold;
-
     cursor:pointer;
-
 }
 
 #btnLogin:hover{
-
     background:#c91d63;
-
 }
 
 #btnLogin:disabled{
-
     opacity:.6;
-
     cursor:not-allowed;
-
 }
 
 #erroLogin{
-
     display:none;
-
     margin-top:15px;
-
     background:#fff0f0;
-
     color:#d00000;
-
     border-radius:8px;
-
     padding:12px;
-
     font-size:13px;
-
     text-align:center;
-
 }
 
 #carregandoLogin{
-
     display:none;
-
     text-align:center;
-
     color:#888;
-
     margin-top:15px;
-
     font-size:13px;
-
 }
 
 
@@ -244,17 +154,12 @@ body{
 ===================================================== */
 
 #painel{
-
     display:none;
-
 }
 
 .layout{
-
     display:flex;
-
     min-height:100vh;
-
 }
 
 
@@ -263,159 +168,93 @@ body{
 ===================================================== */
 
 .sidebar{
-
     width:260px;
-
     background:#fff;
-
     border-right:1px solid #eee;
-
     position:fixed;
-
     left:0;
-
     top:0;
-
     bottom:0;
-
     padding:25px 18px;
-
     z-index:20;
-
 }
 
 .logo{
-
     text-align:center;
-
     margin-bottom:35px;
-
 }
 
 .logo .nome{
-
-    font-family:Georgia, serif;
-
+    font-family:Georgia,serif;
     font-size:34px;
-
     color:#e52b79;
-
 }
 
 .logo .sub{
-
     color:#e52b79;
-
     letter-spacing:4px;
-
     font-size:12px;
-
     margin-top:-4px;
-
 }
 
 .admin{
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     margin-bottom:30px;
-
 }
 
 .admin strong{
-
     display:block;
-
     font-size:15px;
-
 }
 
 .admin span{
-
     display:block;
-
     color:#e52b79;
-
     font-size:13px;
-
     margin-top:4px;
-
 }
 
 .menu{
-
     display:flex;
-
     flex-direction:column;
-
     gap:7px;
-
 }
 
 .menu button{
-
     border:0;
-
     background:transparent;
-
     padding:14px;
-
     border-radius:10px;
-
     text-align:left;
-
     font-size:15px;
-
     cursor:pointer;
-
     color:#171717;
-
     transition:.2s;
-
 }
 
 .menu button:hover,
-
 .menu button.ativo{
-
     background:#fff0f6;
-
     color:#e52b79;
-
 }
 
 .whatsapp-box{
-
     position:absolute;
-
     bottom:20px;
-
     left:18px;
-
     right:18px;
-
     background:#fff0f6;
-
     padding:18px;
-
     border-radius:10px;
-
     font-size:13px;
-
 }
 
 .whatsapp-box strong{
-
     color:#e52b79;
-
     display:block;
-
     margin-bottom:5px;
-
 }
 
 
@@ -424,57 +263,36 @@ body{
 ===================================================== */
 
 .main{
-
     margin-left:260px;
-
     width:calc(100% - 260px);
-
 }
 
 .topbar{
-
     height:70px;
-
     background:#fff;
-
     border-bottom:1px solid #eee;
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     padding:0 30px;
-
 }
 
 .topbar-left{
-
     font-size:18px;
-
     font-weight:bold;
-
     color:#e52b79;
-
 }
 
 .topbar-right{
-
     display:flex;
-
     align-items:center;
-
     gap:25px;
-
 }
 
 .account{
-
     border-left:1px solid #eee;
-
     padding-left:20px;
-
+    font-size:14px;
 }
 
 
@@ -483,61 +301,38 @@ body{
 ===================================================== */
 
 .content{
-
     padding:32px;
-
 }
 
 .welcome{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     margin-bottom:25px;
-
 }
 
 .welcome h1{
-
     margin:0;
-
     font-size:27px;
-
 }
 
 .welcome p{
-
     color:#777;
-
     margin:7px 0 0;
-
 }
 
 .btn-primary{
-
     background:#e52b79;
-
     color:#fff;
-
     border:0;
-
     border-radius:8px;
-
     padding:13px 22px;
-
     font-size:15px;
-
     cursor:pointer;
-
 }
 
 .btn-primary:hover{
-
     background:#c91d63;
-
 }
 
 
@@ -546,77 +341,47 @@ body{
 ===================================================== */
 
 .cards{
-
     display:grid;
-
     grid-template-columns:repeat(5,1fr);
-
     gap:15px;
-
     margin-bottom:25px;
-
 }
 
 .card{
-
     background:#fff;
-
     border:1px solid #eee;
-
     border-radius:14px;
-
     padding:20px;
-
 }
 
 .card-top{
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     margin-bottom:12px;
-
 }
 
 .card-icon{
-
     width:10px;
-
     height:10px;
-
     border-radius:50%;
-
     background:#e52b79;
-
 }
 
 .card-title{
-
     font-size:14px;
-
 }
 
 .card-value{
-
     font-size:26px;
-
     font-weight:bold;
-
     margin-top:8px;
-
 }
 
 .card-info{
-
     color:#888;
-
     font-size:12px;
-
     margin-top:5px;
-
 }
 
 
@@ -625,186 +390,127 @@ body{
 ===================================================== */
 
 .section{
-
     background:#fff;
-
     border:1px solid #eee;
-
     border-radius:14px;
-
     overflow:hidden;
-
     margin-bottom:25px;
-
 }
 
 .section-header{
-
     padding:20px 25px;
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     border-bottom:1px solid #eee;
-
 }
 
 .section-header h2{
-
     margin:0;
-
     font-size:20px;
-
 }
 
 .link{
-
     color:#d62973;
-
     cursor:pointer;
-
+    font-size:14px;
 }
 
 .table{
-
     width:100%;
-
 }
 
 .table-head,
-
 .product-row{
-
     display:grid;
-
     grid-template-columns:
-    2.5fr 1.2fr 1fr 1fr 1fr 130px;
-
+    2.5fr 1.2fr 1fr 1fr 1fr 150px;
     align-items:center;
-
     padding:12px 25px;
-
 }
 
 .table-head{
-
     background:#fff8fb;
-
     color:#555;
-
     font-size:13px;
-
 }
 
 .product-row{
-
     border-top:1px solid #eee;
-
 }
 
 .product{
-
     display:flex;
-
     align-items:center;
-
     gap:15px;
-
 }
 
 .product img{
-
     width:62px;
-
     height:62px;
-
     object-fit:cover;
-
     border-radius:9px;
-
+    background:#f5f5f5;
 }
 
 .product-name{
-
     font-weight:500;
-
 }
 
 .price{
-
     font-weight:bold;
-
 }
 
 .stock{
-
     color:#29934a;
-
 }
 
 .status{
-
     display:inline-block;
-
     background:#e9f8ed;
-
     color:#29934a;
-
     border-radius:20px;
-
     padding:6px 12px;
-
     font-size:12px;
-
     width:max-content;
-
 }
 
 .actions{
-
     display:flex;
-
     gap:7px;
-
 }
 
 .action{
-
     min-width:42px;
-
     height:38px;
-
     border:1px solid #ddd;
-
     background:#fff;
-
     border-radius:8px;
-
     cursor:pointer;
-
     font-size:12px;
-
     padding:0 8px;
-
 }
 
 .action:hover{
-
     background:#fff0f6;
-
     color:#e52b79;
-
 }
 
 .delete:hover{
-
     background:#fff0f0;
-
     color:red;
+}
 
+.carregando-produtos{
+    padding:50px;
+    text-align:center;
+    color:#888;
+}
+
+.sem-produtos{
+    padding:50px;
+    text-align:center;
+    color:#888;
 }
 
 
@@ -813,137 +519,81 @@ body{
 ===================================================== */
 
 .modal{
-
     display:none;
-
     position:fixed;
-
     inset:0;
-
     background:rgba(0,0,0,.45);
-
     z-index:100;
-
     align-items:center;
-
     justify-content:center;
-
     padding:20px;
-
 }
 
 .modal.aberto{
-
     display:flex;
-
 }
 
 .modal-box{
-
     background:#fff;
-
     width:100%;
-
     max-width:700px;
-
     max-height:92vh;
-
     overflow:auto;
-
     border-radius:18px;
-
     padding:28px;
-
 }
 
 .modal-header{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     margin-bottom:25px;
-
 }
 
 .modal-header h2{
-
     margin:0;
-
 }
 
 .fechar{
-
     border:0;
-
     background:#f3f3f3;
-
     width:40px;
-
     height:40px;
-
     border-radius:50%;
-
     font-size:20px;
-
     cursor:pointer;
-
 }
 
 .form-group{
-
     margin-bottom:17px;
-
 }
 
 .form-group label{
-
     display:block;
-
     font-size:13px;
-
     font-weight:bold;
-
     margin-bottom:7px;
-
 }
 
 .form-group input,
-
 .form-group textarea,
-
 .form-group select{
-
     width:100%;
-
     border:1px solid #ddd;
-
     border-radius:9px;
-
     padding:12px;
-
     font-size:14px;
-
 }
 
 .form-group textarea{
-
     min-height:100px;
-
     resize:vertical;
-
 }
 
 .grid{
-
     display:grid;
-
     grid-template-columns:1fr 1fr;
-
     gap:15px;
-
 }
 
 
@@ -952,141 +602,88 @@ body{
 ===================================================== */
 
 .fotos-container{
-
     display:grid;
-
     grid-template-columns:repeat(4,1fr);
-
     gap:10px;
-
     margin-top:10px;
-
 }
 
 .foto-item{
-
     position:relative;
-
     height:130px;
-
 }
 
 .foto-item img{
-
     width:100%;
-
     height:100%;
-
     object-fit:cover;
-
     border-radius:10px;
-
     border:1px solid #ddd;
-
 }
 
 .remover-foto{
-
     position:absolute;
-
     top:5px;
-
     right:5px;
-
     width:28px;
-
     height:28px;
-
     border:0;
-
     border-radius:50%;
-
     background:#fff;
-
     color:#e00000;
-
     cursor:pointer;
-
     font-weight:bold;
-
 }
 
 .adicionar-foto{
-
     height:130px;
-
     border:2px dashed #e52b79;
-
     border-radius:10px;
-
     background:#fff7fa;
-
     color:#e52b79;
-
     cursor:pointer;
-
     font-size:13px;
-
 }
 
 .adicionar-foto:hover{
-
     background:#ffeaf3;
-
 }
 
 #fotoInput{
-
     display:none;
-
 }
 
 .modal-footer{
-
     display:flex;
-
     justify-content:flex-end;
-
     gap:10px;
-
     margin-top:25px;
-
 }
 
 .btn-cancel{
-
     border:1px solid #ddd;
-
     background:#fff;
-
     border-radius:8px;
-
     padding:12px 20px;
-
     cursor:pointer;
-
 }
 
 .btn-save{
-
     border:0;
-
     background:#e52b79;
-
     color:#fff;
-
     border-radius:8px;
-
     padding:12px 25px;
-
     cursor:pointer;
-
 }
 
 .btn-save:hover{
-
     background:#c91d63;
+}
 
+.btn-save:disabled{
+    opacity:.6;
+    cursor:not-allowed;
 }
 
 
@@ -1094,139 +691,97 @@ body{
    RESPONSIVO
 ===================================================== */
 
-@media(max-width:1000px){
+@media(max-width:1100px){
 
     .sidebar{
-
         width:220px;
-
     }
 
     .main{
-
         margin-left:220px;
-
         width:calc(100% - 220px);
-
     }
 
     .cards{
-
         grid-template-columns:repeat(2,1fr);
-
     }
 
     .table-head,
-
     .product-row{
-
         grid-template-columns:
         2fr 1fr 1fr 100px;
-
     }
 
     .table-head div:nth-child(4),
-
     .table-head div:nth-child(5),
-
     .product-row > div:nth-child(4),
-
     .product-row > div:nth-child(5){
-
         display:none;
-
     }
-
 }
 
 @media(max-width:700px){
 
     .sidebar{
-
         display:none;
-
     }
 
     .main{
-
         margin-left:0;
-
         width:100%;
-
     }
 
     .content{
-
         padding:18px;
-
     }
 
     .topbar{
-
         padding:0 18px;
-
     }
 
     .cards{
-
         grid-template-columns:1fr 1fr;
-
     }
 
     .welcome{
-
         align-items:flex-start;
-
         gap:15px;
-
     }
 
     .welcome h1{
-
         font-size:21px;
+    }
 
+    .welcome .btn-primary{
+        padding:11px 14px;
+        font-size:13px;
     }
 
     .table-head{
-
         display:none;
-
     }
 
     .product-row{
-
         display:flex;
-
         flex-wrap:wrap;
-
         gap:15px;
-
         padding:15px;
-
     }
 
     .product{
-
         width:100%;
-
     }
 
     .grid{
-
         grid-template-columns:1fr;
-
     }
 
     .fotos-container{
-
         grid-template-columns:repeat(2,1fr);
-
     }
 
     .login-box{
-
         padding:25px;
-
     }
 
 }
@@ -1240,7 +795,7 @@ body{
 
 
 <!-- =====================================================
-     TELA DE LOGIN
+     LOGIN
 ===================================================== -->
 
 <div id="telaLogin">
@@ -1259,17 +814,13 @@ body{
 
         </div>
 
-
         <h2>
             Acesso administrativo
         </h2>
 
         <div class="login-subtitulo">
-
             Entre para acessar o painel da sua loja.
-
         </div>
-
 
         <div class="login-group">
 
@@ -1278,13 +829,12 @@ body{
             </label>
 
             <input
-            id="emailLogin"
-            type="email"
-            placeholder="seuemail@gmail.com"
-            autocomplete="email">
+                id="emailLogin"
+                type="email"
+                placeholder="seuemail@gmail.com"
+                autocomplete="email">
 
         </div>
-
 
         <div class="login-group">
 
@@ -1293,34 +843,27 @@ body{
             </label>
 
             <input
-            id="senhaLogin"
-            type="password"
-            placeholder="Digite sua senha"
-            autocomplete="current-password">
+                id="senhaLogin"
+                type="password"
+                placeholder="Digite sua senha"
+                autocomplete="current-password">
 
         </div>
 
-
         <button
-        id="btnLogin"
-        onclick="fazerLogin()">
+            id="btnLogin"
+            onclick="fazerLogin()">
 
             Entrar no painel
 
         </button>
 
-
         <div id="carregandoLogin">
-
             Verificando acesso...
-
         </div>
 
-
         <div id="erroLogin">
-
             E-mail ou senha incorretos.
-
         </div>
 
     </div>
@@ -1338,11 +881,10 @@ body{
 
 
 <!-- =====================================================
-     MENU
+     SIDEBAR
 ===================================================== -->
 
 <aside class="sidebar">
-
 
     <div class="logo">
 
@@ -1358,7 +900,6 @@ body{
 
 
     <div class="admin">
-
 
         <div style="
         width:48px;
@@ -1376,7 +917,6 @@ body{
 
         </div>
 
-
         <div>
 
             <strong>
@@ -1389,85 +929,74 @@ body{
 
         </div>
 
-
     </div>
 
 
     <div class="menu">
 
-
         <button
-        class="ativo"
-        onclick="menuNavegar('Dashboard', this)">
+            class="ativo"
+            onclick="menuNavegar('Dashboard',this)">
 
             Dashboard
 
         </button>
 
-
         <button
-        onclick="menuNavegar('Produtos', this)">
+            onclick="menuNavegar('Produtos',this)">
 
             Produtos
 
         </button>
 
-
         <button
-        onclick="menuNavegar('Categorias', this)">
+            onclick="menuNavegar('Categorias',this)">
 
             Categorias
 
         </button>
 
-
         <button
-        onclick="menuNavegar('Pedidos', this)">
+            onclick="menuNavegar('Pedidos',this)">
 
             Pedidos
 
         </button>
 
-
         <button
-        onclick="menuNavegar('Clientes', this)">
+            onclick="menuNavegar('Clientes',this)">
 
             Clientes
 
         </button>
 
-
         <button
-        onclick="menuNavegar('Cupons', this)">
+            onclick="menuNavegar('Cupons',this)">
 
             Cupons
 
         </button>
 
-
         <button
-        onclick="menuNavegar('Configurações', this)">
+            onclick="menuNavegar('Configurações',this)">
 
             Configurações
 
         </button>
 
-
         <button
-        onclick="menuNavegar('Banners', this)">
+            onclick="menuNavegar('Banners',this)">
 
             Banners
 
         </button>
 
-
         <button
-        onclick="fazerLogout()">
+            onclick="fazerLogout()">
 
             Sair
 
         </button>
-
 
     </div>
 
@@ -1482,7 +1011,6 @@ body{
 
     </div>
 
-
 </aside>
 
 
@@ -1492,31 +1020,23 @@ body{
 
 <main class="main">
 
-
 <header class="topbar">
 
-
     <div
-    class="topbar-left"
-    id="tituloTopo">
+        class="topbar-left"
+        id="tituloTopo">
 
         Thay Costa
 
     </div>
 
-
     <div class="topbar-right">
 
-
         <div class="account">
-
             LaLabela Boutique
-
         </div>
 
-
     </div>
-
 
 </header>
 
@@ -1530,7 +1050,6 @@ body{
 
 <div class="welcome">
 
-
     <div>
 
         <h1>
@@ -1543,15 +1062,13 @@ body{
 
     </div>
 
-
     <button
-    class="btn-primary"
-    onclick="abrirNovoProduto()">
+        class="btn-primary"
+        onclick="abrirNovoProduto()">
 
         + Novo Produto
 
     </button>
-
 
 </div>
 
@@ -1561,7 +1078,6 @@ body{
 ===================================================== -->
 
 <div class="cards">
-
 
     <div class="card">
 
@@ -1576,8 +1092,8 @@ body{
         </div>
 
         <div
-        class="card-value"
-        id="totalProdutos">
+            class="card-value"
+            id="totalProdutos">
 
             0
 
@@ -1603,8 +1119,8 @@ body{
         </div>
 
         <div
-        class="card-value"
-        id="totalPromocoes">
+            class="card-value"
+            id="totalPromocoes">
 
             0
 
@@ -1629,8 +1145,12 @@ body{
 
         </div>
 
-        <div class="card-value">
+        <div
+            class="card-value"
+            id="totalVisualizacoes">
+
             0
+
         </div>
 
         <div class="card-info">
@@ -1652,8 +1172,12 @@ body{
 
         </div>
 
-        <div class="card-value">
+        <div
+            class="card-value"
+            id="totalPedidos">
+
             0
+
         </div>
 
         <div class="card-info">
@@ -1675,8 +1199,12 @@ body{
 
         </div>
 
-        <div class="card-value">
+        <div
+            class="card-value"
+            id="totalFaturamento">
+
             R$ 0,00
+
         </div>
 
         <div class="card-info">
@@ -1684,7 +1212,6 @@ body{
         </div>
 
     </div>
-
 
 </div>
 
@@ -1694,85 +1221,82 @@ body{
 ===================================================== -->
 
 <section
-class="section"
-id="secaoProdutos">
+    class="section"
+    id="secaoProdutos">
+
+    <div class="section-header">
+
+        <h2>
+            Produtos
+        </h2>
+
+        <span
+            class="link"
+            onclick="verTodosProdutos()">
+
+            Atualização automática
+
+        </span>
+
+    </div>
 
 
-<div class="section-header">
+    <div class="table">
+
+        <div class="table-head">
+
+            <div>Produto</div>
+
+            <div>Categoria</div>
+
+            <div>Preço</div>
+
+            <div>Estoque</div>
+
+            <div>Status</div>
+
+            <div>Ações</div>
+
+        </div>
 
 
-    <h2>
-        Produtos Recentes
-    </h2>
+        <div id="listaProdutos">
 
+            <div class="carregando-produtos">
+                Carregando produtos...
+            </div>
 
-    <span
-    class="link"
-    onclick="verTodosProdutos()">
+        </div>
 
-        Ver todos
-
-    </span>
-
-
-</div>
-
-
-<div class="table">
-
-
-<div class="table-head">
-
-    <div>Produto</div>
-
-    <div>Categoria</div>
-
-    <div>Preço</div>
-
-    <div>Estoque</div>
-
-    <div>Status</div>
-
-    <div>Ações</div>
-
-</div>
-
-
-<div id="listaProdutos"></div>
-
-
-</div>
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     GRÁFICOS
+     GRÁFICO
 ===================================================== -->
 
 <section class="section">
 
+    <div class="section-header">
 
-<div class="section-header">
+        <h2>
+            Vendas — Últimos 7 dias
+        </h2>
 
-    <h2>
-        Vendas — Últimos 7 dias
-    </h2>
+    </div>
 
-</div>
+    <div style="
+    height:220px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#aaa;">
 
+        Os dados de vendas aparecerão aqui.
 
-<div style="
-height:220px;
-display:flex;
-align-items:center;
-justify-content:center;
-color:#aaa;">
-
-    Os dados de vendas aparecerão aqui.
-
-</div>
-
+    </div>
 
 </section>
 
@@ -1791,222 +1315,181 @@ color:#aaa;">
 ===================================================== -->
 
 <div
-class="modal"
-id="modalProduto">
+    class="modal"
+    id="modalProduto">
 
+    <div class="modal-box">
 
-<div class="modal-box">
+        <div class="modal-header">
 
+            <h2 id="tituloModal">
+                Novo produto
+            </h2>
 
-<div class="modal-header">
+            <button
+                class="fechar"
+                onclick="fecharModal()">
 
+                ×
 
-    <h2 id="tituloModal">
-        Novo produto
-    </h2>
+            </button>
 
+        </div>
 
-    <button
-    class="fechar"
-    onclick="fecharModal()">
 
-        ×
+        <div class="form-group">
 
-    </button>
+            <label>
+                Nome do produto
+            </label>
 
+            <input
+                id="nomeProduto"
+                type="text"
+                placeholder="Ex: Conjunto Zandeya">
 
-</div>
+        </div>
 
 
-<div class="form-group">
+        <div class="grid">
 
+            <div class="form-group">
 
-    <label>
-        Nome do produto
-    </label>
+                <label>
+                    Preço
+                </label>
 
+                <input
+                    id="precoProduto"
+                    type="number"
+                    step="0.01"
+                    placeholder="69.90">
 
-    <input
-    id="nomeProduto"
-    type="text"
-    placeholder="Ex: Conjunto Zandeya">
+            </div>
 
 
-</div>
+            <div class="form-group">
 
+                <label>
+                    Categoria
+                </label>
 
-<div class="grid">
+                <select id="categoriaProduto">
 
+                    <option>Conjunto</option>
+                    <option>Vestido</option>
+                    <option>Blusa</option>
+                    <option>Calça</option>
+                    <option>Short</option>
+                    <option>Saia</option>
+                    <option>Macacão</option>
+                    <option>Outro</option>
 
-<div class="form-group">
+                </select>
 
+            </div>
 
-    <label>
-        Preço
-    </label>
+        </div>
 
 
-    <input
-    id="precoProduto"
-    type="number"
-    step="0.01"
-    placeholder="69.90">
+        <div class="form-group">
 
+            <label>
+                Cores
+            </label>
 
-</div>
+            <input
+                id="coresProduto"
+                type="text"
+                placeholder="Marrom, Bege, Preto">
 
+        </div>
 
-<div class="form-group">
 
+        <div class="form-group">
 
-    <label>
-        Categoria
-    </label>
+            <label>
+                Tamanhos
+            </label>
 
+            <input
+                id="tamanhosProduto"
+                type="text"
+                placeholder="P, M, G">
 
-    <select id="categoriaProduto">
+        </div>
 
-        <option>Conjunto</option>
 
-        <option>Vestido</option>
+        <div class="form-group">
 
-        <option>Blusa</option>
+            <label>
+                Descrição
+            </label>
 
-        <option>Calça</option>
+            <textarea
+                id="descricaoProduto"
+                placeholder="Descrição do produto..."></textarea>
 
-        <option>Short</option>
+        </div>
 
-        <option>Saia</option>
 
-        <option>Macacão</option>
+        <div class="form-group">
 
-        <option>Outro</option>
+            <label>
+                Etiqueta
+            </label>
 
-    </select>
+            <input
+                id="tagProduto"
+                type="text"
+                placeholder="Promoção">
 
+        </div>
 
-</div>
 
-</div>
+        <div class="form-group">
 
+            <label>
+                Fotos do produto
+            </label>
 
-<div class="form-group">
+            <div
+                class="fotos-container"
+                id="fotosContainer">
+            </div>
 
+            <input
+                type="file"
+                id="fotoInput"
+                accept="image/*"
+                multiple
+                onchange="adicionarFotos(event)">
 
-    <label>
-        Cores
-    </label>
+        </div>
 
 
-    <input
-    id="coresProduto"
-    type="text"
-    placeholder="Marrom, Bege, Preto">
+        <div class="modal-footer">
 
+            <button
+                class="btn-cancel"
+                onclick="fecharModal()">
 
-</div>
+                Cancelar
 
+            </button>
 
-<div class="form-group">
+            <button
+                class="btn-save"
+                id="btnSalvarProduto"
+                onclick="salvarProduto()">
 
+                Salvar produto
 
-    <label>
-        Tamanhos
-    </label>
+            </button>
 
+        </div>
 
-    <input
-    id="tamanhosProduto"
-    type="text"
-    placeholder="P, M, G">
-
-
-</div>
-
-
-<div class="form-group">
-
-
-    <label>
-        Descrição
-    </label>
-
-
-    <textarea
-    id="descricaoProduto"
-    placeholder="Descrição do produto..."></textarea>
-
-
-</div>
-
-
-<div class="form-group">
-
-
-    <label>
-        Etiqueta
-    </label>
-
-
-    <input
-    id="tagProduto"
-    type="text"
-    placeholder="Promoção">
-
-
-</div>
-
-
-<div class="form-group">
-
-
-    <label>
-        Fotos do produto
-    </label>
-
-
-    <div
-    class="fotos-container"
-    id="fotosContainer">
     </div>
-
-
-    <input
-    type="file"
-    id="fotoInput"
-    accept="image/*"
-    multiple
-    onchange="adicionarFotos(event)">
-
-
-</div>
-
-
-<div class="modal-footer">
-
-
-    <button
-    class="btn-cancel"
-    onclick="fecharModal()">
-
-        Cancelar
-
-    </button>
-
-
-    <button
-    class="btn-save"
-    onclick="salvarProduto()">
-
-        Salvar produto
-
-    </button>
-
-
-</div>
-
-
-</div>
 
 </div>
 
@@ -2017,19 +1500,15 @@ id="modalProduto">
 
 <script type="module">
 
-/*
-=========================================================
-ATENÇÃO
+/* =====================================================
+   FIREBASE
+===================================================== */
 
-AQUI DEVE FICAR A MESMA CONFIGURAÇÃO FIREBASE
-QUE VOCÊ JÁ COLOCOU NO SEU INDEX.HTML.
+import {
+    initializeApp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-NÃO CRIE OUTRO PROJETO.
-
-Exemplo da estrutura:
-
-import { initializeApp }
-from "...firebase-app.js";
 
 import {
     getAuth,
@@ -2037,56 +1516,45 @@ import {
     onAuthStateChanged,
     signOut
 }
-from "...firebase-auth.js";
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-const firebaseConfig = {
-    apiKey: "SUA_CONFIGURAÇÃO",
-    authDomain: "SUA_CONFIGURAÇÃO",
-    projectId: "SUA_CONFIGURAÇÃO",
-    storageBucket: "SUA_CONFIGURAÇÃO",
-    messagingSenderId: "SUA_CONFIGURAÇÃO",
-    appId: "SUA_CONFIGURAÇÃO"
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-=========================================================
-*/
 
 import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import {
-    getAuth,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
+    getFirestore,
+    collection,
+    onSnapshot,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+    serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
 /* =====================================================
-   COLOQUE AQUI SUA CONFIGURAÇÃO FIREBASE ATUAL
+   CONFIGURAÇÃO REAL DO SEU FIREBASE
 ===================================================== */
 
 const firebaseConfig = {
 
-    apiKey: "COLOQUE_AQUI_SUA_API_KEY",
+    apiKey:
+        "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
 
-    authDomain: "COLOQUE_AQUI_SEU_AUTH_DOMAIN",
+    authDomain:
+        "lalabela-boutique.firebaseapp.com",
 
-    projectId: "COLOQUE_AQUI_SEU_PROJECT_ID",
+    projectId:
+        "lalabela-boutique",
 
-    storageBucket: "COLOQUE_AQUI_SEU_STORAGE_BUCKET",
+    storageBucket:
+        "lalabela-boutique.firebasestorage.app",
 
     messagingSenderId:
-    "COLOQUE_AQUI_SEU_MESSAGING_SENDER_ID",
+        "642045507952",
 
     appId:
-    "COLOQUE_AQUI_SEU_APP_ID"
+        "1:642045507952:web:8953c11428090b4a41b7b5"
 
 };
 
@@ -2098,10 +1566,24 @@ const firebaseConfig = {
 const app =
     initializeApp(firebaseConfig);
 
-
 const auth =
     getAuth(app);
 
+const db =
+    getFirestore(app);
+
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
+let produtos = [];
+
+let produtoEditando = null;
+
+let fotosAtuais = [];
+
+let carregamentoInicial = true;
 
 
 /* =====================================================
@@ -2124,48 +1606,45 @@ const btnLogin =
     document.getElementById("btnLogin");
 
 
-
 /* =====================================================
-   VERIFICAR LOGIN
+   OBSERVADOR DE LOGIN
 ===================================================== */
 
-onAuthStateChanged(auth, (usuario) => {
+onAuthStateChanged(
+    auth,
+    usuario => {
 
+        if(usuario){
 
-    if(usuario){
+            console.log(
+                "Usuário autenticado:",
+                usuario.email
+            );
 
-        /*
-        Usuário está logado.
-        Libera o painel.
-        */
+            telaLogin.style.display =
+                "none";
 
-        telaLogin.style.display =
-            "none";
+            painel.style.display =
+                "block";
 
-        painel.style.display =
-            "block";
+            carregarProdutosFirebase();
 
+        }else{
 
-        renderizarProdutos();
+            console.log(
+                "Nenhum usuário autenticado."
+            );
 
+            telaLogin.style.display =
+                "flex";
 
-    }else{
+            painel.style.display =
+                "none";
 
-        /*
-        Usuário não está logado.
-        Mostra login.
-        */
-
-        telaLogin.style.display =
-            "flex";
-
-        painel.style.display =
-            "none";
+        }
 
     }
-
-});
-
+);
 
 
 /* =====================================================
@@ -2181,12 +1660,10 @@ async function(){
         .value
         .trim();
 
-
     const senha =
         document
         .getElementById("senhaLogin")
         .value;
-
 
     erroLogin.style.display =
         "none";
@@ -2208,13 +1685,11 @@ async function(){
     btnLogin.disabled =
         true;
 
-
     carregandoLogin.style.display =
         "block";
 
 
     try{
-
 
         await signInWithEmailAndPassword(
             auth,
@@ -2222,33 +1697,72 @@ async function(){
             senha
         );
 
-
-        /*
-        O onAuthStateChanged
-        abrirá automaticamente
-        o painel.
-        */
-
-
     }catch(error){
 
-        console.error(error);
+        console.error(
+            "Erro de login:",
+            error
+        );
+
+
+        let mensagem =
+            "E-mail ou senha incorretos.";
+
+
+        if(
+            error.code ===
+            "auth/user-not-found"
+        ){
+
+            mensagem =
+                "Este e-mail não está cadastrado no Firebase.";
+
+        }
+
+
+        if(
+            error.code ===
+            "auth/wrong-password"
+        ){
+
+            mensagem =
+                "A senha está incorreta.";
+
+        }
+
+
+        if(
+            error.code ===
+            "auth/invalid-credential"
+        ){
+
+            mensagem =
+                "E-mail ou senha incorretos.";
+
+        }
+
+
+        if(
+            error.code ===
+            "auth/invalid-email"
+        ){
+
+            mensagem =
+                "Digite um e-mail válido.";
+
+        }
 
 
         erroLogin.textContent =
-            "E-mail ou senha incorretos.";
-
+            mensagem;
 
         erroLogin.style.display =
             "block";
 
-
     }finally{
-
 
         btnLogin.disabled =
             false;
-
 
         carregandoLogin.style.display =
             "none";
@@ -2256,7 +1770,6 @@ async function(){
     }
 
 };
-
 
 
 /* =====================================================
@@ -2273,9 +1786,7 @@ async function(){
 
 
     if(!confirmar){
-
         return;
-
     }
 
 
@@ -2288,13 +1799,12 @@ async function(){
         console.error(error);
 
         alert(
-            "Não foi possível sair. Tente novamente."
+            "Não foi possível sair."
         );
 
     }
 
 };
-
 
 
 /* =====================================================
@@ -2305,7 +1815,7 @@ document
 .getElementById("senhaLogin")
 .addEventListener(
     "keydown",
-    function(event){
+    event => {
 
         if(event.key === "Enter"){
 
@@ -2317,255 +1827,80 @@ document
 );
 
 
-
 /* =====================================================
-   PRODUTOS
+   CARREGAR PRODUTOS FIRESTORE
 ===================================================== */
 
-let produtos = [
+function carregarProdutosFirebase(){
 
+    const lista =
+        document.getElementById(
+            "listaProdutos"
+        );
 
-{
 
-nome:"Conjunto Zandeya",
+    lista.innerHTML = `
+        <div class="carregando-produtos">
+            Carregando produtos...
+        </div>
+    `;
 
-preco:69.90,
 
-categoria:"Conjunto",
+    const produtosRef =
+        collection(
+            db,
+            "produtos"
+        );
 
-imagens:[
 
-"https://i.postimg.cc/y8YzytK6/IMG-7740.jpg",
+    onSnapshot(
+        produtosRef,
 
-"https://i.postimg.cc/sx9tp90Z/IMG-7741.jpg",
+        snapshot => {
 
-"https://i.postimg.cc/W14QkZmZ/IMG-7742.jpg"
+            produtos =
+                snapshot.docs.map(
+                    item => {
 
-],
+                        return {
+                            id:item.id,
+                            ...item.data()
+                        };
 
-cores:[
-"Marrom",
-"Bege"
-],
+                    }
+                );
 
-tamanhos:[
-"Único — veste do 36 ao 40"
-],
 
-descricao:
-"Conjunto Zandeya confeccionado em tecido Suplex, com ótimo caimento, conforto e modelagem que valoriza o corpo.",
+            console.log(
+                "Produtos recebidos do Firestore:",
+                produtos
+            );
 
-tag:"Promoção"
 
-},
+            renderizarProdutos();
 
+        },
 
-{
+        error => {
 
-nome:"Conjunto Maresia",
+            console.error(
+                "Erro Firestore:",
+                error
+            );
 
-preco:149,
 
-categoria:"Conjunto",
+            lista.innerHTML = `
+                <div class="sem-produtos">
+                    ⚠️ Não foi possível carregar os produtos.
+                    <br><br>
+                    Verifique as regras do Firestore.
+                </div>
+            `;
 
-imagens:[
-
-"https://i.postimg.cc/L54mcxDd/IMG-3628.jpg"
-
-],
-
-cores:[
-"Estampa da foto"
-],
-
-tamanhos:[
-"Único — veste do 36 ao 40"
-],
-
-descricao:
-"Conjunto duas peças, perfeito para dias quentes.",
-
-tag:"Últimas peças"
-
-},
-
-
-{
-
-nome:"Conjunto Mafil",
-
-preco:150,
-
-categoria:"Conjunto",
-
-imagens:[
-
-"https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg"
-
-],
-
-cores:[
-"Preto",
-"Rosa"
-],
-
-tamanhos:[
-"P",
-"M",
-"G"
-],
-
-descricao:
-"Conjunto duas peças.",
-
-tag:"Últimas peças"
-
-},
-
-
-{
-
-nome:"Vestido Verão",
-
-preco:80,
-
-categoria:"Vestido",
-
-imagens:[
-
-"https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg"
-
-],
-
-cores:[
-"Rosa",
-"Preto",
-"Branco"
-],
-
-tamanhos:[
-"P",
-"M",
-"G"
-],
-
-descricao:
-"O vestido perfeito para dias quentes.",
-
-tag:"O mais vendido"
-
-},
-
-
-{
-
-nome:"Conjunto Luxo",
-
-preco:160,
-
-categoria:"Conjunto",
-
-imagens:[
-
-"https://i.postimg.cc/9ffKHv58/EC63DBCD-C2B9-4C31-A4B8-4756586365DE.jpg"
-
-],
-
-cores:[
-"Preto",
-"Chocolate"
-],
-
-tamanhos:[
-"P",
-"M",
-"G"
-],
-
-descricao:
-"Conjunto duas peças.",
-
-tag:""
-
-},
-
-
-{
-
-nome:"Conjunto Sophie",
-
-preco:70,
-
-categoria:"Conjunto",
-
-imagens:[
-
-"https://i.postimg.cc/63J3mVFt/B2BCDDAC-D626-4AA3-99D0-9BF61179CA88.png"
-
-],
-
-cores:[
-"Rosa",
-"Branco"
-],
-
-tamanhos:[
-"36",
-"38",
-"40"
-],
-
-descricao:
-"Conjunto duas peças, tecido fluido.",
-
-tag:"Promoção"
-
-},
-
-
-{
-
-nome:"Vestido Mônaco",
-
-preco:70,
-
-categoria:"Vestido",
-
-imagens:[
-
-"https://i.postimg.cc/jdKf5TgN/C4271E37-C738-44AA-A8A8-E7A278EA6417.jpg"
-
-],
-
-cores:[
-"Preto",
-"Rosa",
-"Verde"
-],
-
-tamanhos:[
-"P",
-"M",
-"G"
-],
-
-descricao:
-"Vestido midi Ribana canelada, caimento leve.",
-
-tag:"Promoção"
+        }
+    );
 
 }
-
-];
-
-
-let produtoEditando =
-null;
-
-
-let fotosAtuais =
-[];
-
 
 
 /* =====================================================
@@ -2584,101 +1919,122 @@ function(){
     lista.innerHTML = "";
 
 
-    produtos.forEach(
-    (produto,index)=>{
+    if(produtos.length === 0){
+
+        lista.innerHTML = `
+            <div class="sem-produtos">
+                Nenhum produto cadastrado.
+                <br><br>
+                Clique em <strong>+ Novo Produto</strong>
+                para adicionar o primeiro.
+            </div>
+        `;
+
+    }else{
+
+        produtos.forEach(
+            (produto,index) => {
+
+                const foto =
+                    produto.imagens &&
+                    produto.imagens.length
+                    ? produto.imagens[0]
+                    : "";
 
 
-        const foto =
-            produto.imagens?.[0] || "";
+                lista.innerHTML += `
+
+                <div class="product-row">
+
+                    <div class="product">
+
+                        ${
+                            foto
+                            ?
+                            `<img
+                                src="${foto}"
+                                alt="${produto.nome || ""}"
+                            >`
+                            :
+                            `<div style="
+                                width:62px;
+                                height:62px;
+                                border-radius:9px;
+                                background:#f3f3f3;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;">
+                                🛍️
+                            </div>`
+                        }
+
+                        <div class="product-name">
+                            ${produto.nome || "Sem nome"}
+                        </div>
+
+                    </div>
 
 
-        lista.innerHTML += `
-
-        <div class="product-row">
-
-
-            <div class="product">
+                    <div>
+                        ${produto.categoria || "-"}
+                    </div>
 
 
-                <img
-                src="${foto}"
-                alt="${produto.nome}">
+                    <div class="price">
+
+                        R$
+                        ${Number(
+                            produto.preco || 0
+                        )
+                        .toFixed(2)
+                        .replace(".",",")}
+
+                    </div>
 
 
-                <div class="product-name">
+                    <div class="stock">
+                        —
+                    </div>
 
-                    ${produto.nome}
+
+                    <div>
+
+                        <span class="status">
+                            Ativo
+                        </span>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        <button
+                            class="action"
+                            onclick="editarProduto(${index})">
+
+                            Editar
+
+                        </button>
+
+
+                        <button
+                            class="action delete"
+                            onclick="excluirProduto(${index})">
+
+                            Excluir
+
+                        </button>
+
+                    </div>
 
                 </div>
 
+                `;
 
-            </div>
+            }
+        );
 
-
-            <div>
-
-                ${produto.categoria || "-"}
-
-            </div>
-
-
-            <div class="price">
-
-                R$
-                ${Number(produto.preco)
-                .toFixed(2)
-                .replace(".",",")}
-
-            </div>
-
-
-            <div class="stock">
-
-                —
-
-            </div>
-
-
-            <div>
-
-                <span class="status">
-
-                    Ativo
-
-                </span>
-
-            </div>
-
-
-            <div class="actions">
-
-
-                <button
-                class="action"
-                onclick="editarProduto(${index})">
-
-                    Editar
-
-                </button>
-
-
-                <button
-                class="action delete"
-                onclick="excluirProduto(${index})">
-
-                    Excluir
-
-                </button>
-
-
-            </div>
-
-
-        </div>
-
-        `;
-
-    });
+    }
 
 
     document
@@ -2691,11 +2047,12 @@ function(){
     .getElementById("totalPromocoes")
     .textContent =
         produtos.filter(
-            p => p.tag
+            produto =>
+                produto.tag &&
+                produto.tag.trim() !== ""
         ).length;
 
 };
-
 
 
 /* =====================================================
@@ -2703,25 +2060,19 @@ function(){
 ===================================================== */
 
 window.menuNavegar =
-function(nome, botao){
-
+function(nome,botao){
 
     document
     .querySelectorAll(".menu button")
-    .forEach(btn=>{
-
-        btn.classList.remove(
-            "ativo"
-        );
-
-    });
+    .forEach(
+        btn =>
+            btn.classList.remove("ativo")
+    );
 
 
     if(botao){
 
-        botao.classList.add(
-            "ativo"
-        );
+        botao.classList.add("ativo");
 
     }
 
@@ -2737,15 +2088,10 @@ function(nome, botao){
         tituloTopo.textContent =
             "Thay Costa";
 
-
         window.scrollTo({
-
             top:0,
-
             behavior:"smooth"
-
         });
-
 
         return;
 
@@ -2755,19 +2101,15 @@ function(nome, botao){
     if(nome === "Produtos"){
 
         tituloTopo.textContent =
-            "Thay Costa";
-
+            "Produtos";
 
         document
         .getElementById(
             "secaoProdutos"
         )
         .scrollIntoView({
-
             behavior:"smooth"
-
         });
-
 
         return;
 
@@ -2782,13 +2124,12 @@ function(nome, botao){
 
         alert(
             nome +
-            " será configurado nesta próxima etapa."
+            " será configurado em uma próxima etapa."
         );
 
     }
 
 };
-
 
 
 /* =====================================================
@@ -2803,13 +2144,10 @@ function(){
         "secaoProdutos"
     )
     .scrollIntoView({
-
         behavior:"smooth"
-
     });
 
 };
-
 
 
 /* =====================================================
@@ -2844,7 +2182,6 @@ function(){
 };
 
 
-
 /* =====================================================
    EDITAR PRODUTO
 ===================================================== */
@@ -2852,12 +2189,17 @@ function(){
 window.editarProduto =
 function(index){
 
-    produtoEditando =
-        index;
-
-
     const produto =
         produtos[index];
+
+
+    if(!produto){
+        return;
+    }
+
+
+    produtoEditando =
+        index;
 
 
     document
@@ -2898,8 +2240,11 @@ function(index){
         "coresProduto"
     )
     .value =
-        (produto.cores || [])
-        .join(", ");
+        Array.isArray(produto.cores)
+        ?
+        produto.cores.join(", ")
+        :
+        "";
 
 
     document
@@ -2907,8 +2252,11 @@ function(index){
         "tamanhosProduto"
     )
     .value =
-        (produto.tamanhos || [])
-        .join(", ");
+        Array.isArray(produto.tamanhos)
+        ?
+        produto.tamanhos.join(", ")
+        :
+        "";
 
 
     document
@@ -2928,7 +2276,11 @@ function(index){
 
 
     fotosAtuais =
-        [...(produto.imagens || [])];
+        Array.isArray(produto.imagens)
+        ?
+        [...produto.imagens]
+        :
+        [];
 
 
     renderizarFotos();
@@ -2942,7 +2294,6 @@ function(index){
     .add("aberto");
 
 };
-
 
 
 /* =====================================================
@@ -2962,45 +2313,44 @@ function(){
 
 
     fotosAtuais.forEach(
-    (foto,index)=>{
+        (foto,index) => {
 
+            container.innerHTML += `
 
-        container.innerHTML += `
+                <div class="foto-item">
 
-        <div class="foto-item">
+                    <img
+                        src="${foto}"
+                        alt="Foto ${index + 1}"
+                    >
 
+                    <button
+                        type="button"
+                        class="remover-foto"
+                        onclick="removerFoto(${index})">
 
-            <img
-            src="${foto}"
-            alt="Foto ${index + 1}">
+                        ×
 
+                    </button>
 
-            <button
-            class="remover-foto"
-            onclick="removerFoto(${index})">
+                </div>
 
-                ×
+            `;
 
-            </button>
-
-
-        </div>
-
-        `;
-
-    });
+        }
+    );
 
 
     container.innerHTML += `
 
         <button
-        type="button"
-        class="adicionar-foto"
-        onclick="
-        document
-        .getElementById('fotoInput')
-        .click()
-        ">
+            type="button"
+            class="adicionar-foto"
+            onclick="
+                document
+                .getElementById('fotoInput')
+                .click()
+            ">
 
             +
 
@@ -3013,7 +2363,6 @@ function(){
     `;
 
 };
-
 
 
 /* =====================================================
@@ -3034,7 +2383,6 @@ function(index){
 };
 
 
-
 /* =====================================================
    ADICIONAR FOTOS
 ===================================================== */
@@ -3043,36 +2391,35 @@ window.adicionarFotos =
 function(event){
 
     const arquivos =
-        event.target.files;
+        [...event.target.files];
 
 
-    [...arquivos].forEach(
-    arquivo=>{
+    arquivos.forEach(
+        arquivo => {
+
+            const reader =
+                new FileReader();
 
 
-        const reader =
-            new FileReader();
+            reader.onload =
+                function(e){
+
+                    fotosAtuais.push(
+                        e.target.result
+                    );
 
 
-        reader.onload =
-        function(e){
+                    renderizarFotos();
+
+                };
 
 
-            fotosAtuais.push(
-                e.target.result
+            reader.readAsDataURL(
+                arquivo
             );
 
-
-            renderizarFotos();
-
-        };
-
-
-        reader.readAsDataURL(
-            arquivo
-        );
-
-    });
+        }
+    );
 
 
     event.target.value = "";
@@ -3080,57 +2427,47 @@ function(event){
 };
 
 
-
 /* =====================================================
-   SALVAR PRODUTO
+   SALVAR PRODUTO NO FIRESTORE
 ===================================================== */
 
 window.salvarProduto =
-function(){
+async function(){
+
+    const btn =
+        document.getElementById(
+            "btnSalvarProduto"
+        );
 
 
-    const produto = {
-
-
-        nome:
-
+    const nome =
         document
         .getElementById(
             "nomeProduto"
         )
         .value
-        .trim(),
+        .trim();
 
 
-        preco:
-
+    const preco =
         Number(
-
             document
             .getElementById(
                 "precoProduto"
             )
             .value
+        );
 
-        ),
 
-
-        categoria:
-
+    const categoria =
         document
         .getElementById(
             "categoriaProduto"
         )
-        .value,
+        .value;
 
 
-        imagens:
-
-        [...fotosAtuais],
-
-
-        cores:
-
+    const cores =
         document
         .getElementById(
             "coresProduto"
@@ -3138,13 +2475,12 @@ function(){
         .value
         .split(",")
         .map(
-            x => x.trim()
+            item => item.trim()
         )
-        .filter(Boolean),
+        .filter(Boolean);
 
 
-        tamanhos:
-
+    const tamanhos =
         document
         .getElementById(
             "tamanhosProduto"
@@ -3152,32 +2488,30 @@ function(){
         .value
         .split(",")
         .map(
-            x => x.trim()
+            item => item.trim()
         )
-        .filter(Boolean),
+        .filter(Boolean);
 
 
-        descricao:
-
+    const descricao =
         document
         .getElementById(
             "descricaoProduto"
         )
-        .value,
+        .value
+        .trim();
 
 
-        tag:
-
+    const tag =
         document
         .getElementById(
             "tagProduto"
         )
         .value
+        .trim();
 
-    };
 
-
-    if(!produto.nome){
+    if(!nome){
 
         alert(
             "Digite o nome do produto."
@@ -3188,58 +2522,223 @@ function(){
     }
 
 
-    if(produtoEditando === null){
+    if(!preco || preco <= 0){
 
-        produtos.unshift(
-            produto
+        alert(
+            "Digite um preço válido."
         );
-
-    }else{
-
-        produtos[
-            produtoEditando
-        ] =
-            produto;
-
-    }
-
-
-    renderizarProdutos();
-
-
-    fecharModal();
-
-};
-
-
-
-/* =====================================================
-   EXCLUIR
-===================================================== */
-
-window.excluirProduto =
-function(index){
-
-
-    if(!confirm(
-        "Deseja realmente excluir este produto?"
-    )){
 
         return;
 
     }
 
 
-    produtos.splice(
-        index,
-        1
-    );
+    const produto = {
+
+        nome:nome,
+
+        preco:preco,
+
+        categoria:categoria,
+
+        imagens:[...fotosAtuais],
+
+        cores:cores,
+
+        tamanhos:tamanhos,
+
+        descricao:descricao,
+
+        tag:tag,
+
+        atualizadoEm:
+            serverTimestamp()
+
+    };
 
 
-    renderizarProdutos();
+    btn.disabled =
+        true;
+
+    btn.textContent =
+        "Salvando...";
+
+
+    try{
+
+        if(
+            produtoEditando === null
+        ){
+
+            await addDoc(
+                collection(
+                    db,
+                    "produtos"
+                ),
+                {
+                    ...produto,
+                    criadoEm:
+                        serverTimestamp()
+                }
+            );
+
+
+            alert(
+                "Produto adicionado com sucesso!"
+            );
+
+        }else{
+
+            const produtoAtual =
+                produtos[
+                    produtoEditando
+                ];
+
+
+            if(!produtoAtual){
+
+                throw new Error(
+                    "Produto não encontrado."
+                );
+
+            }
+
+
+            await updateDoc(
+                doc(
+                    db,
+                    "produtos",
+                    produtoAtual.id
+                ),
+                produto
+            );
+
+
+            alert(
+                "Produto atualizado com sucesso!"
+            );
+
+        }
+
+
+        fecharModal();
+
+
+        produtoEditando =
+            null;
+
+
+    }catch(error){
+
+        console.error(
+            "Erro ao salvar produto:",
+            error
+        );
+
+
+        if(
+            error.code ===
+            "permission-denied"
+        ){
+
+            alert(
+                "O Firebase bloqueou a gravação. Precisamos ajustar as regras do Firestore."
+            );
+
+        }else{
+
+            alert(
+                "Não foi possível salvar o produto."
+            );
+
+        }
+
+    }finally{
+
+        btn.disabled =
+            false;
+
+        btn.textContent =
+            "Salvar produto";
+
+    }
 
 };
 
+
+/* =====================================================
+   EXCLUIR PRODUTO DO FIRESTORE
+===================================================== */
+
+window.excluirProduto =
+async function(index){
+
+    const produto =
+        produtos[index];
+
+
+    if(!produto){
+        return;
+    }
+
+
+    const confirmar =
+        confirm(
+            "Deseja realmente excluir o produto:\n\n" +
+            produto.nome +
+            "?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    try{
+
+        await deleteDoc(
+            doc(
+                db,
+                "produtos",
+                produto.id
+            )
+        );
+
+
+        alert(
+            "Produto excluído com sucesso!"
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Erro ao excluir:",
+            error
+        );
+
+
+        if(
+            error.code ===
+            "permission-denied"
+        ){
+
+            alert(
+                "O Firebase bloqueou a exclusão. Precisamos ajustar as regras do Firestore."
+            );
+
+        }else{
+
+            alert(
+                "Não foi possível excluir o produto."
+            );
+
+        }
+
+    }
+
+};
 
 
 /* =====================================================
@@ -3248,7 +2747,6 @@ function(index){
 
 window.limparFormulario =
 function(){
-
 
     document
     .getElementById(
@@ -3308,7 +2806,6 @@ function(){
 };
 
 
-
 /* =====================================================
    FECHAR MODAL
 ===================================================== */
@@ -3323,12 +2820,15 @@ function(){
     .classList
     .remove("aberto");
 
+
+    produtoEditando =
+        null;
+
 };
 
 
-
 /* =====================================================
-   FECHAR MODAL CLICANDO FORA
+   FECHAR CLICANDO FORA
 ===================================================== */
 
 document
@@ -3336,27 +2836,47 @@ document
     "modalProduto"
 )
 .addEventListener(
-"click",
-function(event){
+    "click",
+    function(event){
 
-    if(
-        event.target === this
-    ){
+        if(
+            event.target === this
+        ){
 
-        fecharModal();
+            fecharModal();
+
+        }
 
     }
-
-});
-
+);
 
 
 /* =====================================================
-   INICIALIZAÇÃO DAS FOTOS
+   FOTOS INICIAIS
 ===================================================== */
 
 renderizarFotos();
 
+
+console.log(
+    "======================================"
+);
+
+console.log(
+    "LaLabela Admin iniciado."
+);
+
+console.log(
+    "Firebase: lalabela-boutique"
+);
+
+console.log(
+    "Firestore: coleção produtos"
+);
+
+console.log(
+    "======================================"
+);
 
 </script>
 

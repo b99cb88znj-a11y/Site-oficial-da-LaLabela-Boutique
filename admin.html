@@ -1863,6 +1863,102 @@ document
 =================================== */
 
 renderizarProdutos();
+renderizarProdutos();
+
+
+/* ===================================
+   BOTÕES DO MENU
+=================================== */
+
+const botoesMenu = document.querySelectorAll(".menu button");
+
+botoesMenu.forEach((botao) => {
+
+    botao.addEventListener("click", function () {
+
+        botoesMenu.forEach((b) => {
+            b.classList.remove("ativo");
+        });
+
+        this.classList.add("ativo");
+
+        const nome = this.textContent.trim();
+
+        switch (nome) {
+
+            case "Dashboard":
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+                break;
+
+            case "Produtos":
+                document.querySelector(".section").scrollIntoView({
+                    behavior: "smooth"
+                });
+                break;
+
+            case "Categorias":
+                alert("Área de Categorias");
+                break;
+
+            case "Pedidos":
+                alert("Área de Pedidos");
+                break;
+
+            case "Clientes":
+                alert("Área de Clientes");
+                break;
+
+            case "Cupons":
+                alert("Área de Cupons");
+                break;
+
+            case "Configurações":
+                alert("Área de Configurações");
+                break;
+
+            case "Banners":
+                alert("Área de Banners");
+                break;
+
+            case "Sair":
+                alert("Você saiu do painel.");
+                break;
+
+        }
+
+    });
+
+});
+
+
+/* ===================================
+   VER TODOS
+=================================== */
+
+document.querySelector(".link").addEventListener("click", function(){
+
+    document.querySelector(".section").scrollIntoView({
+        behavior:"smooth"
+    });
+
+});
+
+
+/* ===================================
+   FECHAR MODAL CLICANDO FORA
+=================================== */
+
+document.getElementById("modalProduto").addEventListener("click", function(event){
+
+    if(event.target === this){
+        fecharModal();
+    }
+
+});
+
 
 </script>
 

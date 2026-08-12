@@ -1,283 +1,535 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Painel LaLabela Boutique</title>
+<title>LaLabela Boutique - Painel</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f8f8f8;
-      color: #222;
-    }
+*{
+  box-sizing:border-box;
+}
 
-    header {
-      background: #ed1764;
-      color: white;
-      padding: 22px 20px;
-      text-align: center;
-    }
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f7f7f7;
+  color:#222;
+}
 
-    header h1 {
-      font-size: 25px;
-      margin-bottom: 5px;
-    }
+header{
+  background:#f20b68;
+  color:white;
+  text-align:center;
+  padding:35px 20px;
+}
 
-    header p {
-      font-size: 14px;
-      opacity: 0.9;
-    }
+header h1{
+  margin:0;
+  font-size:34px;
+}
 
-    .container {
-      width: 100%;
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
-    }
+header p{
+  margin:10px 0 0;
+  font-size:20px;
+}
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 25px;
-    }
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:25px 18px;
+}
 
-    .card {
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-      text-align: center;
-    }
+.resumo{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:30px;
+}
 
-    .card strong {
-      display: block;
-      font-size: 25px;
-      color: #ed1764;
-      margin-bottom: 5px;
-    }
+.card{
+  background:white;
+  border-radius:20px;
+  padding:25px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
 
-    .card span {
-      color: #777;
-      font-size: 14px;
-    }
+.card strong{
+  display:block;
+  color:#f20b68;
+  font-size:35px;
+}
 
-    .section {
-      background: white;
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-    }
+.card span{
+  color:#777;
+  font-size:18px;
+}
 
-    .section h2 {
-      margin-bottom: 18px;
-      font-size: 20px;
-    }
+.produtos-box{
+  background:white;
+  border-radius:25px;
+  padding:25px;
+  box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
 
-    .button {
-      border: none;
-      background: #ed1764;
-      color: white;
-      padding: 13px 20px;
-      border-radius: 10px;
-      font-size: 15px;
-      cursor: pointer;
-    }
+.produtos-box h2{
+  margin-top:0;
+  font-size:28px;
+}
 
-    .button:hover {
-      opacity: 0.9;
-    }
+.btn-add{
+  background:#f20b68;
+  color:white;
+  border:0;
+  padding:15px 25px;
+  border-radius:14px;
+  font-size:18px;
+  cursor:pointer;
+  margin-bottom:25px;
+}
 
-    .product {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px 0;
-      border-bottom: 1px solid #eee;
-    }
+.produto{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:20px 0;
+  border-bottom:1px solid #eee;
+}
 
-    .product:last-child {
-      border-bottom: none;
-    }
+.produto:last-child{
+  border-bottom:0;
+}
 
-    .product img {
-      width: 75px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 10px;
-      background: #eee;
-    }
+.produto img{
+  width:140px;
+  height:170px;
+  object-fit:cover;
+  border-radius:15px;
+  background:#eee;
+}
 
-    .product-info {
-      flex: 1;
-    }
+.info{
+  flex:1;
+}
 
-    .product-info h3 {
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
+.info h3{
+  margin:0 0 8px;
+  font-size:22px;
+}
 
-    .product-info p {
-      color: #ed1764;
-      font-weight: bold;
-    }
+.preco{
+  color:#f20b68;
+  font-size:21px;
+  font-weight:bold;
+}
 
-    .edit {
-      background: #222;
-      color: white;
-      border: none;
-      padding: 9px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+.categoria{
+  color:#777;
+  margin-top:6px;
+}
 
-    @media (max-width: 600px) {
+.tag{
+  display:inline-block;
+  background:#fce0eb;
+  color:#f20b68;
+  padding:5px 10px;
+  border-radius:20px;
+  margin-top:8px;
+  font-size:13px;
+}
 
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
+.btn-editar{
+  background:#222;
+  color:white;
+  border:0;
+  padding:13px 20px;
+  border-radius:12px;
+  font-size:16px;
+  cursor:pointer;
+}
 
-      .product {
-        align-items: flex-start;
-      }
+@media(max-width:700px){
 
-      .product img {
-        width: 65px;
-        height: 80px;
-      }
+  .resumo{
+    grid-template-columns:1fr;
+  }
 
-      .edit {
-        padding: 8px 10px;
-      }
-    }
-  </style>
+  .produto{
+    align-items:flex-start;
+  }
+
+  .produto img{
+    width:100px;
+    height:130px;
+  }
+
+  .info h3{
+    font-size:18px;
+  }
+
+  .preco{
+    font-size:18px;
+  }
+
+  .btn-editar{
+    padding:10px 12px;
+    font-size:14px;
+  }
+
+}
+
+</style>
 </head>
 
 <body>
 
-  <header>
-    <h1>LaLabela Boutique</h1>
-    <p>Painel administrativo</p>
-  </header>
+<header>
 
-  <main class="container">
+<h1>LaLabela Boutique</h1>
 
-    <div class="dashboard">
+<p>Painel administrativo</p>
 
-      <div class="card">
-        <strong id="totalProdutos">0</strong>
-        <span>Produtos</span>
-      </div>
+</header>
 
-      <div class="card">
-        <strong>R$ 0,00</strong>
-        <span>Vendas</span>
-      </div>
 
-      <div class="card">
-        <strong>0</strong>
-        <span>Pedidos</span>
-      </div>
+<div class="container">
 
-    </div>
 
-    <div class="section">
+<div class="resumo">
 
-      <h2>Produtos</h2>
+<div class="card">
+<strong id="totalProdutos">0</strong>
+<span>Produtos</span>
+</div>
 
-      <button class="button" onclick="adicionarProduto()">
-        + Adicionar produto
-      </button>
+<div class="card">
+<strong>R$ 0,00</strong>
+<span>Vendas</span>
+</div>
 
-      <div id="listaProdutos" style="margin-top:20px;"></div>
+<div class="card">
+<strong>0</strong>
+<span>Pedidos</span>
+</div>
 
-    </div>
+</div>
 
-  </main>
 
-  <script>
+<div class="produtos-box">
 
-    const produtos = [
-      {
-        nome: "Conjunto Zandeya",
-        preco: 69.90,
-        imagem: "https://i.postimg.cc/y8YzytK6/IMG-7740.jpg"
-      }
-    ];
+<h2>Produtos</h2>
 
-    function carregarProdutos() {
+<button class="btn-add" onclick="adicionarProduto()">
++ Adicionar produto
+</button>
 
-      const lista = document.getElementById("listaProdutos");
+<div id="listaProdutos"></div>
 
-      lista.innerHTML = "";
+</div>
 
-      produtos.forEach((produto, index) => {
+</div>
 
-        lista.innerHTML += `
 
-          <div class="product">
+<script>
 
-            <img
-              src="${produto.imagem}"
-              alt="${produto.nome}"
-            >
+const PRODUTOS = [
 
-            <div class="product-info">
+{
+nome:"Conjunto Zandeya",
+preco:69.90,
+categoria:"Conjunto",
 
-              <h3>${produto.nome}</h3>
+imagens:[
+"https://i.postimg.cc/y8YzytK6/IMG-7740.jpg",
+"https://i.postimg.cc/sx9tp90Z/IMG-7741.jpg",
+"https://i.postimg.cc/W14QkZmZ/IMG-7742.jpg"
+],
 
-              <p>
-                R$ ${produto.preco.toFixed(2).replace(".", ",")}
-              </p>
+cores:["Marrom","Bege"],
 
-            </div>
+tamanhos:[
+"Único — veste do 36 ao 40"
+],
 
-            <button
-              class="edit"
-              onclick="editarProduto(${index})"
-            >
-              Editar
-            </button>
+descricao:
+"Conjunto Zandeya confeccionado em tecido Suplex, com ótimo caimento, conforto e modelagem que valoriza o corpo. Tamanho único, veste do 36 ao 40.",
 
-          </div>
+tag:"Promoção"
+},
 
-        `;
+{
 
-      });
+nome:"Conjunto Maresia",
 
-      document.getElementById("totalProdutos").innerText =
-        produtos.length;
-    }
+preco:149.00,
 
-    function adicionarProduto() {
+categoria:"Conjunto",
 
-      alert(
-        "Aqui vamos colocar o formulário para adicionar produtos."
-      );
+imagens:[
+"https://i.postimg.cc/L54mcxDd/IMG-3628.jpg",
+"COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",
+"COLE-AQUI-O-LINK-DA-TERCEIRA-FOTO"
+],
 
-    }
+cores:[
+"estampa da foto"
+],
 
-    function editarProduto(index) {
+tamanhos:[
+"Único — veste do 36 ao 40"
+],
 
-      alert(
-        "Aqui vamos colocar a edição do produto: " +
-        produtos[index].nome
-      );
+descricao:
+"Conjunto Duas Peças, perfeito para dias quentes.",
 
-    }
+tag:"Ultimas peças"
+},
 
-    carregarProdutos();
+{
 
-  </script>
+nome:"Conjunto Mafil",
+
+preco:150.00,
+
+categoria:"Conjunto",
+
+imagens:[
+"https://i.postimg.cc/jdmrcxGp/IMG-2524.jpg",
+"COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO",
+"COLE-AQUI-O-LINK-DA-TERCEIRA-FOTO"
+],
+
+cores:[
+"Preto",
+"Rosa"
+],
+
+tamanhos:[
+"P",
+"M",
+"G"
+],
+
+descricao:
+"Conjunto Duas peças.",
+
+tag:"Últimas peças"
+},
+
+{
+
+nome:"Vestido Verão",
+
+preco:80.00,
+
+categoria:"Vestido",
+
+imagens:[
+"https://i.postimg.cc/PrLgCGP4/IMG-3629.jpg",
+"COLE-AQUI-O-LINK-DA-SEGUNDA-FOTO"
+],
+
+cores:[
+"Rosa",
+"Preto",
+"Branco"
+],
+
+tamanhos:[
+"P",
+"M",
+"G"
+],
+
+descricao:
+"O vestido perfeito para dias quentes.",
+
+tag:"O mais vendido"
+},
+
+{
+
+nome:"Conjunto Luxo",
+
+preco:160.00,
+
+categoria:"Conjunto",
+
+imagens:[
+"https://i.postimg.cc/9ffKHv58/EC63DBCD-C2B9-4C31-A4B8-4756586365DE.jpg"
+],
+
+cores:[
+"Preto",
+"Chocolate"
+],
+
+tamanhos:[
+"P",
+"M",
+"G"
+],
+
+descricao:
+"Conjunto duas peças.",
+
+tag:""
+},
+
+{
+
+nome:"Conjunto Sophie",
+
+preco:70.00,
+
+categoria:"Conjunto",
+
+imagens:[
+"https://i.postimg.cc/63J3mVFt/B2BCDDAC-D626-4AA3-99D0-9BF61179CA88.png"
+],
+
+cores:[
+"Rosa",
+"Branco"
+],
+
+tamanhos:[
+"36",
+"38",
+"40"
+],
+
+descricao:
+"Conjunto duas peças, tecido fluido.",
+
+tag:"Promoção"
+},
+
+{
+
+nome:"Vestido Mônaco",
+
+preco:70.00,
+
+categoria:"Vestido",
+
+imagens:[
+"https://i.postimg.cc/jdKf5TgN/C4271E37-C738-44AA-A8A8-E7A278EA6417.jpg"
+],
+
+cores:[
+"Preto",
+"Rosa",
+"Verde"
+],
+
+tamanhos:[
+"P",
+"M",
+"G"
+],
+
+descricao:
+"Vestido midi Ribana canelada, caimento leve.",
+
+tag:"Promoção"
+}
+
+];
+
+
+function carregarProdutos(){
+
+const lista = document.getElementById("listaProdutos");
+
+lista.innerHTML="";
+
+document.getElementById("totalProdutos").textContent =
+PRODUTOS.length;
+
+
+PRODUTOS.forEach((produto,index)=>{
+
+const div=document.createElement("div");
+
+div.className="produto";
+
+const imagem =
+produto.imagens && produto.imagens.length
+? produto.imagens[0]
+: "";
+
+
+div.innerHTML=`
+
+<img
+src="${imagem}"
+onerror="this.style.display='none'"
+>
+
+<div class="info">
+
+<h3>${produto.nome}</h3>
+
+<div class="preco">
+R$ ${produto.preco.toFixed(2).replace(".",",")}
+</div>
+
+<div class="categoria">
+${produto.categoria || ""}
+</div>
+
+${produto.tag ? `
+<div class="tag">
+${produto.tag}
+</div>
+` : ""}
+
+</div>
+
+<button
+class="btn-editar"
+onclick="editarProduto(${index})"
+>
+Editar
+</button>
+
+`;
+
+lista.appendChild(div);
+
+});
+
+}
+
+
+function editarProduto(index){
+
+const produto=PRODUTOS[index];
+
+alert(
+"Aqui vamos colocar a edição do produto: "
++ produto.nome
+);
+
+}
+
+
+function adicionarProduto(){
+
+alert(
+"Aqui vamos colocar o cadastro de novos produtos."
+);
+
+}
+
+
+carregarProdutos();
+
+</script>
 
 </body>
 </html>

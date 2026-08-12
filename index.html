@@ -1982,6 +1982,9 @@ function normalizarProduto(doc){
 
     estoque = Number(estoque) || 0;
 
+    let estoqueVariacoes =
+        dados.estoqueVariacoes || [];
+
 
     const nome =
         dados.nome ||
@@ -2019,6 +2022,8 @@ function normalizarProduto(doc){
         preco:preco,
 
         estoque:estoque,
+
+        estoqueVariacoes: estoqueVariacoes,
 
         categoria:String(categoria),
 
@@ -2487,7 +2492,7 @@ function montarFrete(){
 
 
 /* =========================================================
-   CARRINHO E TRAVA DE ESTOQUE
+   CARRINHO E TRAVA DE ESTOQUE POR COR E TAMANHO
 ========================================================= */
 
 function criarChaveItem(item){
@@ -2499,116 +2504,68 @@ function criarChaveItem(item){
 
 function adicionarAoCarrinho(i){
 
-    const p =
-        PRODUTOS[i];
+    const p = PRODUTOS[i];
+    if(!p) return;
 
+    const corElement = document.getElementById(`cor-${i}`);
+    const tamanhoElement = document.getElementById(`tamanho-${i}`);
 
-    if(!p){
-        return;
+    const cor = corElement ? corElement.value : "";
+    const tamanho = tamanhoElement ? tamanhoElement.value : "";
+
+    // Verifica o estoque específico cadastrado para esta cor/tamanho
+    let estoqueDisponivel = p.estoque; 
+    
+    if(Array.isArray(p.estoqueVariacoes) && p.estoqueVariacoes.length > 0){
+        const variacaoEncontrada = p.estoqueVariacoes.find(v => 
+            String(v.cor || "").trim().toLowerCase() === String(cor || "").trim().toLowerCase() &&
+            String(v.tamanho || "").trim().toLowerCase() === String(tamanho || "").trim().toLowerCase()
+        );
+        
+        if(variacaoEncontrada){
+            estoqueDisponivel = Number(variacaoEncontrada.quantidade) || 0;
+        } else {
+            estoqueDisponivel = 0;
+        }
     }
 
-
-    const corElement =
-        document.getElementById(
-            `cor-${i}`
-        );
-
-
-    const tamanhoElement =
-        document.getElementById(
-            `tamanho-${i}`
-        );
-
-
-    const cor =
-        corElement
-        ? corElement.value
-        : "";
-
-
-    const tamanho =
-        tamanhoElement
-        ? tamanhoElement.value
-        : "";
-
-
-    const existente =
-        carrinho.find(
-            item =>
-                item.nome === p.nome &&
-                item.cor === cor &&
-                item.tamanho === tamanho
-        );
-
+    const existente = carrinho.find(
+        item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho
+    );
 
     const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
 
-
-    // Trava de estoque
-    if((qtdAtualNoCarrinho + 1) > p.estoque){
-        alert("Ops! Quantidade indisponível em estoque para este produto.");
+    // Trava rigorosa por cor e tamanho
+    if((qtdAtualNoCarrinho + 1) > estoqueDisponivel){
+        alert(`Ops! Quantidade indisponível em estoque para esta cor/tamanho (Disponível: ${estoqueDisponivel}).`);
         return;
     }
 
-
     if(existente){
-
         existente.qtd += 1;
-
     }else{
-
         carrinho.push({
-
-            nome:p.nome,
-
-            preco:p.preco,
-
-            estoque:p.estoque,
-
-            imagem:
-                p.imagens && p.imagens.length
-                ? p.imagens[0]
-                : "",
-
-            qtd:1,
-
-            cor:cor,
-
-            tamanho:tamanho
-
+            nome: p.nome,
+            preco: p.preco,
+            estoque: estoqueDisponivel,
+            imagem: p.imagens && p.imagens.length ? p.imagens[0] : "",
+            qtd: 1,
+            cor: cor,
+            tamanho: tamanho
         });
-
     }
 
-
-    const btn =
-        document.getElementById(
-            `add-${i}`
-        );
-
-
+    const btn = document.getElementById(`add-${i}`);
     if(btn){
-
-        btn.textContent =
-            "Adicionado ✓";
-
+        btn.textContent = "Adicionado ✓";
         btn.classList.add("added");
-
-
         setTimeout(() => {
-
-            btn.textContent =
-                "Adicionar";
-
+            btn.textContent = "Adicionar";
             btn.classList.remove("added");
-
-        },1200);
-
+        }, 1200);
     }
-
 
     atualizarCarrinho();
-
     openCart();
 
 }
@@ -2635,7 +2592,7 @@ function alterarQtd(
 
 
     if(delta > 0 && novaQtd > item.estoque){
-        alert("Ops! Quantidade máxima disponível em estoque atingida.");
+        alert("Ops! Quantidade máxima disponível em estoque atingida para esta variação.");
         return;
     }
 

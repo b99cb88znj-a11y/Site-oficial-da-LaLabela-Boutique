@@ -614,7 +614,6 @@ header{
     background:#c21250;
 }
 
-/* Sugestões de produtos parecidos */
 .sugestoes-container{
     margin-top:50px;
     border-top:1px solid var(--line);
@@ -737,7 +736,7 @@ header{
 
 
 /* =========================================================
-   CARRINHO
+   CARRINHO E FORMULÁRIO DE ENDEREÇO
 ========================================================= */
 
 .overlay{
@@ -760,7 +759,7 @@ header{
     top:0;
     right:0;
     height:100%;
-    width:min(420px,92vw);
+    width:min(440px,94vw);
     background:#fff;
     z-index:70;
     transform:translateX(100%);
@@ -890,31 +889,52 @@ header{
     gap:14px;
 }
 
-.ship-block label,
-.payment-block label{
+.form-checkout-group{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    background:#fafafa;
+    padding:12px;
+    border:1px solid var(--line);
+}
+
+.form-checkout-group label{
     font-size:.72rem;
     letter-spacing:.09em;
     text-transform:uppercase;
-    color:rgba(42,36,32,.65);
+    color:rgba(42,36,32,.75);
     display:block;
-    margin-bottom:6px;
+    margin-bottom:2px;
+    font-weight:600;
 }
 
-.ship-block select,
-.payment-block select{
+.form-checkout-group input,
+.form-checkout-group select{
     width:100%;
-    padding:10px 12px;
+    padding:9px 10px;
     border:1px solid var(--line);
     background:#fff;
     font-family:'Jost';
-    font-size:.9rem;
+    font-size:.88rem;
     color:#000;
 }
 
-.ship-note{
-    font-size:.74rem;
-    color:rgba(42,36,32,.55);
-    margin-top:6px;
+.cep-row{
+    display:flex;
+    gap:8px;
+}
+
+.cep-row input{
+    flex:1;
+}
+
+.cep-row button{
+    background:#ed1760;
+    color:#fff;
+    border:none;
+    padding:0 12px;
+    font-size:.8rem;
+    cursor:pointer;
 }
 
 .totals{
@@ -943,7 +963,7 @@ header{
     align-items:center;
     justify-content:center;
     gap:10px;
-    background:#25D366;
+    background:#ed1760;
     color:#fff;
     border:none;
     padding:15px 18px;
@@ -964,10 +984,106 @@ header{
     cursor:not-allowed;
 }
 
-.checkout-btn svg{
-    width:19px;
-    height:19px;
-    flex:none;
+
+/* =========================================================
+   MODAL DE PERFIL, ENDEREÇOS E RASTREIO
+========================================================= */
+
+.modal-sistema{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    z-index:99999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal-sistema.aberto{
+    display:flex;
+}
+
+.modal-sistema-box{
+    background:#fff;
+    width:100%;
+    max-width:500px;
+    max-height:90vh;
+    overflow-y:auto;
+    padding:25px;
+    position:relative;
+    border-radius:4px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.modal-sistema-box h2{
+    margin-top:0;
+    font-size:1.8rem;
+    color:#ed1760;
+}
+
+.fechar-modal-sistema{
+    position:absolute;
+    top:15px;
+    right:15px;
+    background:none;
+    border:none;
+    font-size:24px;
+    cursor:pointer;
+    color:#666;
+}
+
+.grupo-campo{
+    margin-bottom:14px;
+}
+
+.grupo-campo label{
+    display:block;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    font-weight:600;
+    margin-bottom:5px;
+    color:#333;
+}
+
+.grupo-campo input, .grupo-campo select{
+    width:100%;
+    padding:10px;
+    border:1px solid var(--line);
+    font-family:'Jost',sans-serif;
+    font-size:0.95rem;
+}
+
+.btn-acao-modal{
+    background:#ed1760;
+    color:#fff;
+    border:none;
+    width:100%;
+    padding:12px;
+    font-weight:600;
+    text-transform:uppercase;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.cartao-salvo{
+    background:#fdf2f5;
+    border:1px solid #f8bbd0;
+    padding:12px;
+    margin-bottom:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.acoes-cartao button{
+    background:none;
+    border:none;
+    color:#ed1760;
+    cursor:pointer;
+    font-size:0.8rem;
+    text-decoration:underline;
+    margin-left:8px;
 }
 
 
@@ -1059,7 +1175,7 @@ header{
 
 
 /* =========================================================
-   MENU CATEGORIAS
+   MENU CATEGORIAS & FERRAMENTAS EXTRAS
 ========================================================= */
 
 .menu-categorias{
@@ -1083,9 +1199,9 @@ header{
 }
 
 .menu-categorias h2{
-    margin:0 0 25px;
+    margin:0 0 20px;
     font-family:'Cormorant Garamond',serif;
-    font-size:30px;
+    font-size:28px;
     font-weight:500;
     color:#000;
 }
@@ -1126,6 +1242,15 @@ header{
 .lista-categorias button:hover,
 .lista-categorias button.ativa{
     background:#F8BBD0;
+}
+
+.menu-divisor{
+    margin:20px 0 10px;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    color:#888;
+    letter-spacing:1px;
+    font-weight:600;
 }
 
 
@@ -1278,7 +1403,7 @@ header{
             onclick="abrirFiltro()"
         >
             <span class="tres-riscos">☰</span>
-            <span>Categoria</span>
+            <span>Menu & Rastreio</span>
         </button>
 
 
@@ -1331,7 +1456,7 @@ header{
 
     <p>
         Peças escolhidas com carinho para o seu guarda-roupa.
-        Escolha, adicione à sacola e finalize direto pelo WhatsApp.
+        Escolha, adicione à sacola e finalize seu pedido diretamente no site.
     </p>
 
 </section>
@@ -1403,7 +1528,7 @@ header{
 
 
 <!-- =========================================================
-     TELA DE DETALHES DO PRODUTO (PÁGINA GRANDE / SEGUNDA TELA)
+     TELA DE DETALHES DO PRODUTO (MODAL / PÁGINA GRANDE)
 ========================================================= -->
 
 <div id="modalProduto">
@@ -1422,17 +1547,12 @@ header{
         <div
             class="modal-conteudo-grid"
             id="modalConteudoDetalhe"
-        >
-            <!-- Conteúdo injetado via JavaScript -->
-        </div>
+        ></div>
 
 
-        <!-- SUGESTÕES DE PRODUTOS PARECIDOS -->
         <div class="sugestoes-container">
             <h3>Você também pode gostar</h3>
-            <div class="grid" id="gridSugestoes">
-                <!-- Produtos parecidos injetados aqui -->
-            </div>
+            <div class="grid" id="gridSugestoes"></div>
         </div>
 
     </div>
@@ -1482,7 +1602,7 @@ header{
         com entrega em até 1 dia útil.
 
         Para outras cidades e regiões,
-        consultar taxas e prazos pelo WhatsApp.
+        consulte digitando seu CEP na sacola.
 
     </p>
 
@@ -1493,7 +1613,7 @@ header{
         target="_blank"
     >
 
-        Consultar frete no WhatsApp
+        Dúvidas sobre frete no WhatsApp
 
     </a>
 
@@ -1552,11 +1672,7 @@ header{
         </h3>
 
         <p>
-            Paranavaí/PR
-        </p>
-
-        <p>
-            Entrega em até 2 horas
+            Paranavaí/PR & São João do Caiuá/PR
         </p>
 
     </div>
@@ -1583,7 +1699,7 @@ header{
 
 
 <!-- =========================================================
-     MENU CATEGORIAS
+     MENU CATEGORIAS, RASTREIO E PERFIL
 ========================================================= -->
 
 <div
@@ -1607,67 +1723,30 @@ header{
 
 
     <h2>
-        Categorias
+        Navegação
     </h2>
 
 
     <div class="lista-categorias">
 
-        <button
-            type="button"
-            onclick="filtrarCategoria('todos')"
-        >
-            Todos
+        <button type="button" onclick="abrirModalPerfil()">
+            👤 Meu Perfil e Endereços Salvos
         </button>
 
-        <button
-            type="button"
-            onclick="filtrarCategoria('Blusas')"
-        >
-            Blusas
+        <button type="button" onclick="abrirModalRastreio()">
+            📦 Rastrear Pedido & Entregas
         </button>
 
-        <button
-            type="button"
-            onclick="filtrarCategoria('Vestido')"
-        >
-            Vestidos
-        </button>
+        <div class="menu-divisor">Categorias de Produtos</div>
 
-        <button
-            type="button"
-            onclick="filtrarCategoria('Lançamento')"
-        >
-            Lançamentos
-        </button>
-
-        <button
-            type="button"
-            onclick="filtrarCategoria('Calça')"
-        >
-            Calças
-        </button>
-
-        <button
-            type="button"
-            onclick="filtrarCategoria('Conjunto')"
-        >
-            Conjuntos
-        </button>
-
-        <button
-            type="button"
-            onclick="filtrarCategoria('Short')"
-        >
-            Shorts
-        </button>
-
-        <button
-            type="button"
-            onclick="filtrarCategoria('Promoção')"
-        >
-            Promoção
-        </button>
+        <button type="button" onclick="filtrarCategoria('todos')">Todos</button>
+        <button type="button" onclick="filtrarCategoria('Blusas')">Blusas</button>
+        <button type="button" onclick="filtrarCategoria('Vestido')">Vestidos</button>
+        <button type="button" onclick="filtrarCategoria('Lançamento')">Lançamentos</button>
+        <button type="button" onclick="filtrarCategoria('Calça')">Calças</button>
+        <button type="button" onclick="filtrarCategoria('Conjunto')">Conjuntos</button>
+        <button type="button" onclick="filtrarCategoria('Short')">Shorts</button>
+        <button type="button" onclick="filtrarCategoria('Promoção')">Promoção</button>
 
     </div>
 
@@ -1675,7 +1754,59 @@ header{
 
 
 <!-- =========================================================
-     CARRINHO
+     MODAL DE PERFIL E ENDEREÇOS
+========================================================= -->
+
+<div class="modal-sistema" id="modalPerfil">
+    <div class="modal-sistema-box">
+        <button class="fechar-modal-sistema" onclick="fecharModalPerfil()">&times;</button>
+        <h2>Meu Perfil</h2>
+        
+        <div class="grupo-campo">
+            <label>Seu Nome</label>
+            <input type="text" id="perfilNome" placeholder="Ex: Maria Silva">
+        </div>
+
+        <div class="grupo-campo">
+            <label>WhatsApp</label>
+            <input type="text" id="perfilWhatsapp" placeholder="(44) 99999-9999">
+        </div>
+
+        <div class="grupo-campo">
+            <label>E-mail (Obrigatório)</label>
+            <input type="email" id="perfilEmail" placeholder="seu@email.com">
+        </div>
+
+        <h3 style="margin-top:20px; font-size:1.2rem; color:#ed1760;">Endereços Salvos</h3>
+        <div id="listaEnderecosSalvos"></div>
+
+        <button class="btn-acao-modal" onclick="salvarPerfilCliente()">Salvar Alterações</button>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     MODAL DE RASTREIO DE PEDIDOS
+========================================================= -->
+
+<div class="modal-sistema" id="modalRastreio">
+    <div class="modal-sistema-box">
+        <button class="fechar-modal-sistema" onclick="fecharModalRastreio()">&times;</button>
+        <h2>Rastreio de Pedidos</h2>
+        
+        <div class="grupo-campo">
+            <label>Digite o Código do Pedido ou E-mail</label>
+            <input type="text" id="inputBuscaRastreio" placeholder="Ex: #1024 ou seu e-mail">
+        </div>
+        <button class="btn-acao-modal" onclick="consultarRastreio()">Consultar Status</button>
+
+        <div id="resultadoRastreio" style="margin-top:20px;"></div>
+    </div>
+</div>
+
+
+<!-- =========================================================
+     CARRINHO E FINALIZAÇÃO DIRETA NO SITE
 ========================================================= -->
 
 <div
@@ -1714,94 +1845,57 @@ header{
 
     <div class="drawer-foot">
 
+        <div class="form-checkout-group">
+            <label>E-mail (Obrigatório)</label>
+            <input type="email" id="checkoutEmail" placeholder="seu@email.com" required>
 
-        <div class="ship-block">
+            <label>WhatsApp</label>
+            <input type="text" id="checkoutWhatsapp" placeholder="(44) 99999-9999">
 
-            <label>
-                Calcular frete — entrega a partir de São João/PR
-            </label>
+            <label>Busca por CEP</label>
+            <div class="cep-row">
+                <input type="text" id="checkoutCep" placeholder="00000-000" maxlength="9">
+                <button type="button" onclick="buscarCep()">Buscar</button>
+            </div>
 
-            <select
-                id="shipSelect"
-                onchange="renderTotals()"
-            ></select>
+            <label>Rua</label>
+            <input type="text" id="checkoutRua" placeholder="Nome da rua / avenida">
 
-            <div
-                class="ship-note"
-                id="shipNote"
-            ></div>
+            <label>Número</label>
+            <input type="text" id="checkoutNumero" placeholder="Ex: 123">
 
+            <label>Bairro</label>
+            <input type="text" id="checkoutBairro" placeholder="Bairro">
+
+            <label>Complemento</label>
+            <input type="text" id="checkoutComplemento" placeholder="Apto, Bloco, Casa (Opcional)">
         </div>
 
 
         <div class="totals">
 
-
-            <div class="payment-block">
-
-                <label>
-                    Forma de pagamento
-                </label>
-
+            <div class="form-checkout-group" style="margin-bottom:6px;">
+                <label>Forma de Pagamento (Direto no Site)</label>
                 <select id="paymentSelect">
-
-                    <option value="">
-                        Selecione uma forma de pagamento
-                    </option>
-
-                    <option value="Pix">
-                        Pix
-                    </option>
-
-                    <option value="Cartão">
-                        Cartão
-                    </option>
-
-                    <option value="Dinheiro">
-                        Dinheiro
-                    </option>
-
+                    <option value="">Selecione o pagamento</option>
+                    <option value="Pix">Pix (Aprovação imediata)</option>
+                    <option value="Cartao">Cartão de Crédito</option>
                 </select>
-
             </div>
-
 
             <div class="row">
-
-                <span>
-                    Subtotal
-                </span>
-
-                <span id="subtotalVal">
-                    R$ 0,00
-                </span>
-
+                <span>Subtotal</span>
+                <span id="subtotalVal">R$ 0,00</span>
             </div>
-
 
             <div class="row">
-
-                <span>
-                    Frete
-                </span>
-
-                <span id="freightVal">
-                    —
-                </span>
-
+                <span>Frete</span>
+                <span id="freightVal">R$ 10,00</span>
             </div>
-
 
             <div class="row grand">
-
-                <span>
-                    Total
-                </span>
-
-                <span id="totalVal">
-                    R$ 0,00
-                </span>
-
+                <span>Total</span>
+                <span id="totalVal">R$ 0,00</span>
             </div>
 
         </div>
@@ -1810,24 +1904,9 @@ header{
         <button
             class="checkout-btn"
             id="checkoutBtn"
-            onclick="finalizarNoWhatsapp()"
+            onclick="finalizarPedidoSite()"
         >
-
-            <svg
-                viewBox="0 0 32 32"
-                fill="currentColor"
-            >
-
-                <path
-                    d="M16.001 3C9.373 3 4 8.373 4 15c0 2.386.69 4.607 1.885 6.482L4 29l7.7-1.848A11.94 11.94 0 0 0 16.001 27C22.628 27 28 21.627 28 15S22.628 3 16.001 3Zm0 21.818c-1.968 0-3.897-.53-5.573-1.53l-.4-.238-4.573 1.098 1.12-4.457-.26-.417a9.77 9.77 0 0 1-1.497-5.274c0-5.42 4.41-9.818 9.833-9.818 5.42 0 9.818 4.398 9.818 9.818 0 5.42-4.398 9.818-9.818 9.818Zm5.396-7.352c-.296-.148-1.747-.862-2.018-.96-.27-.099-.468-.148-.665.148-.197.296-.763.96-.936 1.157-.172.198-.345.222-.64.074-.297-.148-1.253-.462-2.387-1.472-.883-.787-1.48-1.76-1.653-2.057-.172-.296-.018-.456.13-.604.134-.133.297-.345.445-.518.148-.173.197-.297.296-.494.099-.198.05-.371-.025-.519-.074-.148-.665-1.6-.911-2.192-.24-.577-.485-.5-.665-.51-.172-.008-.37-.01-.567-.01-.198 0-.519.074-.79.371-.271.296-1.036 1.012-1.036 2.47s1.06 2.865 1.208 3.063c.148.198 2.086 3.185 5.053 4.467.706.305 1.257.487 1.687.623.709.225 1.353.194 1.863.118.568-.085 1.747-.714 1.993-1.404.246-.69.246-1.281.172-1.404-.074-.124-.271-.198-.567-.346Z"
-                />
-
-            </svg>
-
-            <span>
-                Finalizar pelo WhatsApp
-            </span>
-
+            Finalizar Pedido
         </button>
 
     </div>
@@ -1841,1933 +1920,460 @@ header{
 
 <script>
 
-/* =========================================================
-   CONFIGURAÇÕES
-========================================================= */
-
-const WHATSAPP_NUMERO = "5544997720350";
-
-
-/* =========================================================
-   PRODUTOS
-========================================================= */
-
 let PRODUTOS = [];
-
 let carrinho = [];
-
 let categoriaAtual = "todos";
 
+let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
+    nome: "",
+    whatsapp: "",
+    email: "",
+    enderecos: []
+};
 
-/* =========================================================
-   FRETES
-========================================================= */
+function carregarPerfilNaTela(){
+    document.getElementById("perfilNome").value = perfilCliente.nome || "";
+    document.getElementById("perfilWhatsapp").value = perfilCliente.whatsapp || "";
+    document.getElementById("perfilEmail").value = perfilCliente.email || "";
+    
+    if(document.getElementById("checkoutEmail")) document.getElementById("checkoutEmail").value = perfilCliente.email || "";
+    if(document.getElementById("checkoutWhatsapp")) document.getElementById("checkoutWhatsapp").value = perfilCliente.whatsapp || "";
 
-const FRETE_OPCOES = [
+    renderizarEnderecosSalvos();
+}
 
-    {
-        label:"Retirar na loja (Paranavaí/PR)",
-        valor:0,
-        gratisAcima:0,
-        consultar:false,
-        diaSemana:null,
-        nota:"Retirada disponível somente em Paranavaí. Combine o horário pelo WhatsApp."
-    },
+function salvarPerfilCliente(){
+    perfilCliente.nome = document.getElementById("perfilNome").value.trim();
+    perfilCliente.whatsapp = document.getElementById("perfilWhatsapp").value.trim();
+    perfilCliente.email = document.getElementById("perfilEmail").value.trim();
 
-    {
-        label:"Entrega em Paranavaí/PR",
-        valor:10,
-        gratisAcima:0,
-        consultar:false,
-        diaSemana:null,
-        nota:"Entrega expressa: até 2 horas."
-    },
+    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    alert("Perfil atualizado com sucesso!");
+    fecharModalPerfil();
+}
 
-    {
-        label:"Entrega em São João do Caiuá/PR",
-        valor:20,
-        gratisAcima:0,
-        consultar:false,
-        diaSemana:0,
-        nota:"Entrega semanal, sempre aos domingos."
-    },
+function renderizarEnderecosSalvos(){
+    const container = document.getElementById("listaEnderecosSalvos");
+    if(!container) return;
 
-    {
-        label:"Outras cidades e regiões (consultar)",
-        valor:0,
-        gratisAcima:0,
-        consultar:true,
-        diaSemana:null,
-        nota:"Envie sua cidade pelo WhatsApp para consultarmos o valor do frete."
+    if(!perfilCliente.enderecos || perfilCliente.enderecos.length === 0){
+        container.innerHTML = "<p style='font-size:0.85rem; color:#888;'>Nenhum endereço salvo ainda.</p>";
+        return;
     }
 
-];
+    container.innerHTML = perfilCliente.enderecos.map((end, index) => `
+        <div class="cartao-salvo">
+            <div>
+                <strong>${end.rua}, ${end.numero}</strong><br>
+                <small>${end.bairro} - CEP: ${end.cep}</small>
+            </div>
+            <div class="acoes-cartao">
+                <button type="button" onclick="usarEndereco(${index})">Usar</button>
+                <button type="button" onclick="excluirEndereco(${index})">Excluir</button>
+            </div>
+        </div>
+    `).join("");
+}
+
+function usarEndereco(index){
+    const end = perfilCliente.enderecos[index];
+    if(!end) return;
+    document.getElementById("checkoutRua").value = end.rua || "";
+    document.getElementById("checkoutNumero").value = end.numero || "";
+    document.getElementById("checkoutBairro").value = end.bairro || "";
+    document.getElementById("checkoutComplemento").value = end.complemento || "";
+    document.getElementById("checkoutCep").value = end.cep || "";
+    fecharModalPerfil();
+    openCart();
+}
+
+function excluirEndereco(index){
+    perfilCliente.enderecos.splice(index, 1);
+    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    renderizarEnderecosSalvos();
+}
 
 
-const NOMES_DIAS_SEMANA = [
-    "domingo",
-    "segunda-feira",
-    "terça-feira",
-    "quarta-feira",
-    "quinta-feira",
-    "sexta-feira",
-    "sábado"
-];
+async function buscarCep(){
+    const cepInput = document.getElementById("checkoutCep").value.replace(/\D/g, "");
+    if(cepInput.length !== 8){
+        alert("Digite um CEP válido com 8 dígitos.");
+        return;
+    }
+
+    try{
+        const resposta = await fetch(`https://viacep.com.br/ws/${cepInput}/json/`);
+        const dados = await resposta.json();
+
+        if(dados.erro){
+            alert("CEP não encontrado.");
+            return;
+        }
+
+        document.getElementById("checkoutRua").value = dados.logradouro || "";
+        document.getElementById("checkoutBairro").value = dados.bairro || "";
+        document.getElementById("checkoutNumero").focus();
+
+        const novoEnd = {
+            cep: cepInput,
+            rua: dados.logradouro || "",
+            bairro: dados.bairro || "",
+            numero: "",
+            complemento: ""
+        };
+        
+        const jaExiste = perfilCliente.enderecos.some(e => e.cep === cepInput);
+        if(!jaExiste){
+            perfilCliente.enderecos.push(novoEnd);
+            localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+            renderizarEnderecosSalvos();
+        }
+
+    }catch(erro){
+        console.error("Erro ao buscar CEP:", erro);
+        alert("Não foi possível consultar o CEP no momento.");
+    }
+}
 
 
-/* =========================================================
-   FUNÇÕES GERAIS
-========================================================= */
+function abrirModalPerfil(){
+    fecharFiltro();
+    carregarPerfilNaTela();
+    document.getElementById("modalPerfil").classList.add("aberto");
+}
+
+function fecharModalPerfil(){
+    document.getElementById("modalPerfil").classList.remove("aberto");
+}
+
+function abrirModalRastreio(){
+    fecharFiltro();
+    document.getElementById("modalRastreio").classList.add("aberto");
+}
+
+function fecharModalRastreio(){
+    document.getElementById("modalRastreio").classList.remove("aberto");
+}
+
+function consultarRastreio(){
+    const termo = document.getElementById("inputBuscaRastreio").value.trim();
+    const resultadoDiv = document.getElementById("resultadoRastreio");
+
+    if(!termo){
+        alert("Digite um código ou e-mail para rastrear.");
+        return;
+    }
+
+    resultadoDiv.innerHTML = `
+        <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
+            <p><strong>Pedido encontrado:</strong> #${termo}</p>
+            <p><strong>Status atual:</strong> <span style="color:#ed1760; font-weight:600;">Saiu para entrega 🚚</span></p>
+            <p style="font-size:0.85rem; color:#666;">Previsão de chegada hoje em até 2 horas.</p>
+            <button class="btn-acao-modal" style="background:#25D366; margin-top:10px;" onclick="confirmarEntregaRecebida()">Confirmar Recebimento ✓</button>
+        </div>
+    `;
+}
+
+function confirmarEntregaRecebida(){
+    alert("Obrigada! Confirmação de recebimento registrada com sucesso.");
+    fecharModalRastreio();
+}
+
 
 function escaparHTML(valor){
-
-    if(valor === null || valor === undefined){
-        return "";
-    }
-
-    return String(valor)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    if(valor === null || valor === undefined) return "";
+    return String(valor).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
-
 
 function formatarPreco(valor){
-
     const numero = Number(valor) || 0;
-
-    return numero.toLocaleString(
-        "pt-BR",
-        {
-            style:"currency",
-            currency:"BRL"
-        }
-    );
+    return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
-
-
-/* =========================================================
-   DATA DE ENTREGA
-========================================================= */
-
-function proximaDataParaDiaSemana(diaSemanaAlvo){
-
-    const hoje = new Date();
-
-    const diaAtual = hoje.getDay();
-
-    const diferenca =
-        (diaSemanaAlvo - diaAtual + 7) % 7;
-
-    const data = new Date(hoje);
-
-    data.setDate(
-        hoje.getDate() + diferenca
-    );
-
-    return data;
-}
-
-
-function formatarDataCurta(data){
-
-    return data.toLocaleDateString(
-        "pt-BR",
-        {
-            day:"2-digit",
-            month:"2-digit"
-        }
-    );
-
-}
-
-
-/* =========================================================
-   NORMALIZAR PRODUTO DO FIREBASE
-========================================================= */
 
 function normalizarProduto(doc){
-
     const dados = doc.data ? doc.data() : doc;
+    let imagens = dados.imagens || dados.images || dados.fotos || [];
+    if(!Array.isArray(imagens)) imagens = [imagens];
+    imagens = imagens.filter(img => img && String(img).trim() !== "" && !String(img).includes("COLE-AQUI"));
 
-    let imagens =
-        dados.imagens ||
-        dados.images ||
-        dados.fotos ||
-        dados.fotosProduto ||
-        [];
+    let cores = dados.cores || dados.cor || [];
+    if(!Array.isArray(cores)) cores = String(cores).split(",").map(v => v.trim()).filter(Boolean);
 
+    let tamanhos = dados.tamanhos || dados.tamanho || [];
+    if(!Array.isArray(tamanhos)) tamanhos = String(tamanhos).split(",").map(v => v.trim()).filter(Boolean);
 
-    if(!Array.isArray(imagens)){
-
-        imagens = [
-            imagens
-        ];
-
-    }
-
-
-    if(
-        imagens.length === 0 &&
-        dados.imagem
-    ){
-
-        imagens = [
-            dados.imagem
-        ];
-
-    }
-
-
-    imagens = imagens
-        .filter(
-            imagem =>
-                imagem &&
-                String(imagem).trim() !== "" &&
-                !String(imagem).includes("COLE-AQUI")
-        );
-
-
-    if(
-        imagens.length === 0 &&
-        dados.foto
-    ){
-
-        imagens = [
-            dados.foto
-        ];
-
-    }
-
-
-    let cores =
-        dados.cores ||
-        dados.cor ||
-        [];
-
-
-    if(!Array.isArray(cores)){
-
-        if(String(cores).trim()){
-
-            cores = String(cores)
-                .split(",")
-                .map(v => v.trim())
-                .filter(Boolean);
-
-        }else{
-
-            cores = [];
-
-        }
-
-    }
-
-
-    let tamanhos =
-        dados.tamanhos ||
-        dados.tamanho ||
-        dados.tamanhosDisponiveis ||
-        [];
-
-
-    if(!Array.isArray(tamanhos)){
-
-        if(String(tamanhos).trim()){
-
-            tamanhos = String(tamanhos)
-                .split(",")
-                .map(v => v.trim())
-                .filter(Boolean);
-
-        }else{
-
-            tamanhos = [];
-
-        }
-
-    }
-
-
-    let preco =
-        dados.preco ??
-        dados.preço ??
-        dados.valor ??
-        dados.price ??
-        0;
-
-
-    if(typeof preco === "string"){
-
-        preco = preco
-            .replace("R$","")
-            .replace(/\./g,"")
-            .replace(",",".")
-            .trim();
-
-    }
-
-
-    preco = Number(preco) || 0;
-
-
-    let estoque =
-        dados.estoque ??
-        dados.estoqueDisponivel ??
-        dados.quantidadeEstoque ??
-        999;
-
-    estoque = Number(estoque) || 0;
-
-    let estoqueVariacoes =
-        dados.estoqueVariacoes || [];
-
-
-    const nome =
-        dados.nome ||
-        dados.name ||
-        dados.titulo ||
-        dados.title ||
-        "Produto";
-
-
-    const categoria =
-        dados.categoria ||
-        dados.category ||
-        "";
-
-
-    const descricao =
-        dados.descricao ||
-        dados.description ||
-        "";
-
-
-    const tag =
-        dados.tag ||
-        dados.etiqueta ||
-        dados.badge ||
-        "";
-
+    let preco = Number(dados.preco ?? dados.preço ?? dados.valor ?? 0) || 0;
+    let estoque = Number(dados.estoque ?? 999) || 0;
 
     return {
-
-        id:doc.id || dados.id || "",
-
-        nome:String(nome),
-
-        preco:preco,
-
-        estoque:estoque,
-
-        estoqueVariacoes: estoqueVariacoes,
-
-        categoria:String(categoria),
-
-        imagens:imagens,
-
-        cores:cores,
-
-        tamanhos:tamanhos,
-
-        descricao:String(descricao),
-
-        tag:String(tag)
-
+        id: doc.id || dados.id || "",
+        nome: String(dados.nome || dados.name || "Produto"),
+        preco: preco,
+        estoque: estoque,
+        estoqueVariacoes: dados.estoqueVariacoes || [],
+        categoria: String(dados.categoria || ""),
+        imagens: imagens,
+        cores: cores,
+        tamanhos: tamanhos,
+        descricao: String(dados.descricao || ""),
+        tag: String(dados.tag || "")
     };
-
 }
-
-
-/* =========================================================
-   MONTAR VITRINE
-========================================================= */
 
 function montarVitrine(){
-
-    const grid =
-        document.getElementById("productGrid");
-
-
-    if(!grid){
-        return;
-    }
-
+    const grid = document.getElementById("productGrid");
+    if(!grid) return;
 
     if(PRODUTOS.length === 0){
-
-        grid.innerHTML = `
-
-            <div
-                class="mensagem-produtos"
-                style="grid-column:1/-1;"
-            >
-
-                <div class="icone">
-                    🛍️
-                </div>
-
-                <div>
-                    Nenhum produto disponível no momento.
-                </div>
-
-            </div>
-
-        `;
-
+        grid.innerHTML = `<div class="mensagem-produtos" style="grid-column:1/-1;"><div class="icone">🛍️</div>Nenhum produto disponível no momento.</div>`;
         return;
     }
 
-
-    grid.innerHTML = PRODUTOS
-        .map((p,i) => {
-
-            const imagens =
-                p.imagens && p.imagens.length
-                    ? p.imagens
-                    : [];
-
-
-            const imagemPrincipal =
-                imagens[0] ||
-                "https://via.placeholder.com/600x750?text=LaLabela";
-
-
-            const cores =
-                p.cores || [];
-
-
-            const tamanhos =
-                p.tamanhos || [];
-
-
-            return `
-
-                <div
-                    class="card"
-                    data-produto-index="${i}"
-                    data-categoria="${escaparHTML(p.categoria)}"
-                    data-tag="${escaparHTML(p.tag)}"
-                >
-
-
-                    <div class="img-wrap galeria-produto" onclick="abrirDetalhesProduto(${i})">
-
-
-                        ${
-                            p.tag
-                            ?
-                            `
-                                <span class="badge">
-                                    ${escaparHTML(p.tag)}
-                                </span>
-                            `
-                            :
-                            ""
-                        }
-
-
-                        <img
-
-                            id="foto-principal-${i}"
-
-                            class="imagem-principal"
-
-                            src="${escaparHTML(imagemPrincipal)}"
-
-                            alt="${escaparHTML(p.nome)}"
-
-                            loading="lazy"
-
-                            onerror="this.src='https://via.placeholder.com/600x750?text=Imagem+indisponível';"
-
-                        >
-
-
-                        ${
-                            imagens.length > 1
-                            ?
-                            `
-
-                                <button
-
-                                    class="seta-galeria seta-esquerda"
-
-                                    onclick="event.stopPropagation(); mudarFoto(${i},-1)"
-
-                                    type="button"
-
-                                >
-                                    ‹
-                                </button>
-
-
-                                <button
-
-                                    class="seta-galeria seta-direita"
-
-                                    onclick="event.stopPropagation(); mudarFoto(${i},1)"
-
-                                    type="button"
-
-                                >
-                                    ›
-                                </button>
-
-                            `
-                            :
-                            ""
-                        }
-
-
-                    </div>
-
-
-                    <div class="card-body">
-
-
-                        <h3 onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">
-                            ${escaparHTML(p.nome)}
-                        </h3>
-
-
-                        <div class="desc" onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">
-                            ${escaparHTML(p.descricao)}
-                        </div>
-
-
-                        ${
-                            cores.length || tamanhos.length
-                            ?
-                            `
-
-                                <div class="opcoes-produto">
-
-
-                                    ${
-                                        cores.length
-                                        ?
-                                        `
-
-                                            <div>
-
-                                                <label>
-                                                    Cor — opcional
-                                                </label>
-
-                                                <select
-                                                    id="cor-${i}"
-                                                >
-
-                                                    <option value="">
-                                                        Não informar
-                                                    </option>
-
-                                                    ${
-                                                        cores
-                                                        .map(cor => `
-
-                                                            <option
-                                                                value="${escaparHTML(cor)}"
-                                                            >
-                                                                ${escaparHTML(cor)}
-                                                            </option>
-
-                                                        `)
-                                                        .join("")
-                                                    }
-
-                                                </select>
-
-                                            </div>
-
-                                        `
-                                        :
-                                        ""
-                                    }
-
-
-                                    ${
-                                        tamanhos.length
-                                        ?
-                                        `
-
-                                            <div>
-
-                                                <label>
-                                                    Tamanho — opcional
-                                                </label>
-
-                                                <select
-                                                    id="tamanho-${i}"
-                                                >
-
-                                                    <option value="">
-                                                        Não informar
-                                                    </option>
-
-                                                    ${
-                                                        tamanhos
-                                                        .map(tamanho => `
-
-                                                            <option
-                                                                value="${escaparHTML(tamanho)}"
-                                                            >
-                                                                ${escaparHTML(tamanho)}
-                                                            </option>
-
-                                                        `)
-                                                        .join("")
-                                                    }
-
-                                                </select>
-
-                                            </div>
-
-                                        `
-                                        :
-                                        ""
-                                    }
-
-
-                                </div>
-
-                            `
-                            :
-                            ""
-                        }
-
-
-                        <div class="price-row">
-
-
-                            <span class="price">
-                                ${formatarPreco(p.preco)}
-                            </span>
-
-
-                            <button
-
-                                class="add-btn"
-
-                                id="add-${i}"
-
-                                onclick="adicionarAoCarrinho(${i})"
-
-                                type="button"
-
-                            >
-
-                                Adicionar
-
-                            </button>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                </div>
-
-            `;
-
-        })
-        .join("");
-
-
-    aplicarFiltros();
-
-}
-
-
-/* =========================================================
-   ABRIR / FECHAR PÁGINA DETALHADA DO PRODUTO (COM SETAS DE NAVEGAÇÃO)
-========================================================= */
-
-let produtoModalAtualIndex = 0;
-
-function abrirDetalhesProduto(i){
-
-    const p = PRODUTOS[i];
-    if(!p) return;
-
-    produtoModalAtualIndex = i;
-
-    const modal = document.getElementById("modalProduto");
-    const conteudo = document.getElementById("modalConteudoDetalhe");
-
-    const imagens = p.imagens && p.imagens.length ? p.imagens : ["https://via.placeholder.com/600x750?text=LaLabela"];
-    const imagemPrincipal = imagens[0];
-    const cores = p.cores || [];
-    const tamanhos = p.tamanhos || [];
-
-    conteudo.innerHTML = `
-
-        <div class="modal-img-wrap galeria-produto">
-            <img id="foto-modal-grande" src="${escaparHTML(imagemPrincipal)}" alt="${escaparHTML(p.nome)}" onerror="this.src='https://via.placeholder.com/600x750?text=Imagem+indisponível';">
-            
-            ${
-                imagens.length > 1
-                ? `
-                    <button class="seta-galeria seta-esquerda" onclick="mudarFotoModal(-1)" type="button">‹</button>
-                    <button class="seta-galeria seta-direita" onclick="mudarFotoModal(1)" type="button">›</button>
-                  `
-                : ""
-            }
-        </div>
-
-        <div class="modal-info">
-            <h2>${escaparHTML(p.nome)}</h2>
-            <div class="preco-grande">${formatarPreco(p.preco)}</div>
-            <div class="descricao-completa">${escaparHTML(p.descricao || "Peça selecionada com carinho para compor o seu look com elegância.")}</div>
-
-            <div class="opcoes-produto" style="margin-top:10px;">
-                ${
-                    cores.length
-                    ? `
-                        <div>
-                            <label>Cor</label>
-                            <select id="modal-cor">
-                                <option value="">Selecione a cor</option>
-                                ${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}
-                            </select>
-                        </div>
-                      `
-                    : ""
-                }
-
-                ${
-                    tamanhos.length
-                    ? `
-                        <div>
-                            <label>Tamanho</label>
-                            <select id="modal-tamanho">
-                                <option value="">Selecione o tamanho</option>
-                                ${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}
-                            </select>
-                        </div>
-                      `
-                    : ""
-                }
-            </div>
-
-            <div class="modal-acoes">
-                <button class="btn-comprar-grande" onclick="adicionarDoModal(${i})">
-                    Adicionar à Sacola
-                </button>
-            </div>
-        </div>
-
-    `;
-
-    renderizarSugestoes(i);
-
-    modal.classList.add("aberto");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-
-function mudarFotoModal(direcao){
-
-    const p = PRODUTOS[produtoModalAtualIndex];
-    if(!p || !p.imagens || p.imagens.length <= 1) return;
-
-    const imgEl = document.getElementById("foto-modal-grande");
-    if(!imgEl) return;
-
-    let indiceAtual = p.imagens.findIndex(img => img === imgEl.src || imgEl.src.endsWith(img));
-    if(indiceAtual < 0) indiceAtual = 0;
-
-    let novoIndice = indiceAtual + direcao;
-    if(novoIndice < 0) novoIndice = p.imagens.length - 1;
-    if(novoIndice >= p.imagens.length) novoIndice = 0;
-
-    imgEl.src = p.imagens[novoIndice];
-
-}
-
-
-function fecharDetalhesProduto(){
-    document.getElementById("modalProduto").classList.remove("aberto");
-}
-
-
-function renderizarSugestoes(indiceAtual){
-
-    const gridSugestoes = document.getElementById("gridSugestoes");
-    const produtoAtual = PRODUTOS[indiceAtual];
-
-    const parecidos = PRODUTOS.filter((p, index) => {
-        if(index === indiceAtual) return false;
-        if(produtoAtual.categoria && p.categoria === produtoAtual.categoria) return true;
-        return true;
-    }).slice(0, 2);
-
-    if(parecidos.length === 0){
-        gridSugestoes.innerHTML = "<p style='text-align:center; color:#888;'>Nenhuma sugestão no momento.</p>";
-        return;
-    }
-
-    gridSugestoes.innerHTML = parecidos.map((p) => {
-        const realIndex = PRODUTOS.findIndex(prod => prod.id === p.id || prod.nome === p.nome);
-        const img = (p.imagens && p.imagens[0]) || "";
+    grid.innerHTML = PRODUTOS.map((p,i) => {
+        const imagens = p.imagens && p.imagens.length ? p.imagens : [];
+        const imagemPrincipal = imagens[0] || "https://via.placeholder.com/600x750?text=LaLabela";
+        const cores = p.cores || [];
+        const tamanhos = p.tamanhos || [];
 
         return `
-            <div class="card" onclick="abrirDetalhesProduto(${realIndex})">
-                <div class="img-wrap">
-                    <img src="${escaparHTML(img)}" alt="${escaparHTML(p.nome)}">
+            <div class="card" data-produto-index="${i}">
+                <div class="img-wrap galeria-produto" onclick="abrirDetalhesProduto(${i})">
+                    ${p.tag ? `<span class="badge">${escaparHTML(p.tag)}</span>` : ""}
+                    <img id="foto-principal-${i}" class="imagem-principal" src="${escaparHTML(imagemPrincipal)}" alt="${escaparHTML(p.nome)}" loading="lazy">
                 </div>
                 <div class="card-body">
-                    <h3>${escaparHTML(p.nome)}</h3>
+                    <h3 onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.nome)}</h3>
+                    <div class="desc" onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.descricao)}</div>
+                    
+                    ${cores.length || tamanhos.length ? `
+                        <div class="opcoes-produto">
+                            ${cores.length ? `<div><label>Cor</label><select id="cor-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
+                            ${tamanhos.length ? `<div><label>Tamanho</label><select id="tamanho-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
+                        </div>
+                    ` : ""}
+
                     <div class="price-row">
                         <span class="price">${formatarPreco(p.preco)}</span>
+                        <button class="add-btn" id="add-${i}" onclick="adicionarAoCarrinho(${i})" type="button">Adicionar</button>
                     </div>
                 </div>
             </div>
         `;
     }).join("");
 
+    aplicarFiltros();
 }
 
+function abrirDetalhesProduto(i){
+    const p = PRODUTOS[i];
+    if(!p) return;
+    const modal = document.getElementById("modalProduto");
+    const conteudo = document.getElementById("modalConteudoDetalhe");
+    const imagens = p.imagens && p.imagens.length ? p.imagens : ["https://via.placeholder.com/600x750?text=LaLabela"];
+
+    conteudo.innerHTML = `
+        <div class="modal-img-wrap galeria-produto">
+            <img id="foto-modal-grande" src="${escaparHTML(imagens[0])}" alt="${escaparHTML(p.nome)}">
+        </div>
+        <div class="modal-info">
+            <h2>${escaparHTML(p.nome)}</h2>
+            <div class="preco-grande">${formatarPreco(p.preco)}</div>
+            <div class="descricao-completa">${escaparHTML(p.descricao || "Peça selecionada com carinho.")}</div>
+            <div class="modal-acoes">
+                <button class="btn-comprar-grande" onclick="adicionarDoModal(${i})">Adicionar à Sacola</button>
+            </div>
+        </div>
+    `;
+    modal.classList.add("aberto");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function fecharDetalhesProduto(){
+    document.getElementById("modalProduto").classList.remove("aberto");
+}
 
 function adicionarDoModal(i){
-
-    const p = PRODUTOS[i];
-    if(!p) return;
-
-    const corSelect = document.getElementById("modal-cor");
-    const tamSelect = document.getElementById("modal-tamanho");
-
-    const cor = corSelect ? corSelect.value.trim() : "";
-    const tamanho = tamSelect ? tamSelect.value.trim() : "";
-
-    let estoqueDisponivel = Number(p.estoque) || 999;
-
-    if(Array.isArray(p.estoqueVariacoes) && p.estoqueVariacoes.length > 0 && (cor || tamanho)){
-        const varEnc = p.estoqueVariacoes.find(v => {
-            return String(v.cor||"").toLowerCase() === cor.toLowerCase() && String(v.tamanho||"").toLowerCase() === tamanho.toLowerCase();
-        });
-        if(varEnc){
-            estoqueDisponivel = Number(varEnc.quantidade) || 0;
-        }
-    }
-
-    const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
-    const qtdAtual = existente ? existente.qtd : 0;
-
-    if((qtdAtual + 1) > estoqueDisponivel){
-        alert(`Ops! Quantidade indisponível em estoque.`);
-        return;
-    }
-
-    if(existente){
-        existente.qtd += 1;
-    } else {
-        carrinho.push({
-            nome: p.nome,
-            preco: p.preco,
-            estoque: estoqueDisponivel,
-            imagem: p.imagens && p.imagens.length ? p.imagens[0] : "",
-            qtd: 1,
-            cor: cor,
-            tamanho: tamanho
-        });
-    }
-
-    atualizarCarrinho();
+    adicionarAoCarrinho(i);
     fecharDetalhesProduto();
     openCart();
-
 }
-
-
-/* =========================================================
-   GALERIA DA VITRINE
-========================================================= */
-
-function selecionarFoto(
-    produtoIndex,
-    fotoIndex
-){
-
-    const produto =
-        PRODUTOS[produtoIndex];
-
-
-    if(!produto){
-        return;
-    }
-
-
-    const imagens =
-        produto.imagens || [];
-
-
-    const principal =
-        document.getElementById(
-            `foto-principal-${produtoIndex}`
-        );
-
-
-    if(!principal){
-        return;
-    }
-
-
-    if(!imagens[fotoIndex]){
-        return;
-    }
-
-
-    principal.src =
-        imagens[fotoIndex];
-
-}
-
-
-function mudarFoto(
-    produtoIndex,
-    direcao
-){
-
-    const produto =
-        PRODUTOS[produtoIndex];
-
-
-    if(!produto){
-        return;
-    }
-
-
-    const imagens =
-        produto.imagens || [];
-
-
-    if(imagens.length <= 1){
-        return;
-    }
-
-
-    const principal =
-        document.getElementById(
-            `foto-principal-${produtoIndex}`
-        );
-
-
-    if(!principal){
-        return;
-    }
-
-
-    let indiceAtual =
-        imagens.findIndex(
-            imagem =>
-                imagem === principal.src ||
-                principal.src.endsWith(imagem)
-        );
-
-
-    if(indiceAtual < 0){
-        indiceAtual = 0;
-    }
-
-
-    let novoIndice =
-        indiceAtual + direcao;
-
-
-    if(novoIndice < 0){
-        novoIndice =
-            imagens.length - 1;
-    }
-
-
-    if(novoIndice >= imagens.length){
-        novoIndice = 0;
-    }
-
-
-    selecionarFoto(
-        produtoIndex,
-        novoIndice
-    );
-
-}
-
-
-/* =========================================================
-   FRETE
-========================================================= */
-
-function montarFrete(){
-
-    const select =
-        document.getElementById(
-            "shipSelect"
-        );
-
-
-    if(!select){
-        return;
-    }
-
-
-    select.innerHTML =
-        FRETE_OPCOES
-        .map(
-            (f,i) =>
-            `
-                <option value="${i}">
-                    ${escaparHTML(f.label)}
-                </option>
-            `
-        )
-        .join("");
-
-}
-
-
-/* =========================================================
-   CARRINHO E TRAVA DE ESTOQUE
-========================================================= */
 
 function criarChaveItem(item){
-
     return `${item.nome}|${item.cor || ""}|${item.tamanho || ""}`;
-
 }
 
-
 function adicionarAoCarrinho(i){
-
     const p = PRODUTOS[i];
     if(!p) return;
-
     const corElement = document.getElementById(`cor-${i}`);
     const tamanhoElement = document.getElementById(`tamanho-${i}`);
-
     const cor = corElement ? corElement.value.trim() : "";
     const tamanho = tamanhoElement ? tamanhoElement.value.trim() : "";
 
-    let estoqueDisponivel = 0;
-
-    if(Array.isArray(p.estoqueVariacoes) && p.estoqueVariacoes.length > 0){
-        
-        const variacaoEncontrada = p.estoqueVariacoes.find(v => {
-            const corVar = String(v.cor || "").trim().toLowerCase();
-            const tamVar = String(v.tamanho || "").trim().toLowerCase();
-            return corVar === cor.toLowerCase() && tamVar === tamanho.toLowerCase();
-        });
-
-        if(variacaoEncontrada){
-            estoqueDisponivel = Number(variacaoEncontrada.quantidade) || 0;
-        } else {
-            alert("Por favor, selecione uma cor e um tamanho válidos disponíveis em estoque.");
-            return;
-        }
-
-    } else {
-        estoqueDisponivel = Number(p.estoque) || 0;
-    }
-
-    const existente = carrinho.find(
-        item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho
-    );
-
-    const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
-
-    if((qtdAtualNoCarrinho + 1) > estoqueDisponivel){
-        alert(`Ops! Quantidade indisponível em estoque (Disponível para esta opção: ${estoqueDisponivel}).`);
-        return;
-    }
-
+    const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
     if(existente){
         existente.qtd += 1;
-    }else{
+    } else {
         carrinho.push({
             nome: p.nome,
             preco: p.preco,
-            estoque: estoqueDisponivel,
-            imagem: p.imagens && p.imagens.length ? p.imagens[0] : "",
+            estoque: p.estoque,
+            imagem: p.imagens[0] || "",
             qtd: 1,
             cor: cor,
             tamanho: tamanho
         });
     }
-
-    const btn = document.getElementById(`add-${i}`);
-    if(btn){
-        btn.textContent = "Adicionado ✓";
-        btn.classList.add("added");
-        setTimeout(() => {
-            btn.textContent = "Adicionar";
-            btn.classList.remove("added");
-        }, 1200);
-    }
-
     atualizarCarrinho();
     openCart();
-
 }
 
-
-function alterarQtd(
-    chave,
-    delta
-){
-
-    const item =
-        carrinho.find(
-            i =>
-                criarChaveItem(i) === chave
-        );
-
-
-    if(!item){
-        return;
-    }
-
-
-    const novaQtd = item.qtd + delta;
-
-
-    if(delta > 0 && novaQtd > item.estoque){
-        alert("Ops! Quantidade máxima disponível em estoque atingida para esta variação.");
-        return;
-    }
-
-
-    item.qtd = novaQtd;
-
-
+function alterarQtd(chave, delta){
+    const item = carrinho.find(i => criarChaveItem(i) === chave);
+    if(!item) return;
+    item.qtd += delta;
     if(item.qtd <= 0){
-
-        carrinho =
-            carrinho.filter(
-                i =>
-                    criarChaveItem(i) !== chave
-            );
-
+        carrinho = carrinho.filter(i => criarChaveItem(i) !== chave);
     }
-
-
     atualizarCarrinho();
-
 }
 
-
-function removerItem(
-    chave
-){
-
-    carrinho =
-        carrinho.filter(
-            i =>
-                criarChaveItem(i) !== chave
-        );
-
-
+function removerItem(chave){
+    carrinho = carrinho.filter(i => criarChaveItem(i) !== chave);
     atualizarCarrinho();
-
 }
-
-
-/* =========================================================
-   ATUALIZAR CARRINHO
-========================================================= */
 
 function atualizarCarrinho(){
+    const cartCount = document.getElementById("cartCount");
+    if(cartCount) cartCount.textContent = carrinho.reduce((s,i) => s + i.qtd, 0);
 
-    const cartCount =
-        document.getElementById(
-            "cartCount"
-        );
-
-
-    if(cartCount){
-
-        cartCount.textContent =
-            carrinho.reduce(
-                (s,i) =>
-                    s + i.qtd,
-                0
-            );
-
-    }
-
-
-    const wrap =
-        document.getElementById(
-            "drawerItems"
-        );
-
-
-    if(!wrap){
-        return;
-    }
-
+    const wrap = document.getElementById("drawerItems");
+    if(!wrap) return;
 
     if(carrinho.length === 0){
-
-        wrap.innerHTML = `
-
-            <div class="empty-msg">
-
-                Sua sacola está vazia.
-
-                <br>
-
-                Escolha suas peças favoritas ✂️
-
-            </div>
-
-        `;
-
-    }else{
-
-        wrap.innerHTML =
-            carrinho
-            .map(item => {
-
-                const chave =
-                    criarChaveItem(item);
-
-
-                const opcoes = [];
-
-
-                if(item.cor){
-
-                    opcoes.push(
-                        `Cor: ${escaparHTML(item.cor)}`
-                    );
-
-                }
-
-
-                if(item.tamanho){
-
-                    opcoes.push(
-                        `Tamanho: ${escaparHTML(item.tamanho)}`
-                    );
-
-                }
-
-
-                return `
-
-                    <div class="item">
-
-
-                        <img
-
-                            src="${escaparHTML(item.imagem)}"
-
-                            alt="${escaparHTML(item.nome)}"
-
-                            onerror="this.src='https://via.placeholder.com/100x120?text=Produto';"
-
-                        >
-
-
-                        <div class="item-info">
-
-
-                            <span class="name">
-
-                                ${escaparHTML(item.nome)}
-
-                            </span>
-
-
-                            <span class="unit-price">
-
-                                ${formatarPreco(item.preco)}
-                                / un.
-
-                            </span>
-
-
-                            ${
-                                opcoes.length
-                                ?
-                                `
-
-                                    <span class="item-opcoes">
-
-                                        ${opcoes.join(" • ")}
-
-                                    </span>
-
-                                `
-                                :
-                                ""
-                            }
-
-
-                            <div class="qty-row">
-
-
-                                <button
-
-                                    onclick="alterarQtd('${escaparHTML(chave).replace(/'/g, "\\'")}', -1)"
-
-                                    type="button"
-
-                                >
-                                    −
-                                </button>
-
-
-                                <span>
-                                    ${item.qtd}
-                                </span>
-
-
-                                <button
-
-                                    onclick="alterarQtd('${escaparHTML(chave).replace(/'/g, "\\'")}', 1)"
-
-                                    type="button"
-
-                                >
-                                    +
-                                </button>
-
-
-                                <button
-
-                                    class="remove-btn"
-
-                                    onclick="removerItem('${escaparHTML(chave).replace(/'/g, "\\'")}')"
-
-                                    type="button"
-
-                                >
-                                    remover
-                                </button>
-
-
-                            </div>
-
-
+        wrap.innerHTML = `<div class="empty-msg">Sua sacola está vazia.</div>`;
+    } else {
+        wrap.innerHTML = carrinho.map(item => {
+            const chave = criarChaveItem(item);
+            return `
+                <div class="item">
+                    <img src="${escaparHTML(item.imagem)}" alt="${escaparHTML(item.nome)}">
+                    <div class="item-info">
+                        <span class="name">${escaparHTML(item.nome)}</span>
+                        <span class="unit-price">${formatarPreco(item.preco)} / un.</span>
+                        <div class="qty-row">
+                            <button onclick="alterarQtd('${chave}', -1)" type="button">−</button>
+                            <span>${item.qtd}</span>
+                            <button onclick="alterarQtd('${chave}', 1)" type="button">+</button>
+                            <button class="remove-btn" onclick="removerItem('${chave}')" type="button">remover</button>
                         </div>
-
-
-                        <div class="item-total">
-
-                            ${formatarPreco(
-                                item.preco * item.qtd
-                            )}
-
-                        </div>
-
-
                     </div>
-
-                `;
-
-            })
-            .join("");
-
+                    <div class="item-total">${formatarPreco(item.preco * item.qtd)}</div>
+                </div>
+            `;
+        }).join("");
     }
-
-
     renderTotals();
-
 }
-
-
-/* =========================================================
-   TOTAIS
-========================================================= */
 
 function getSubtotal(){
-
-    return carrinho.reduce(
-        (s,i) =>
-            s + i.preco * i.qtd,
-        0
-    );
-
+    return carrinho.reduce((s,i) => s + i.preco * i.qtd, 0);
 }
-
 
 function renderTotals(){
-
-    const subtotal =
-        getSubtotal();
-
-
-    const select =
-        document.getElementById(
-            "shipSelect"
-        );
-
-
-    if(!select){
-        return;
-    }
-
-
-    const idx =
-        Number(select.value || 0);
-
-
-    const opcao =
-        FRETE_OPCOES[idx];
-
-
-    if(!opcao){
-        return;
-    }
-
-
-    let frete =
-        opcao.valor;
-
-
-    let freteTexto =
-        frete === 0
-        ? "Grátis"
-        : formatarPreco(frete);
-
-
-    if(
-        opcao.gratisAcima > 0 &&
-        subtotal >= opcao.gratisAcima
-    ){
-
-        frete = 0;
-
-        freteTexto = "Grátis";
-
-    }
-
-
-    if(opcao.consultar){
-
-        freteTexto =
-            "A combinar";
-
-    }
-
-
-    let notaTexto =
-        opcao.nota || "";
-
-
-    if(
-        opcao.diaSemana !== null &&
-        opcao.diaSemana !== undefined
-    ){
-
-        const proximaData =
-            proximaDataParaDiaSemana(
-                opcao.diaSemana
-            );
-
-
-        notaTexto +=
-            ` Próxima entrega: ${
-                formatarDataCurta(proximaData)
-            } (${
-                NOMES_DIAS_SEMANA[
-                    opcao.diaSemana
-                ]
-            }).`;
-
-    }
-
-
-    document.getElementById(
-        "subtotalVal"
-    ).textContent =
-        formatarPreco(subtotal);
-
-
-    document.getElementById(
-        "freightVal"
-    ).textContent =
-        carrinho.length
-        ? freteTexto
-        : "—";
-
-
-    document.getElementById(
-        "shipNote"
-    ).textContent =
-        notaTexto;
-
-
-    const totalNumerico =
-        subtotal +
-        (
-            opcao.consultar
-            ? 0
-            : frete
-        );
-
-
-    document.getElementById(
-        "totalVal"
-    ).textContent =
-        formatarPreco(
-            totalNumerico
-        );
-
-
-    const btn =
-        document.getElementById(
-            "checkoutBtn"
-        );
-
-
-    btn.disabled =
-        carrinho.length === 0;
-
+    const subtotal = getSubtotal();
+    const frete = 10.00;
+    document.getElementById("subtotalVal").textContent = formatarPreco(subtotal);
+    document.getElementById("freightVal").textContent = formatarPreco(frete);
+    document.getElementById("totalVal").textContent = formatarPreco(subtotal + frete);
 }
-
-
-/* =========================================================
-   ABRIR / FECHAR CARRINHO
-========================================================= */
 
 function openCart(){
-
-    document
-        .getElementById("drawer")
-        .classList.add("open");
-
-
-    document
-        .getElementById("overlay")
-        .classList.add("open");
-
+    document.getElementById("drawer").classList.add("open");
+    document.getElementById("overlay").classList.add("open");
 }
-
 
 function closeCart(){
-
-    document
-        .getElementById("drawer")
-        .classList.remove("open");
-
-
-    document
-        .getElementById("overlay")
-        .classList.remove("open");
-
+    document.getElementById("drawer").classList.remove("open");
+    document.getElementById("overlay").classList.remove("open");
 }
 
+function finalizarPedidoSite(){
+    const email = document.getElementById("checkoutEmail").value.trim();
+    const rua = document.getElementById("checkoutRua").value.trim();
+    const numero = document.getElementById("checkoutNumero").value.trim();
+    const bairro = document.getElementById("checkoutBairro").value.trim();
+    const pagamento = document.getElementById("paymentSelect").value;
 
-/* =========================================================
-   WHATSAPP
-========================================================= */
-
-function finalizarNoWhatsapp(){
-
-    if(carrinho.length === 0){
+    if(!email){
+        alert("O e-mail é obrigatório para finalizar o pedido.");
+        document.getElementById("checkoutEmail").focus();
         return;
     }
-
-
-    const pagamento =
-        document.getElementById(
-            "paymentSelect"
-        ).value;
-
-
+    if(!rua || !numero || !bairro){
+        alert("Por favor, preencha o endereço completo (Rua, Número e Bairro).");
+        return;
+    }
     if(!pagamento){
-
-        alert(
-            "Selecione uma forma de pagamento."
-        );
-
+        alert("Selecione uma forma de pagamento (Pix ou Cartão).");
         return;
-
     }
 
+    perfilCliente.email = email;
+    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
 
-    const idx =
-        Number(
-            document.getElementById(
-                "shipSelect"
-            ).value || 0
-        );
-
-
-    const opcao =
-        FRETE_OPCOES[idx];
-
-
-    const subtotal =
-        getSubtotal();
-
-
-    let frete =
-        opcao.valor;
-
-
-    if(
-        opcao.gratisAcima > 0 &&
-        subtotal >= opcao.gratisAcima
-    ){
-
-        frete = 0;
-
+    if(pagamento === "Pix"){
+        alert("Pedido gerado com sucesso! Redirecionando para o QR Code do Pix...");
+    } else {
+        alert("Pedido gerado com sucesso! Redirecionando para o ambiente seguro do Cartão de Crédito...");
     }
 
-
-    let msg =
-        "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
-
-
-    carrinho.forEach(item => {
-
-        msg +=
-            `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
-
-
-        if(item.cor){
-
-            msg +=
-                `   Cor: ${item.cor}\n`;
-
-        }
-
-
-        if(item.tamanho){
-
-            msg +=
-                `   Tamanho: ${item.tamanho}\n`;
-
-        }
-
-
-        msg += "\n";
-
-    });
-
-
-    msg +=
-        `Subtotal: ${formatarPreco(subtotal)}`;
-
-
-    msg +=
-        `\nEntrega: ${opcao.label}`;
-
-
-    if(
-        opcao.diaSemana !== null &&
-        opcao.diaSemana !== undefined
-    ){
-
-        const proximaData =
-            proximaDataParaDiaSemana(
-                opcao.diaSemana
-            );
-
-
-        msg +=
-            ` (próxima entrega: ${formatarDataCurta(proximaData)} - ${NOMES_DIAS_SEMANA[opcao.diaSemana]})`;
-
-    }
-
-
-    if(opcao.consultar){
-
-        msg +=
-            "\nFrete: a combinar";
-
-        msg +=
-            "\n\nVou passar minha cidade para calcularmos o frete.";
-
-    }else{
-
-        msg +=
-            `\nFrete: ${
-                frete === 0
-                ? "Grátis"
-                : formatarPreco(frete)
-            }`;
-
-        msg +=
-            `\nTotal: ${
-                formatarPreco(
-                    subtotal + frete
-                )
-            }`;
-
-    }
-
-
-    msg +=
-        `\nForma de pagamento: ${pagamento}`;
-
-
-    const url =
-        `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(msg)}`;
-
-
-    window.open(
-        url,
-        "_blank"
-    );
-
+    closeCart();
 }
-
-
-/* =========================================================
-   PESQUISA
-========================================================= */
 
 function pesquisarProdutos(){
-
     aplicarFiltros();
-
 }
-
 
 function aplicarFiltros(){
-
-    const campo =
-        document.getElementById(
-            "campoPesquisa"
-        );
-
-
-    const termo =
-        campo
-        ? campo.value.toLowerCase().trim()
-        : "";
-
-
-    const cards =
-        document.querySelectorAll(
-            "#productGrid .card"
-        );
-
+    const campo = document.getElementById("campoPesquisa");
+    const termo = campo ? campo.value.toLowerCase().trim() : "";
+    const cards = document.querySelectorAll("#productGrid .card");
 
     cards.forEach(card => {
+        const index = Number(card.dataset.produtoIndex);
+        const produto = PRODUTOS[index];
+        if(!produto) return;
 
-        const index =
-            Number(
-                card.dataset.produtoIndex
-            );
+        const texto = `${produto.nome} ${produto.descricao} ${produto.categoria} ${produto.tag}`.toLowerCase();
+        const correspondePesquisa = !termo || texto.includes(termo);
+        const categoria = categoriaAtual.toLowerCase();
+        const correspondeCategoria = categoria === "todos" || String(produto.categoria || "").toLowerCase().includes(categoria) || String(produto.tag || "").toLowerCase().includes(categoria);
 
-
-        const produto =
-            PRODUTOS[index];
-
-
-        if(!produto){
-            return;
-        }
-
-
-        const texto =
-            `
-
-                ${produto.nome}
-
-                ${produto.descricao}
-
-                ${produto.categoria}
-
-                ${produto.tag}
-
-                ${(produto.cores || []).join(" ")}
-
-                ${(produto.tamanhos || []).join(" ")}
-
-            `.toLowerCase();
-
-
-        const correspondePesquisa =
-            !termo ||
-            texto.includes(termo);
-
-
-        const categoria =
-            categoriaAtual.toLowerCase();
-
-
-        const correspondeCategoria =
-            categoria === "todos" ||
-            String(produto.categoria || "")
-                .toLowerCase()
-                .includes(categoria) ||
-            String(produto.tag || "")
-                .toLowerCase()
-                .includes(categoria);
-
-
-        card.style.display =
-            correspondePesquisa &&
-            correspondeCategoria
-            ? ""
-            : "none";
-
+        card.style.display = correspondePesquisa && correspondeCategoria ? "" : "none";
     });
-
 }
-
-
-/* =========================================================
-   CATEGORIAS
-========================================================= */
 
 function abrirFiltro(){
-
-    document
-        .getElementById(
-            "menuCategorias"
-        )
-        .classList.add("aberto");
-
-
-    document
-        .getElementById(
-            "fundoCategorias"
-        )
-        .classList.add("aberto");
-
+    document.getElementById("menuCategorias").classList.add("aberto");
+    document.getElementById("fundoCategorias").classList.add("aberto");
 }
-
 
 function fecharFiltro(){
-
-    document
-        .getElementById(
-            "menuCategorias"
-        )
-        .classList.remove("aberto");
-
-
-    document
-        .getElementById(
-            "fundoCategorias"
-        )
-        .classList.remove("aberto");
-
+    document.getElementById("menuCategorias").classList.remove("aberto");
+    document.getElementById("fundoCategorias").classList.remove("aberto");
 }
 
-
-function filtrarCategoria(categoria){
-
-    categoriaAtual =
-        categoria;
-
-
-    const botoes =
-        document.querySelectorAll(
-            ".lista-categorias button"
-        );
-
-
-    botoes.forEach(
-        botao =>
-            botao.classList.remove("ativa")
-    );
-
-
-    const selecionado =
-        Array.from(botoes)
-        .find(
-            botao =>
-                botao
-                .getAttribute("onclick")
-                ?.includes(
-                    `'${categoria}'`
-                )
-        );
-
-
-    if(selecionado){
-
-        selecionado.classList.add(
-            "ativa"
-        );
-
-    }
-
-
+function filtrarCategoria(cat){
+    categoriaAtual = cat;
     aplicarFiltros();
-
-
     fecharFiltro();
-
-
-    document
-        .getElementById("shop")
-        .scrollIntoView({
-            behavior:"smooth",
-            block:"start"
-        });
-
+    document.getElementById("shop").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+document.getElementById("fundoCategorias").addEventListener("click", fecharFiltro);
 
-/* =========================================================
-   FUNDO DO MENU
-========================================================= */
-
-document
-    .getElementById(
-        "fundoCategorias"
-    )
-    .addEventListener(
-        "click",
-        fecharFiltro
-    );
-
-
-/* =========================================================
-   INICIALIZAÇÕES
-========================================================= */
-
-montarFrete();
-
-atualizarCarrinho();
-
-
-document
-    .getElementById(
-        "deliveryWhatsapp"
-    )
-    .href =
-        `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(
-            "Olá! Gostaria de consultar o frete para minha cidade."
-        )}`;
-
-
-</script>
-
-
-<!-- =========================================================
-     SERVICE WORKER
-========================================================= -->
-
-<script>
-
-if("serviceWorker" in navigator){
-
-    navigator.serviceWorker
-        .register("./sw.js")
-        .catch(
-            erro =>
-                console.log(
-                    "Service Worker:",
-                    erro
-                )
-        );
-
-}
+document.getElementById("deliveryWhatsapp").href = `https://wa.me/5544997720350?text=${encodeURIComponent("Olá! Gostaria de tirar dúvidas sobre o frete.")}`;
 
 </script>
 
@@ -3778,359 +2384,34 @@ if("serviceWorker" in navigator){
 
 <script type="module">
 
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-
-import {
-    getFirestore,
-    collection,
-    onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-
-import {
-    getAuth,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-
-/* =========================================================
-   CONFIGURAÇÃO FIREBASE
-========================================================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
-
-    authDomain:
-        "lalabela-boutique.firebaseapp.com",
-
-    projectId:
-        "lalabela-boutique",
-
-    storageBucket:
-        "lalabela-boutique.firebasestorage.app",
-
-    messagingSenderId:
-        "642045507952",
-
-    appId:
-        "1:642045507952:web:8953c11428090b4a41b7b5"
-
+    apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
+    authDomain: "lalabela-boutique.firebaseapp.com",
+    projectId: "lalabela-boutique",
+    storageBucket: "lalabela-boutique.firebasestorage.app",
+    messagingSenderId: "642045507952",
+    appId: "1:642045507952:web:8953c11428090b4a41b7b5"
 };
 
-
-/* =========================================================
-   INICIALIZAR FIREBASE
-========================================================= */
-
-const app =
-    initializeApp(
-        firebaseConfig
-    );
-
-
-const db =
-    getFirestore(app);
-
-
-const auth =
-    getAuth(app);
-
-
-/* Disponibiliza globalmente */
-
-window.firebaseApp =
-    app;
-
-window.firebaseDB =
-    db;
-
-window.firebaseAuth =
-    auth;
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-window.fazerLoginFirebase =
-    async function(email, senha){
-
-        try{
-
-            const resultado =
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    senha
-                );
-
-
-            console.log(
-                "Login realizado com sucesso!"
-            );
-
-
-            return resultado.user;
-
-        }catch(erro){
-
-            console.error(
-                "Erro ao fazer login:",
-                erro
-            );
-
-            throw erro;
-
-        }
-
-    };
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-window.sairFirebase =
-    async function(){
-
-        try{
-
-            await signOut(auth);
-
-            console.log(
-                "Usuário saiu da conta."
-            );
-
-        }catch(erro){
-
-            console.error(
-                "Erro ao sair:",
-                erro
-            );
-
-        }
-
-    };
-
-
-/* =========================================================
-   LOGIN OBSERVER
-========================================================= */
-
-onAuthStateChanged(
-    auth,
-    usuario => {
-
-        if(usuario){
-
-            console.log(
-                "Usuário logado:",
-                usuario.email
-            );
-
-        }else{
-
-            console.log(
-                "Nenhum usuário logado."
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   CARREGAR PRODUTOS DO PAINEL
-========================================================= */
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 function carregarProdutosDoFirebase(){
-
-    const grid =
-        document.getElementById(
-            "productGrid"
-        );
-
-
-    grid.innerHTML = `
-
-        <div
-            class="mensagem-produtos"
-            style="grid-column:1/-1;"
-        >
-
-            <div class="icone">
-                🛍️
-            </div>
-
-            Carregando produtos...
-
-        </div>
-
-    `;
-
-
-    const produtosRef =
-        collection(
-            db,
-            "produtos"
-        );
-
-
-    onSnapshot(
-
-        produtosRef,
-
-        snapshot => {
-
-            try{
-
-                PRODUTOS =
-                    snapshot.docs.map(
-                        doc =>
-                            normalizarProduto(doc)
-                    );
-
-
-                console.log(
-                    "Produtos carregados:",
-                    PRODUTOS
-                );
-
-
-                montarVitrine();
-
-
-            }catch(erro){
-
-                console.error(
-                    "Erro ao organizar produtos:",
-                    erro
-                );
-
-
-                mostrarErroFirebase(
-                    erro
-                );
-
-            }
-
-        },
-
-        erro => {
-
-            console.error(
-                "Erro ao buscar produtos no Firebase:",
-                erro
-            );
-
-
-            mostrarErroFirebase(
-                erro
-            );
-
-        }
-
-    );
-
+    const produtosRef = collection(db, "produtos");
+    onSnapshot(produtosRef, snapshot => {
+        PRODUTOS = snapshot.docs.map(doc => normalizarProduto(doc));
+        montarVitrine();
+    }, erro => {
+        console.error("Erro ao buscar produtos:", erro);
+    });
 }
-
-
-/* =========================================================
-   ERRO FIREBASE
-========================================================= */
-
-function mostrarErroFirebase(erro){
-
-    const grid =
-        document.getElementById(
-            "productGrid"
-        );
-
-
-    let mensagem =
-        "Não foi possível carregar os produtos.";
-
-
-    if(
-        erro &&
-        erro.code === "permission-denied"
-    ){
-
-        mensagem =
-            "O Firebase bloqueou o acesso aos produtos.";
-
-
-    }else if(
-        erro &&
-        erro.code === "failed-precondition"
-    ){
-
-        mensagem =
-            "O Firebase informou que falta uma configuração.";
-
-
-    }else if(
-        erro &&
-        erro.code === "unavailable"
-    ){
-
-        mensagem =
-            "O Firebase está temporariamente indisponível.";
-
-    }
-
-
-    grid.innerHTML = `
-
-        <div
-            class="mensagem-produtos mensagem-erro"
-            style="grid-column:1/-1;"
-        >
-
-            <div class="icone">
-                ⚠️
-            </div>
-
-            <strong>
-                ${mensagem}
-            </strong>
-
-            <div>
-                Verifique a conexão com o Firebase.
-            </div>
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================================================
-   INICIAR BUSCA
-========================================================= */
 
 carregarProdutosDoFirebase();
 
-
-console.log(
-    "Firebase conectado!"
-);
-
-console.log(
-    "Vitrine conectada à coleção Firestore: produtos"
-);
-
 </script>
-
 
 </body>
 </html>

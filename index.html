@@ -2492,7 +2492,7 @@ function montarFrete(){
 
 
 /* =========================================================
-   CARRINHO E TRAVA DE ESTOQUE POR COR E TAMANHO
+   CARRINHO E TRAVA DE ESTOQUE POR COR E TAMANHO CORRIGIDA
 ========================================================= */
 
 function criarChaveItem(item){
@@ -2510,23 +2510,30 @@ function adicionarAoCarrinho(i){
     const corElement = document.getElementById(`cor-${i}`);
     const tamanhoElement = document.getElementById(`tamanho-${i}`);
 
-    const cor = corElement ? corElement.value : "";
-    const tamanho = tamanhoElement ? tamanhoElement.value : "";
+    const cor = corElement ? corElement.value.trim() : "";
+    const tamanho = tamanhoElement ? tamanhoElement.value.trim() : "";
 
-    // Verifica o estoque específico cadastrado para esta cor/tamanho
-    let estoqueDisponivel = p.estoque; 
-    
+    let estoqueDisponivel = 0;
+
+    // Se o produto possui variações cadastradas, a verificação obrigatoriamente ocorre por variação
     if(Array.isArray(p.estoqueVariacoes) && p.estoqueVariacoes.length > 0){
-        const variacaoEncontrada = p.estoqueVariacoes.find(v => 
-            String(v.cor || "").trim().toLowerCase() === String(cor || "").trim().toLowerCase() &&
-            String(v.tamanho || "").trim().toLowerCase() === String(tamanho || "").trim().toLowerCase()
-        );
         
+        const variacaoEncontrada = p.estoqueVariacoes.find(v => {
+            const corVar = String(v.cor || "").trim().toLowerCase();
+            const tamVar = String(v.tamanho || "").trim().toLowerCase();
+            return corVar === cor.toLowerCase() && tamVar === tamanho.toLowerCase();
+        });
+
         if(variacaoEncontrada){
             estoqueDisponivel = Number(variacaoEncontrada.quantidade) || 0;
         } else {
-            estoqueDisponivel = 0;
+            alert("Por favor, selecione uma cor e um tamanho válidos disponíveis em estoque.");
+            return;
         }
+
+    } else {
+        // Se o produto NÃO usa o sistema de variações, usa o estoque geral
+        estoqueDisponivel = Number(p.estoque) || 0;
     }
 
     const existente = carrinho.find(
@@ -2535,9 +2542,8 @@ function adicionarAoCarrinho(i){
 
     const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
 
-    // Trava rigorosa por cor e tamanho
     if((qtdAtualNoCarrinho + 1) > estoqueDisponivel){
-        alert(`Ops! Quantidade indisponível em estoque para esta cor/tamanho (Disponível: ${estoqueDisponivel}).`);
+        alert(`Ops! Quantidade indisponível em estoque (Disponível para esta opção: ${estoqueDisponivel}).`);
         return;
     }
 

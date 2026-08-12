@@ -391,7 +391,6 @@ header{
     display:flex;
     flex-direction:column;
     transition:transform .25s ease,box-shadow .25s ease;
-    cursor:pointer;
 }
 
 .card:hover{
@@ -412,11 +411,6 @@ header{
     height:100%;
     object-fit:cover;
     display:block;
-    transition:transform .5s ease;
-}
-
-.card:hover img{
-    transform:scale(1.045);
 }
 
 .badge{
@@ -481,12 +475,6 @@ header{
 
 .add-btn:hover{
     background:#000;
-    color:#fff;
-}
-
-.add-btn.added{
-    background:var(--wine);
-    border-color:var(--wine);
     color:#fff;
 }
 
@@ -628,7 +616,7 @@ header{
 
 
 /* =========================================================
-   GALERIA
+   GALERIA DE FOTOS COM SETAS
 ========================================================= */
 
 .galeria-produto{
@@ -653,9 +641,14 @@ header{
     border-radius:50%;
     background:rgba(255,255,255,.85);
     color:#ed1764;
-    font-size:18px;
+    font-size:16px;
+    font-weight:bold;
     cursor:pointer;
-    z-index:2;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
 }
 
 .seta-esquerda{
@@ -668,7 +661,7 @@ header{
 
 
 /* =========================================================
-   OPÇÕES
+   OPÇÕES (COR E TAMANHO)
 ========================================================= */
 
 .opcoes-produto{
@@ -723,15 +716,6 @@ header{
 .mensagem-produtos .icone{
     font-size:38px;
     margin-bottom:15px;
-}
-
-.mensagem-erro{
-    color:#888;
-}
-
-.mensagem-erro strong{
-    display:block;
-    margin-bottom:8px;
 }
 
 
@@ -797,7 +781,6 @@ header{
     line-height:1;
 }
 
-/* ÁREA DE ROLAGEM GERAL DA SACOLA */
 .drawer-body-scroll{
     flex:1;
     overflow-y:auto;
@@ -994,11 +977,6 @@ header{
     filter:brightness(.94);
 }
 
-.checkout-btn:disabled{
-    background:#c8c8c8;
-    cursor:not-allowed;
-}
-
 
 /* =========================================================
    MODAL DE PERFIL, ENDEREÇOS E RASTREIO
@@ -1103,7 +1081,7 @@ header{
 
 
 /* =========================================================
-   ENTREGA
+   ENTREGA E RODAPÉ
 ========================================================= */
 
 .delivery-info{
@@ -1141,11 +1119,6 @@ header{
     text-transform:uppercase;
     text-decoration:none;
 }
-
-
-/* =========================================================
-   RODAPÉ
-========================================================= */
 
 .rodape{
     background-color:#ed1760;
@@ -1190,7 +1163,7 @@ header{
 
 
 /* =========================================================
-   MENU CATEGORIAS & FERRAMENTAS EXTRAS
+   MENU CATEGORIAS
 ========================================================= */
 
 .menu-categorias{
@@ -1268,9 +1241,6 @@ header{
     font-weight:600;
 }
 
-
-/* FUNDO */
-
 .fundo-categorias{
     position:fixed;
     inset:0;
@@ -1292,89 +1262,25 @@ header{
 ========================================================= */
 
 @media(max-width:700px){
-
     .rodape{
         grid-template-columns:repeat(2,1fr);
         padding:35px 20px 25px;
         gap:30px 15px;
     }
-
-    .rodape-icone{
-        font-size:26px;
-    }
-
-    .rodape-coluna h3{
-        font-size:13px;
-    }
-
-    .rodape-coluna p{
-        font-size:12px;
-    }
-
-    .rodape-final{
-        font-size:13px;
-    }
 }
 
 @media(max-width:560px){
-
     .nav{
         height:68px;
         padding:14px 18px;
     }
-
     .brand{
         font-size:2.05rem;
     }
-
-    .menu-categoria-topo{
-        font-size:0;
-    }
-
-    .menu-categoria-topo .tres-riscos{
-        font-size:25px;
-    }
-
-    .cart-btn{
-        padding:8px 14px;
-        font-size:13px;
-    }
-
-    .cart-count{
-        font-size:10px;
-    }
-
-    .hero{
-        padding:40px 20px 20px;
-    }
-
-    .shop{
-        padding:0 18px 70px;
-    }
-
     .grid{
         grid-template-columns:repeat(2,minmax(0,1fr));
         gap:10px;
     }
-
-    .card-body{
-        padding:14px 10px 16px;
-    }
-
-    .price-row{
-        flex-direction:column;
-        align-items:stretch;
-        gap:10px;
-    }
-
-    .add-btn{
-        width:100%;
-    }
-
-    .barra-pesquisa{
-        width:100%;
-    }
-
 }
 
 </style>
@@ -1383,377 +1289,109 @@ header{
 
 <body>
 
-
-<!-- =========================================================
-     BOAS-VINDAS
-========================================================= -->
-
+<!-- BOAS-VINDAS -->
 <div id="telaBoasVindas">
-
-    <img
-        src="./LaLabela-icon-512-final.png"
-        alt="LaLabela Boutique"
-    >
-
+    <img src="./LaLabela-icon-512-final.png" alt="LaLabela Boutique">
     <h1>Bem-vinda à LaLabela Boutique</h1>
-
-    <p>
-        Moda, estilo e peças escolhidas especialmente para você.
-    </p>
-
+    <p>Moda, estilo e peças escolhidas especialmente para você.</p>
 </div>
 
-
-<!-- =========================================================
-     HEADER
-========================================================= -->
-
+<!-- HEADER -->
 <header>
-
     <div class="nav">
-
-        <button
-            class="menu-categoria-topo"
-            type="button"
-            onclick="abrirFiltro()"
-        >
+        <button class="menu-categoria-topo" type="button" onclick="abrirFiltro()">
             <span class="tres-riscos">☰</span>
             <span>Menu & Rastreio</span>
         </button>
 
-
         <a href="#" class="brand-wrap">
-
-            <span class="brand">
-                LaLabela
-            </span>
-
+            <span class="brand">LaLabela</span>
         </a>
 
-
-        <!-- Botão Sacola Quadrada Rosa Pink -->
-        <button
-            class="cart-btn"
-            onclick="openCart()"
-        >
-
-            <span class="texto-sacola">
-                Sacola
-            </span>
-
-            <span
-                class="cart-count"
-                id="cartCount"
-            >
-                0
-            </span>
-
+        <button class="cart-btn" onclick="openCart()">
+            <span>Sacola</span>
+            <span class="cart-count" id="cartCount">0</span>
         </button>
-
     </div>
-
 </header>
 
-
-<!-- =========================================================
-     HERO
-========================================================= -->
-
+<!-- HERO -->
 <section class="hero">
-
-    <div class="eyebrow">
-        Boutique
-    </div>
-
-    <h1>
-        LaLabela
-    </h1>
-
-    <p>
-        Peças escolhidas com carinho para o seu guarda-roupa.
-        Escolha, adicione à sacola e finalize seu pedido diretamente no site.
-    </p>
-
+    <div class="eyebrow">Boutique</div>
+    <h1>LaLabela</h1>
+    <p>Peças escolhidas com carinho para o seu guarda-roupa. Escolha, adicione à sacola e finalize seu pedido diretamente no site.</p>
 </section>
 
-
 <div class="ribbon">
-
-    <svg
-        viewBox="0 0 26 14"
-        fill="none"
-    >
-
-        <path
-            d="M13 7C13 7 9 1 4 2C1 2.6 1 6 4 7C1 8 1 11.4 4 12C9 13 13 7 13 7ZM13 7C13 7 17 1 22 2C25 2.6 25 6 22 7C25 8 25 11.4 22 12C17 13 13 7 13 7Z"
-            stroke="currentColor"
-            stroke-width="1"
-        />
-
-    </svg>
-
+    <svg viewBox="0 0 26 14" fill="none"><path d="M13 7C13 7 9 1 4 2C1 2.6 1 6 4 7C1 8 1 11.4 4 12C9 13 13 7 13 7ZM13 7C13 7 17 1 22 2C25 2.6 25 6 22 7C25 8 25 11.4 22 12C17 13 13 7 13 7Z" stroke="currentColor" stroke-width="1"/></svg>
 </div>
 
-
-<!-- =========================================================
-     PRODUTOS
-========================================================= -->
-
-<section
-    class="shop"
-    id="shop"
->
-
-    <h2 class="serif">
-        Nossa Coleção
-    </h2>
-
-
-    <!-- PESQUISA -->
+<!-- PRODUTOS -->
+<section class="shop" id="shop">
+    <h2 class="serif">Nossa Coleção</h2>
 
     <div class="barra-pesquisa">
-
-        <input
-            type="text"
-            id="campoPesquisa"
-            placeholder="Pesquisar produto..."
-            oninput="pesquisarProdutos()"
-        >
-
-        <button
-            type="button"
-            onclick="pesquisarProdutos()"
-        >
-
-            <span class="lupa"></span>
-
-        </button>
-
+        <input type="text" id="campoPesquisa" placeholder="Pesquisar produto..." oninput="pesquisarProdutos()">
+        <button type="button" onclick="pesquisarProdutos()"><span class="lupa"></span></button>
     </div>
 
-
-    <!-- PRODUTOS DO FIREBASE -->
-
-    <div
-        class="grid"
-        id="productGrid"
-    ></div>
-
+    <div class="grid" id="productGrid"></div>
 </section>
 
-
-<!-- =========================================================
-     TELA DE DETALHES DO PRODUTO (MODAL / PÁGINA GRANDE)
-========================================================= -->
-
+<!-- MODAL DETALHES DO PRODUTO -->
 <div id="modalProduto">
-
     <div class="modal-container">
-
-        <button
-            class="btn-voltar-home"
-            type="button"
-            onclick="fecharDetalhesProduto()"
-        >
+        <button class="btn-voltar-home" type="button" onclick="fecharDetalhesProduto()">
             ← Voltar para a Tela Inicial
         </button>
-
-
-        <div
-            class="modal-conteudo-grid"
-            id="modalConteudoDetalhe"
-        ></div>
-
-
-        <div class="sugestoes-container">
-            <h3>Você também pode gostar</h3>
-            <div class="grid" id="gridSugestoes"></div>
-        </div>
-
+        <div class="modal-conteudo-grid" id="modalConteudoDetalhe"></div>
     </div>
-
 </div>
-
 
 <div class="ribbon">
-
-    <svg
-        viewBox="0 0 26 14"
-        fill="none"
-    >
-
-        <path
-            d="M13 7C13 7 9 1 4 2C1 2.6 1 6 4 7C1 8 1 11.4 4 12C9 13 13 7 13 7ZM13 7C13 7 17 1 22 2C25 2.6 25 6 22 7C25 8 25 11.4 22 12C17 13 13 7 13 7Z"
-            stroke="currentColor"
-            stroke-width="1"
-        />
-
-    </svg>
-
+    <svg viewBox="0 0 26 14" fill="none"><path d="M13 7C13 7 9 1 4 2C1 2.6 1 6 4 7C1 8 1 11.4 4 12C9 13 13 7 13 7ZM13 7C13 7 17 1 22 2C25 2.6 25 6 22 7C25 8 25 11.4 22 12C17 13 13 7 13 7Z" stroke="currentColor" stroke-width="1"/></svg>
 </div>
 
-
-<!-- =========================================================
-     ENTREGA
-========================================================= -->
-
-<section
-    class="delivery-info"
-    id="entregas"
->
-
-    <h2 class="serif">
-        Entregas
-    </h2>
-
-    <p>
-
-        Fazemos entrega em
-        <strong>Paranavaí/PR</strong>,
-        com prazo de até 2 horas,
-
-        e em
-        <strong>São João do Caiuá/PR</strong>,
-        com entrega em até 1 dia útil.
-
-        Para outras cidades e regiões,
-        consulte digitando seu CEP na sacola.
-
-    </p>
-
-    <a
-        class="whatsapp-link"
-        id="deliveryWhatsapp"
-        href="#"
-        target="_blank"
-    >
-
-        Dúvidas sobre frete no WhatsApp
-
-    </a>
-
+<!-- ENTREGA -->
+<section class="delivery-info" id="entregas">
+    <h2 class="serif">Entregas</h2>
+    <p>Fazemos entrega em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega em até 1 dia útil. Para outras cidades e regiões, consulte digitando seu CEP na sacola.</p>
+    <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Dúvidas sobre frete no WhatsApp</a>
 </section>
 
-
-<!-- =========================================================
-     RODAPÉ
-========================================================= -->
-
+<!-- RODAPÉ -->
 <footer class="rodape">
-
-
     <div class="rodape-coluna">
-
-        <div class="rodape-icone">
-            <i class="fa-brands fa-whatsapp"></i>
-        </div>
-
-        <h3>
-            FALE CONOSCO
-        </h3>
-
-        <p>
-            (44) 99772-0350
-        </p>
-
+        <div class="rodape-icone"><i class="fa-brands fa-whatsapp"></i></div>
+        <h3>FALE CONOSCO</h3>
+        <p>(44) 99772-0350</p>
     </div>
-
-
     <div class="rodape-coluna">
-
-        <div class="rodape-icone">
-            <i class="fa-brands fa-instagram"></i>
-        </div>
-
-        <h3>
-            INSTAGRAM
-        </h3>
-
-        <p>
-            @lalabela_boutiquepvai
-        </p>
-
+        <div class="rodape-icone"><i class="fa-brands fa-instagram"></i></div>
+        <h3>INSTAGRAM</h3>
+        <p>@lalabela_boutiquepvai</p>
     </div>
-
-
     <div class="rodape-coluna">
-
-        <div class="rodape-icone">
-            <i class="fa-solid fa-truck"></i>
-        </div>
-
-        <h3>
-            ENTREGA EXPRESSA
-        </h3>
-
-        <p>
-            Paranavaí/PR & São João do Caiuá/PR
-        </p>
-
+        <div class="rodape-icone"><i class="fa-solid fa-truck"></i></div>
+        <h3>ENTREGA EXPRESSA</h3>
+        <p>Paranavaí/PR & São João do Caiuá/PR</p>
     </div>
-
-
     <div class="rodape-coluna">
-
-        <div class="rodape-icone">
-            <i class="fa-solid fa-file-lines"></i>
-        </div>
-
-        <h3>
-            CNPJ
-        </h3>
-
-        <p>
-            44.106.069/0001-70
-        </p>
-
+        <div class="rodape-icone"><i class="fa-solid fa-file-lines"></i></div>
+        <h3>CNPJ</h3>
+        <p>44.106.069/0001-70</p>
     </div>
-
-
 </footer>
 
-
-<!-- =========================================================
-     MENU CATEGORIAS, RASTREIO E PERFIL
-========================================================= -->
-
-<div
-    class="fundo-categorias"
-    id="fundoCategorias"
-></div>
-
-
-<div
-    class="menu-categorias"
-    id="menuCategorias"
->
-
-    <button
-        class="fechar-categorias"
-        type="button"
-        onclick="fecharFiltro()"
-    >
-        ×
-    </button>
-
-
-    <h2>
-        Navegação
-    </h2>
-
-
+<!-- MENU CATEGORIAS -->
+<div class="fundo-categorias" id="fundoCategorias"></div>
+<div class="menu-categorias" id="menuCategorias">
+    <button class="fechar-categorias" type="button" onclick="fecharFiltro()">×</button>
+    <h2>Navegação</h2>
     <div class="lista-categorias">
-
-        <button type="button" onclick="abrirModalPerfil()">
-            👤 Meu Perfil e Endereços Salvos
-        </button>
-
-        <button type="button" onclick="abrirModalRastreio()">
-            📦 Rastrear Pedido & Entregas
-        </button>
-
+        <button type="button" onclick="abrirModalPerfil()">👤 Meu Perfil e Endereços Salvos</button>
+        <button type="button" onclick="abrirModalRastreio()">📦 Rastrear Pedido & Entregas</button>
         <div class="menu-divisor">Categorias de Produtos</div>
-
         <button type="button" onclick="filtrarCategoria('todos')">Todos</button>
         <button type="button" onclick="filtrarCategoria('Blusas')">Blusas</button>
         <button type="button" onclick="filtrarCategoria('Vestido')">Vestidos</button>
@@ -1762,103 +1400,44 @@ header{
         <button type="button" onclick="filtrarCategoria('Conjunto')">Conjuntos</button>
         <button type="button" onclick="filtrarCategoria('Short')">Shorts</button>
         <button type="button" onclick="filtrarCategoria('Promoção')">Promoção</button>
-
     </div>
-
 </div>
 
-
-<!-- =========================================================
-     MODAL DE PERFIL E ENDEREÇOS
-========================================================= -->
-
+<!-- MODAL PERFIL -->
 <div class="modal-sistema" id="modalPerfil">
     <div class="modal-sistema-box">
         <button class="fechar-modal-sistema" onclick="fecharModalPerfil()">&times;</button>
         <h2>Meu Perfil</h2>
-        
-        <div class="grupo-campo">
-            <label>Seu Nome</label>
-            <input type="text" id="perfilNome" placeholder="Ex: Maria Silva">
-        </div>
-
-        <div class="grupo-campo">
-            <label>WhatsApp</label>
-            <input type="text" id="perfilWhatsapp" placeholder="(44) 99999-9999">
-        </div>
-
-        <div class="grupo-campo">
-            <label>E-mail (Obrigatório)</label>
-            <input type="email" id="perfilEmail" placeholder="seu@email.com">
-        </div>
-
+        <div class="grupo-campo"><label>Seu Nome</label><input type="text" id="perfilNome" placeholder="Ex: Maria Silva"></div>
+        <div class="grupo-campo"><label>WhatsApp</label><input type="text" id="perfilWhatsapp" placeholder="(44) 99999-9999"></div>
+        <div class="grupo-campo"><label>E-mail (Obrigatório)</label><input type="email" id="perfilEmail" placeholder="seu@email.com"></div>
         <h3 style="margin-top:20px; font-size:1.2rem; color:#ed1760;">Endereços Salvos</h3>
         <div id="listaEnderecosSalvos"></div>
-
         <button class="btn-acao-modal" onclick="salvarPerfilCliente()">Salvar Alterações</button>
     </div>
 </div>
 
-
-<!-- =========================================================
-     MODAL DE RASTREIO DE PEDIDOS
-========================================================= -->
-
+<!-- MODAL RASTREIO -->
 <div class="modal-sistema" id="modalRastreio">
     <div class="modal-sistema-box">
         <button class="fechar-modal-sistema" onclick="fecharModalRastreio()">&times;</button>
         <h2>Rastreio de Pedidos</h2>
-        
-        <div class="grupo-campo">
-            <label>Digite o Código do Pedido ou E-mail</label>
-            <input type="text" id="inputBuscaRastreio" placeholder="Ex: #1024 ou seu e-mail">
-        </div>
+        <div class="grupo-campo"><label>Digite o Código do Pedido ou E-mail</label><input type="text" id="inputBuscaRastreio" placeholder="Ex: #1024 ou seu e-mail"></div>
         <button class="btn-acao-modal" onclick="consultarRastreio()">Consultar Status</button>
-
         <div id="resultadoRastreio" style="margin-top:20px;"></div>
     </div>
 </div>
 
-
-<!-- =========================================================
-     CARRINHO E FINALIZAÇÃO DIRETA NO SITE
-========================================================= -->
-
-<div
-    class="overlay"
-    id="overlay"
-    onclick="closeCart()"
-></div>
-
-
-<div
-    class="drawer"
-    id="drawer"
->
-
+<!-- SACOLA / DRAWER -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
     <div class="drawer-head">
-
-        <h2 class="serif">
-            Sua Sacola
-        </h2>
-
-        <button
-            class="close-btn"
-            onclick="closeCart()"
-        >
-            &times;
-        </button>
-
+        <h2 class="serif">Sua Sacola</h2>
+        <button class="close-btn" onclick="closeCart()">&times;</button>
     </div>
 
-
-    <!-- CORPO COM ROLAGEM ÚNICA (FOTOS + FORM + PAGAMENTO + BOTÃO) -->
     <div class="drawer-body-scroll">
-
-        <div
-            class="drawer-items"
-            id="drawerItems"
-        ></div>
+        <div class="drawer-items" id="drawerItems"></div>
 
         <div class="form-checkout-group">
             <label>E-mail (Obrigatório)</label>
@@ -1886,7 +1465,6 @@ header{
             <input type="text" id="checkoutComplemento" placeholder="Apto, Bloco, Casa (Opcional)">
         </div>
 
-
         <div class="form-checkout-group">
             <label>Forma de Pagamento (Direto no Site)</label>
             <select id="paymentSelect">
@@ -1896,47 +1474,27 @@ header{
             </select>
         </div>
 
-
         <div class="totals">
-            <div class="row">
-                <span>Subtotal</span>
-                <span id="subtotalVal">R$ 0,00</span>
-            </div>
-
-            <div class="row">
-                <span>Frete</span>
-                <span id="freightVal">R$ 10,00</span>
-            </div>
-
-            <div class="row grand">
-                <span>Total</span>
-                <span id="totalVal">R$ 0,00</span>
-            </div>
+            <div class="row"><span>Subtotal</span><span id="subtotalVal">R$ 0,00</span></div>
+            <div class="row"><span>Frete</span><span id="freightVal">R$ 10,00</span></div>
+            <div class="row grand"><span>Total</span><span id="totalVal">R$ 0,00</span></div>
         </div>
 
-
-        <button
-            class="checkout-btn"
-            id="checkoutBtn"
-            onclick="finalizarPedidoSite()"
-        >
-            Finalizar Pedido
-        </button>
-
+        <button class="checkout-btn" id="checkoutBtn" onclick="finalizarPedidoSite()">Finalizar Pedido</button>
     </div>
-
 </div>
 
-
-<!-- =========================================================
-     JAVASCRIPT PRINCIPAL
-========================================================= -->
-
+<!-- JAVASCRIPT PRINCIPAL -->
 <script>
 
 let PRODUTOS = [];
 let carrinho = [];
 let categoriaAtual = "todos";
+
+// Índices de foto ativos para cada produto na vitrine
+let indicesFotoVitrine = {};
+// Índice de foto ativo no modal de detalhes
+let indiceFotoModal = 0;
 
 let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
     nome: "",
@@ -2007,7 +1565,6 @@ function excluirEndereco(index){
     renderizarEnderecosSalvos();
 }
 
-
 async function buscarCep(){
     const cepInput = document.getElementById("checkoutCep").value.replace(/\D/g, "");
     if(cepInput.length !== 8){
@@ -2042,13 +1599,11 @@ async function buscarCep(){
             localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
             renderizarEnderecosSalvos();
         }
-
     }catch(erro){
         console.error("Erro ao buscar CEP:", erro);
         alert("Não foi possível consultar o CEP no momento.");
     }
 }
-
 
 function abrirModalPerfil(){
     fecharFiltro();
@@ -2093,7 +1648,6 @@ function confirmarEntregaRecebida(){
     fecharModalRastreio();
 }
 
-
 function escaparHTML(valor){
     if(valor === null || valor === undefined) return "";
     return String(valor).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
@@ -2134,6 +1688,33 @@ function normalizarProduto(doc){
     };
 }
 
+function mudarFotoVitrine(event, indexProduto, direcao){
+    event.stopPropagation();
+    const p = PRODUTOS[indexProduto];
+    if(!p || !p.imagens || p.imagens.length <= 1) return;
+
+    if(indicesFotoVitrine[indexProduto] === undefined) indicesFotoVitrine[indexProduto] = 0;
+    
+    indicesFotoVitrine[indexProduto] += direcao;
+    if(indicesFotoVitrine[indexProduto] >= p.imagens.length) indicesFotoVitrine[indexProduto] = 0;
+    if(indicesFotoVitrine[indexProduto] < 0) indicesFotoVitrine[indexProduto] = p.imagens.length - 1;
+
+    const imgEl = document.getElementById(`foto-principal-${indexProduto}`);
+    if(imgEl) imgEl.src = p.imagens[indicesFotoVitrine[indexProduto]];
+}
+
+function mudarFotoModal(direcao, indexProduto){
+    const p = PRODUTOS[indexProduto];
+    if(!p || !p.imagens || p.imagens.length <= 1) return;
+
+    indiceFotoModal += direcao;
+    if(indiceFotoModal >= p.imagens.length) indiceFotoModal = 0;
+    if(indiceFotoModal < 0) indiceFotoModal = p.imagens.length - 1;
+
+    const imgEl = document.getElementById(`foto-modal-grande`);
+    if(imgEl) imgEl.src = p.imagens[indiceFotoModal];
+}
+
 function montarVitrine(){
     const grid = document.getElementById("productGrid");
     if(!grid) return;
@@ -2154,13 +1735,17 @@ function montarVitrine(){
                 <div class="img-wrap galeria-produto" onclick="abrirDetalhesProduto(${i})">
                     ${p.tag ? `<span class="badge">${escaparHTML(p.tag)}</span>` : ""}
                     <img id="foto-principal-${i}" class="imagem-principal" src="${escaparHTML(imagemPrincipal)}" alt="${escaparHTML(p.nome)}" loading="lazy">
+                    ${imagens.length > 1 ? `
+                        <button type="button" class="seta-galeria seta-esquerda" onclick="mudarFotoVitrine(event, ${i}, -1)">‹</button>
+                        <button type="button" class="seta-galeria seta-direita" onclick="mudarFotoVitrine(event, ${i}, 1)">›</button>
+                    ` : ""}
                 </div>
                 <div class="card-body">
                     <h3 onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.nome)}</h3>
                     <div class="desc" onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.descricao)}</div>
                     
                     ${cores.length || tamanhos.length ? `
-                        <div class="opcoes-produto">
+                        <div class="opcoes-produto" onclick="event.stopPropagation()">
                             ${cores.length ? `<div><label>Cor</label><select id="cor-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
                             ${tamanhos.length ? `<div><label>Tamanho</label><select id="tamanho-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
                         </div>
@@ -2181,18 +1766,33 @@ function montarVitrine(){
 function abrirDetalhesProduto(i){
     const p = PRODUTOS[i];
     if(!p) return;
+    indiceFotoModal = 0;
     const modal = document.getElementById("modalProduto");
     const conteudo = document.getElementById("modalConteudoDetalhe");
     const imagens = p.imagens && p.imagens.length ? p.imagens : ["https://via.placeholder.com/600x750?text=LaLabela"];
+    const cores = p.cores || [];
+    const tamanhos = p.tamanhos || [];
 
     conteudo.innerHTML = `
         <div class="modal-img-wrap galeria-produto">
             <img id="foto-modal-grande" src="${escaparHTML(imagens[0])}" alt="${escaparHTML(p.nome)}">
+            ${imagens.length > 1 ? `
+                <button type="button" class="seta-galeria seta-esquerda" onclick="mudarFotoModal(-1, ${i})">‹</button>
+                <button type="button" class="seta-galeria seta-direita" onclick="mudarFotoModal(1, ${i})">›</button>
+            ` : ""}
         </div>
         <div class="modal-info">
             <h2>${escaparHTML(p.nome)}</h2>
             <div class="preco-grande">${formatarPreco(p.preco)}</div>
             <div class="descricao-completa">${escaparHTML(p.descricao || "Peça selecionada com carinho.")}</div>
+            
+            ${cores.length || tamanhos.length ? `
+                <div class="opcoes-produto">
+                    ${cores.length ? `<div><label>Cor</label><select id="cor-modal-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
+                    ${tamanhos.length ? `<div><label>Tamanho</label><select id="tamanho-modal-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
+                </div>
+            ` : ""}
+
             <div class="modal-acoes">
                 <button class="btn-comprar-grande" onclick="adicionarDoModal(${i})">Adicionar à Sacola</button>
             </div>
@@ -2207,7 +1807,28 @@ function fecharDetalhesProduto(){
 }
 
 function adicionarDoModal(i){
-    adicionarAoCarrinho(i);
+    const p = PRODUTOS[i];
+    if(!p) return;
+    const corEl = document.getElementById(`cor-modal-${i}`);
+    const tamEl = document.getElementById(`tamanho-modal-${i}`);
+    const cor = corEl ? corEl.value.trim() : "";
+    const tamanho = tamEl ? tamEl.value.trim() : "";
+
+    const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
+    if(existente){
+        existente.qtd += 1;
+    } else {
+        carrinho.push({
+            nome: p.nome,
+            preco: p.preco,
+            estoque: p.estoque,
+            imagem: p.imagens[0] || "",
+            qtd: 1,
+            cor: cor,
+            tamanho: tamanho
+        });
+    }
+    atualizarCarrinho();
     fecharDetalhesProduto();
     openCart();
 }
@@ -2274,7 +1895,7 @@ function atualizarCarrinho(){
                     <img src="${escaparHTML(item.imagem)}" alt="${escaparHTML(item.nome)}">
                     <div class="item-info">
                         <span class="name">${escaparHTML(item.nome)}</span>
-                        <span class="unit-price">${formatarPreco(item.preco)} / un.</span>
+                        <span class="unit-price">${formatarPreco(item.preco)} / un. ${item.cor ? `| Cor: ${escaparHTML(item.cor)}` : ""} ${item.tamanho ? `| Tam: ${escaparHTML(item.tamanho)}` : ""}</span>
                         <div class="qty-row">
                             <button onclick="alterarQtd('${chave}', -1)" type="button">−</button>
                             <span>${item.qtd}</span>
@@ -2391,11 +2012,7 @@ document.getElementById("deliveryWhatsapp").href = `https://wa.me/5544997720350?
 
 </script>
 
-
-<!-- =========================================================
-     FIREBASE
-========================================================= -->
-
+<!-- FIREBASE -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";

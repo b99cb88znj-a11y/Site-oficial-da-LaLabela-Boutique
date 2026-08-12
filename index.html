@@ -1291,7 +1291,7 @@ header{
         </a>
 
 
-        <!-- Botão Sacola Quadrado Rosa Pink -->
+        <!-- Botão Sacola Quadrada Rosa Pink -->
         <button
             class="cart-btn"
             onclick="openCart()"
@@ -2485,25 +2485,39 @@ function montarVitrine(){
 
 
 /* =========================================================
-   ABRIR / FECHAR PÁGINA DETALHADA DO PRODUTO
+   ABRIR / FECHAR PÁGINA DETALHADA DO PRODUTO (COM SETAS DE NAVEGAÇÃO)
 ========================================================= */
+
+let produtoModalAtualIndex = 0;
 
 function abrirDetalhesProduto(i){
 
     const p = PRODUTOS[i];
     if(!p) return;
 
+    produtoModalAtualIndex = i;
+
     const modal = document.getElementById("modalProduto");
     const conteudo = document.getElementById("modalConteudoDetalhe");
 
-    const imagemPrincipal = (p.imagens && p.imagens[0]) || "https://via.placeholder.com/600x750?text=LaLabela";
+    const imagens = p.imagens && p.imagens.length ? p.imagens : ["https://via.placeholder.com/600x750?text=LaLabela"];
+    const imagemPrincipal = imagens[0];
     const cores = p.cores || [];
     const tamanhos = p.tamanhos || [];
 
     conteudo.innerHTML = `
 
-        <div class="modal-img-wrap">
-            <img src="${escaparHTML(imagemPrincipal)}" alt="${escaparHTML(p.nome)}">
+        <div class="modal-img-wrap galeria-produto">
+            <img id="foto-modal-grande" src="${escaparHTML(imagemPrincipal)}" alt="${escaparHTML(p.nome)}" onerror="this.src='https://via.placeholder.com/600x750?text=Imagem+indisponível';">
+            
+            ${
+                imagens.length > 1
+                ? `
+                    <button class="seta-galeria seta-esquerda" onclick="mudarFotoModal(-1)" type="button">‹</button>
+                    <button class="seta-galeria seta-direita" onclick="mudarFotoModal(1)" type="button">›</button>
+                  `
+                : ""
+            }
         </div>
 
         <div class="modal-info">
@@ -2550,11 +2564,30 @@ function abrirDetalhesProduto(i){
 
     `;
 
-    // Montar sugestões de produtos parecidos (mesma categoria ou outros produtos aleatórios)
     renderizarSugestoes(i);
 
     modal.classList.add("aberto");
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+function mudarFotoModal(direcao){
+
+    const p = PRODUTOS[produtoModalAtualIndex];
+    if(!p || !p.imagens || p.imagens.length <= 1) return;
+
+    const imgEl = document.getElementById("foto-modal-grande");
+    if(!imgEl) return;
+
+    let indiceAtual = p.imagens.findIndex(img => img === imgEl.src || imgEl.src.endsWith(img));
+    if(indiceAtual < 0) indiceAtual = 0;
+
+    let novoIndice = indiceAtual + direcao;
+    if(novoIndice < 0) novoIndice = p.imagens.length - 1;
+    if(novoIndice >= p.imagens.length) novoIndice = 0;
+
+    imgEl.src = p.imagens[novoIndice];
+
 }
 
 
@@ -2568,12 +2601,11 @@ function renderizarSugestoes(indiceAtual){
     const gridSugestoes = document.getElementById("gridSugestoes");
     const produtoAtual = PRODUTOS[indiceAtual];
 
-    // Filtrar produtos parecidos (mesma categoria ou apenas diferentes do atual)
     const parecidos = PRODUTOS.filter((p, index) => {
         if(index === indiceAtual) return false;
         if(produtoAtual.categoria && p.categoria === produtoAtual.categoria) return true;
         return true;
-    }).slice(0, 2); // Pega até 2 sugestões
+    }).slice(0, 2);
 
     if(parecidos.length === 0){
         gridSugestoes.innerHTML = "<p style='text-align:center; color:#888;'>Nenhuma sugestão no momento.</p>";
@@ -2581,9 +2613,7 @@ function renderizarSugestoes(indiceAtual){
     }
 
     gridSugestoes.innerHTML = parecidos.map((p) => {
-        // Encontrar o índice real deste produto no array global PRODUTOS
         const realIndex = PRODUTOS.findIndex(prod => prod.id === p.id || prod.nome === p.nome);
-
         const img = (p.imagens && p.imagens[0]) || "";
 
         return `
@@ -2656,7 +2686,7 @@ function adicionarDoModal(i){
 
 
 /* =========================================================
-   GALERIA
+   GALERIA DA VITRINE
 ========================================================= */
 
 function selecionarFoto(

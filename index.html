@@ -1885,6 +1885,32 @@ function filtrarCategoria(categoria) {
 
 </script>
 
+  
+  
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
+    authDomain: "lalabela-boutique.firebaseapp.com",
+    projectId: "lalabela-boutique",
+    storageBucket: "lalabela-boutique.firebasestorage.app",
+    messagingSenderId: "642045507952",
+    appId: "1:642045507952:web:8953c11428090b4a41b7b5"
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  console.log("Firebase conectado!");
+
 </script>
+
+
 </body>
 </html>

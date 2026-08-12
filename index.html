@@ -214,7 +214,7 @@ header{
 }
 
 
-/* SACOLA QUADRADA E NA COR ROSA PINK DO RODAPÉ (#ed1760) */
+/* SACOLA QUADRADA ROSA PINK */
 
 .cart-btn{
     justify-self:end;
@@ -306,7 +306,7 @@ header{
 
 
 /* =========================================================
-   PESQUISA MAIS ACIMA
+   PESQUISA
 ========================================================= */
 
 .barra-pesquisa{
@@ -391,6 +391,7 @@ header{
     display:flex;
     flex-direction:column;
     transition:transform .25s ease,box-shadow .25s ease;
+    cursor:pointer;
 }
 
 .card:hover{
@@ -487,6 +488,143 @@ header{
     background:var(--wine);
     border-color:var(--wine);
     color:#fff;
+}
+
+
+/* =========================================================
+   TELA DETALHES DO PRODUTO (MODAL / PÁGINA GRANDE)
+========================================================= */
+
+#modalProduto{
+    position:fixed;
+    inset:0;
+    background:#fff;
+    z-index:90000;
+    overflow-y:auto;
+    display:none;
+    padding:20px;
+}
+
+#modalProduto.aberto{
+    display:block;
+}
+
+.modal-container{
+    max-width:800px;
+    margin:0 auto;
+    padding-bottom:60px;
+}
+
+.btn-voltar-home{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:none;
+    border:1px solid #ed1760;
+    color:#ed1760;
+    padding:10px 18px;
+    font-family:'Jost',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    border-radius:0px;
+    margin-bottom:25px;
+    transition:all .2s ease;
+}
+
+.btn-voltar-home:hover{
+    background:#ed1760;
+    color:#fff;
+}
+
+.modal-conteudo-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+}
+
+@media(max-width:768px){
+    .modal-conteudo-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+.modal-img-wrap{
+    width:100%;
+    aspect-ratio:4/5;
+    background:#f8bbd0;
+    position:relative;
+    overflow:hidden;
+}
+
+.modal-img-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.modal-info{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.modal-info h2{
+    font-size:2.2rem;
+    margin:0;
+    line-height:1.1;
+}
+
+.modal-info .preco-grande{
+    font-size:1.6rem;
+    font-weight:500;
+    color:#ed1760;
+}
+
+.modal-info .descricao-completa{
+    font-size:0.95rem;
+    color:rgba(42,36,32,.75);
+    line-height:1.6;
+}
+
+.modal-acoes{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-top:15px;
+}
+
+.btn-comprar-grande{
+    background:#ed1760;
+    color:#fff;
+    border:none;
+    padding:14px;
+    font-family:'Jost',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    text-transform:uppercase;
+    cursor:pointer;
+    text-align:center;
+    border-radius:0px;
+    transition:background .2s;
+}
+
+.btn-comprar-grande:hover{
+    background:#c21250;
+}
+
+/* Sugestões de produtos parecidos */
+.sugestoes-container{
+    margin-top:50px;
+    border-top:1px solid var(--line);
+    padding-top:30px;
+}
+
+.sugestoes-container h3{
+    font-size:1.6rem;
+    margin-bottom:20px;
+    text-align:center;
 }
 
 
@@ -1153,7 +1291,7 @@ header{
         </a>
 
 
-        <!-- Botão Sacola Quadrado e na cor Rosa Pink do Rodapé -->
+        <!-- Botão Sacola Quadrado Rosa Pink -->
         <button
             class="cart-btn"
             onclick="openCart()"
@@ -1262,6 +1400,44 @@ header{
     ></div>
 
 </section>
+
+
+<!-- =========================================================
+     TELA DE DETALHES DO PRODUTO (PÁGINA GRANDE / SEGUNDA TELA)
+========================================================= -->
+
+<div id="modalProduto">
+
+    <div class="modal-container">
+
+        <button
+            class="btn-voltar-home"
+            type="button"
+            onclick="fecharDetalhesProduto()"
+        >
+            ← Voltar para a Tela Inicial
+        </button>
+
+
+        <div
+            class="modal-conteudo-grid"
+            id="modalConteudoDetalhe"
+        >
+            <!-- Conteúdo injetado via JavaScript -->
+        </div>
+
+
+        <!-- SUGESTÕES DE PRODUTOS PARECIDOS -->
+        <div class="sugestoes-container">
+            <h3>Você também pode gostar</h3>
+            <div class="grid" id="gridSugestoes">
+                <!-- Produtos parecidos injetados aqui -->
+            </div>
+        </div>
+
+    </div>
+
+</div>
 
 
 <div class="ribbon">
@@ -2077,7 +2253,7 @@ function montarVitrine(){
                 >
 
 
-                    <div class="img-wrap galeria-produto">
+                    <div class="img-wrap galeria-produto" onclick="abrirDetalhesProduto(${i})">
 
 
                         ${
@@ -2119,7 +2295,7 @@ function montarVitrine(){
 
                                     class="seta-galeria seta-esquerda"
 
-                                    onclick="mudarFoto(${i},-1)"
+                                    onclick="event.stopPropagation(); mudarFoto(${i},-1)"
 
                                     type="button"
 
@@ -2132,7 +2308,7 @@ function montarVitrine(){
 
                                     class="seta-galeria seta-direita"
 
-                                    onclick="mudarFoto(${i},1)"
+                                    onclick="event.stopPropagation(); mudarFoto(${i},1)"
 
                                     type="button"
 
@@ -2152,12 +2328,12 @@ function montarVitrine(){
                     <div class="card-body">
 
 
-                        <h3>
+                        <h3 onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">
                             ${escaparHTML(p.nome)}
                         </h3>
 
 
-                        <div class="desc">
+                        <div class="desc" onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">
                             ${escaparHTML(p.descricao)}
                         </div>
 
@@ -2304,6 +2480,177 @@ function montarVitrine(){
 
 
     aplicarFiltros();
+
+}
+
+
+/* =========================================================
+   ABRIR / FECHAR PÁGINA DETALHADA DO PRODUTO
+========================================================= */
+
+function abrirDetalhesProduto(i){
+
+    const p = PRODUTOS[i];
+    if(!p) return;
+
+    const modal = document.getElementById("modalProduto");
+    const conteudo = document.getElementById("modalConteudoDetalhe");
+
+    const imagemPrincipal = (p.imagens && p.imagens[0]) || "https://via.placeholder.com/600x750?text=LaLabela";
+    const cores = p.cores || [];
+    const tamanhos = p.tamanhos || [];
+
+    conteudo.innerHTML = `
+
+        <div class="modal-img-wrap">
+            <img src="${escaparHTML(imagemPrincipal)}" alt="${escaparHTML(p.nome)}">
+        </div>
+
+        <div class="modal-info">
+            <h2>${escaparHTML(p.nome)}</h2>
+            <div class="preco-grande">${formatarPreco(p.preco)}</div>
+            <div class="descricao-completa">${escaparHTML(p.descricao || "Peça selecionada com carinho para compor o seu look com elegância.")}</div>
+
+            <div class="opcoes-produto" style="margin-top:10px;">
+                ${
+                    cores.length
+                    ? `
+                        <div>
+                            <label>Cor</label>
+                            <select id="modal-cor">
+                                <option value="">Selecione a cor</option>
+                                ${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}
+                            </select>
+                        </div>
+                      `
+                    : ""
+                }
+
+                ${
+                    tamanhos.length
+                    ? `
+                        <div>
+                            <label>Tamanho</label>
+                            <select id="modal-tamanho">
+                                <option value="">Selecione o tamanho</option>
+                                ${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}
+                            </select>
+                        </div>
+                      `
+                    : ""
+                }
+            </div>
+
+            <div class="modal-acoes">
+                <button class="btn-comprar-grande" onclick="adicionarDoModal(${i})">
+                    Adicionar à Sacola
+                </button>
+            </div>
+        </div>
+
+    `;
+
+    // Montar sugestões de produtos parecidos (mesma categoria ou outros produtos aleatórios)
+    renderizarSugestoes(i);
+
+    modal.classList.add("aberto");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+function fecharDetalhesProduto(){
+    document.getElementById("modalProduto").classList.remove("aberto");
+}
+
+
+function renderizarSugestoes(indiceAtual){
+
+    const gridSugestoes = document.getElementById("gridSugestoes");
+    const produtoAtual = PRODUTOS[indiceAtual];
+
+    // Filtrar produtos parecidos (mesma categoria ou apenas diferentes do atual)
+    const parecidos = PRODUTOS.filter((p, index) => {
+        if(index === indiceAtual) return false;
+        if(produtoAtual.categoria && p.categoria === produtoAtual.categoria) return true;
+        return true;
+    }).slice(0, 2); // Pega até 2 sugestões
+
+    if(parecidos.length === 0){
+        gridSugestoes.innerHTML = "<p style='text-align:center; color:#888;'>Nenhuma sugestão no momento.</p>";
+        return;
+    }
+
+    gridSugestoes.innerHTML = parecidos.map((p) => {
+        // Encontrar o índice real deste produto no array global PRODUTOS
+        const realIndex = PRODUTOS.findIndex(prod => prod.id === p.id || prod.nome === p.nome);
+
+        const img = (p.imagens && p.imagens[0]) || "";
+
+        return `
+            <div class="card" onclick="abrirDetalhesProduto(${realIndex})">
+                <div class="img-wrap">
+                    <img src="${escaparHTML(img)}" alt="${escaparHTML(p.nome)}">
+                </div>
+                <div class="card-body">
+                    <h3>${escaparHTML(p.nome)}</h3>
+                    <div class="price-row">
+                        <span class="price">${formatarPreco(p.preco)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join("");
+
+}
+
+
+function adicionarDoModal(i){
+
+    const p = PRODUTOS[i];
+    if(!p) return;
+
+    const corSelect = document.getElementById("modal-cor");
+    const tamSelect = document.getElementById("modal-tamanho");
+
+    const cor = corSelect ? corSelect.value.trim() : "";
+    const tamanho = tamSelect ? tamSelect.value.trim() : "";
+
+    let estoqueDisponivel = Number(p.estoque) || 999;
+
+    if(Array.isArray(p.estoqueVariacoes) && p.estoqueVariacoes.length > 0 && (cor || tamanho)){
+        const varEnc = p.estoqueVariacoes.find(v => {
+            return String(v.cor||"").toLowerCase() === cor.toLowerCase() && String(v.tamanho||"").toLowerCase() === tamanho.toLowerCase();
+        });
+        if(varEnc){
+            estoqueDisponivel = Number(varEnc.quantidade) || 0;
+        }
+    }
+
+    const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
+    const qtdAtual = existente ? existente.qtd : 0;
+
+    if((qtdAtual + 1) > estoqueDisponivel){
+        alert(`Ops! Quantidade indisponível em estoque.`);
+        return;
+    }
+
+    if(existente){
+        existente.qtd += 1;
+    } else {
+        carrinho.push({
+            nome: p.nome,
+            preco: p.preco,
+            estoque: estoqueDisponivel,
+            imagem: p.imagens && p.imagens.length ? p.imagens[0] : "",
+            qtd: 1,
+            cor: cor,
+            tamanho: tamanho
+        });
+    }
+
+    atualizarCarrinho();
+    fecharDetalhesProduto();
+    openCart();
 
 }
 

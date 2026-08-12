@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Painel LaLabela Boutique</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      color: #222;
+    }
+
+    header {
+      background: #ed1764;
+      color: white;
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 25px;
+      margin-bottom: 5px;
+    }
+
+    header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .card strong {
+      display: block;
+      font-size: 25px;
+      color: #ed1764;
+      margin-bottom: 5px;
+    }
+
+    .card span {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .section h2 {
+      margin-bottom: 18px;
+      font-size: 20px;
+    }
+
+    .button {
+      border: none;
+      background: #ed1764;
+      color: white;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      opacity: 0.9;
+    }
+
+    .product {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .product:last-child {
+      border-bottom: none;
+    }
+
+    .product img {
+      width: 75px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #eee;
+    }
+
+    .product-info {
+      flex: 1;
+    }
+
+    .product-info h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .product-info p {
+      color: #ed1764;
+      font-weight: bold;
+    }
+
+    .edit {
+      background: #222;
+      color: white;
+      border: none;
+      padding: 9px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .product {
+        align-items: flex-start;
+      }
+
+      .product img {
+        width: 65px;
+        height: 80px;
+      }
+
+      .edit {
+        padding: 8px 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>LaLabela Boutique</h1>
+    <p>Painel administrativo</p>
+  </header>
+
+  <main class="container">
+
+    <div class="dashboard">
+
+      <div class="card">
+        <strong id="totalProdutos">0</strong>
+        <span>Produtos</span>
+      </div>
+
+      <div class="card">
+        <strong>R$ 0,00</strong>
+        <span>Vendas</span>
+      </div>
+
+      <div class="card">
+        <strong>0</strong>
+        <span>Pedidos</span>
+      </div>
+
+    </div>
+
+    <div class="section">
+
+      <h2>Produtos</h2>
+
+      <button class="button" onclick="adicionarProduto()">
+        + Adicionar produto
+      </button>
+
+      <div id="listaProdutos" style="margin-top:20px;"></div>
+
+    </div>
+
+  </main>
+
+  <script>
+
+    const produtos = [
+      {
+        nome: "Conjunto Zandeya",
+        preco: 69.90,
+        imagem: "https://i.postimg.cc/y8YzytK6/IMG-7740.jpg"
+      }
+    ];
+
+    function carregarProdutos() {
+
+      const lista = document.getElementById("listaProdutos");
+
+      lista.innerHTML = "";
+
+      produtos.forEach((produto, index) => {
+
+        lista.innerHTML += `
+
+          <div class="product">
+
+            <img
+              src="${produto.imagem}"
+              alt="${produto.nome}"
+            >
+
+            <div class="product-info">
+
+              <h3>${produto.nome}</h3>
+
+              <p>
+                R$ ${produto.preco.toFixed(2).replace(".", ",")}
+              </p>
+
+            </div>
+
+            <button
+              class="edit"
+              onclick="editarProduto(${index})"
+            >
+              Editar
+            </button>
+
+          </div>
+
+        `;
+
+      });
+
+      document.getElementById("totalProdutos").innerText =
+        produtos.length;
+    }
+
+    function adicionarProduto() {
+
+      alert(
+        "Aqui vamos colocar o formulário para adicionar produtos."
+      );
+
+    }
+
+    function editarProduto(index) {
+
+      alert(
+        "Aqui vamos colocar a edição do produto: " +
+        produtos[index].nome
+      );
+
+    }
+
+    carregarProdutos();
+
+  </script>
+
+</body>
+</html>

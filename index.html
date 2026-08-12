@@ -1718,7 +1718,7 @@ header{
         <div class="ship-block">
 
             <label>
-                Calcular frete — entrega a partir de São João/PR
+                Opção de Entrega (Paranavaí e São João do Caiuá)
             </label>
 
             <select
@@ -1733,8 +1733,14 @@ header{
 
         </div>
 
+        <!-- CAMPO DE HORÁRIO PREFERENCIAL -->
+        <div class="ship-block" style="margin-top: 10px;">
+            <label>Horário Preferencial para Entrega</label>
+            <input type="text" id="obsHorario" placeholder="Ex: Período da tarde, após as 14h" style="width:100%; padding:10px 12px; border:1px solid var(--line); font-family:'Jost'; font-size:.9rem; border-radius:4px;">
+        </div>
 
-        <div class="totals">
+
+        <div class="totals" style="margin-top: 10px;">
 
 
             <div class="payment-block">
@@ -1782,7 +1788,7 @@ header{
             <div class="row">
 
                 <span>
-                    Frete
+                    Frete / Taxa
                 </span>
 
                 <span id="freightVal">
@@ -1860,7 +1866,7 @@ let categoriaAtual = "todos";
 
 
 /* =========================================================
-   FRETES
+   FRETES EXCLUSIVOS PARANAVAÍ E SÃO JOÃO DO CAIUÁ
 ========================================================= */
 
 const FRETE_OPCOES = [
@@ -1871,34 +1877,34 @@ const FRETE_OPCOES = [
         gratisAcima:0,
         consultar:false,
         diaSemana:null,
-        nota:"Retirada disponível somente em Paranavaí. Combine o horário pelo WhatsApp."
+        nota:"Retirada disponível em Paranavaí. Combinaremos o horário."
     },
 
     {
-        label:"Entrega em Paranavaí/PR",
+        label:"Entrega Expressa em Paranavaí/PR",
         valor:10,
         gratisAcima:0,
         consultar:false,
         diaSemana:null,
-        nota:"Entrega expressa: até 2 horas."
+        nota:"Entrega em até 2 horas na cidade."
     },
 
     {
         label:"Entrega em São João do Caiuá/PR",
-        valor:20,
+        valor:15,
         gratisAcima:0,
         consultar:false,
         diaSemana:0,
-        nota:"Entrega semanal, sempre aos domingos."
+        nota:"Entrega em até 1 dia útil."
     },
 
     {
-        label:"Outras cidades e regiões (consultar)",
+        label:"Outras regiões (consultar taxa)",
         valor:0,
         gratisAcima:0,
         consultar:true,
         diaSemana:null,
-        nota:"Envie sua cidade pelo WhatsApp para consultarmos o valor do frete."
+        nota:"Informe sua cidade pelo WhatsApp para cálculo."
     }
 
 ];
@@ -3237,18 +3243,6 @@ function renderTotals(){
         : formatarPreco(frete);
 
 
-    if(
-        opcao.gratisAcima > 0 &&
-        subtotal >= opcao.gratisAcima
-    ){
-
-        frete = 0;
-
-        freteTexto = "Grátis";
-
-    }
-
-
     if(opcao.consultar){
 
         freteTexto =
@@ -3259,29 +3253,6 @@ function renderTotals(){
 
     let notaTexto =
         opcao.nota || "";
-
-
-    if(
-        opcao.diaSemana !== null &&
-        opcao.diaSemana !== undefined
-    ){
-
-        const proximaData =
-            proximaDataParaDiaSemana(
-                opcao.diaSemana
-            );
-
-
-        notaTexto +=
-            ` Próxima entrega: ${
-                formatarDataCurta(proximaData)
-            } (${
-                NOMES_DIAS_SEMANA[
-                    opcao.diaSemana
-                ]
-            }).`;
-
-    }
 
 
     document.getElementById(
@@ -3366,159 +3337,81 @@ function closeCart(){
 
 
 /* =========================================================
-   WHATSAPP
+   WHATSAPP & SALVAR PEDIDO NO FIREBASE
 ========================================================= */
 
-function finalizarNoWhatsapp(){
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+window.finalizarNoWhatsapp = async function(){
 
     if(carrinho.length === 0){
         return;
     }
 
-
-    const pagamento =
-        document.getElementById(
-            "paymentSelect"
-        ).value;
-
-
+    const pagamento = document.getElementById("paymentSelect").value;
     if(!pagamento){
-
-        alert(
-            "Selecione uma forma de pagamento."
-        );
-
+        alert("Selecione uma forma de pagamento.");
         return;
-
     }
 
+    const idx = Number(document.getElementById("shipSelect").value || 0);
+    const opcao = FRETE_OPCOES[idx];
+    const subtotal = getSubtotal();
+    let frete = opcao.valor;
+    const obsHorario = document.getElementById("obsHorario").value.trim();
 
-    const idx =
-        Number(
-            document.getElementById(
-                "shipSelect"
-            ).value || 0
-        );
+    // Pedir dados básicos da cliente para o registro no painel
+    const nomeCliente = prompt("Informe seu Nome Completo para a entrega:") || "Cliente";
+    const whatsappCliente = prompt("Informe seu WhatsApp com DDD (ex: 44999999999):") || "";
+    const enderecoCliente = prompt("Informe seu Endereço (Rua, Número, Bairro e Cidade):") || "Paranavaí/PR";
 
-
-    const opcao =
-        FRETE_OPCOES[idx];
-
-
-    const subtotal =
-        getSubtotal();
-
-
-    let frete =
-        opcao.valor;
-
-
-    if(
-        opcao.gratisAcima > 0 &&
-        subtotal >= opcao.gratisAcima
-    ){
-
-        frete = 0;
-
-    }
-
-
-    let msg =
-        "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
-
+    let msg = "Olá, LaLabela! Quero finalizar meu pedido:\n\n";
 
     carrinho.forEach(item => {
-
-        msg +=
-            `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
-
-
-        if(item.cor){
-
-            msg +=
-                `   Cor: ${item.cor}\n`;
-
-        }
-
-
-        if(item.tamanho){
-
-            msg +=
-                `   Tamanho: ${item.tamanho}\n`;
-
-        }
-
-
+        msg += `• ${item.nome} — Qtd: ${item.qtd} — ${formatarPreco(item.preco)} un.\n`;
+        if(item.cor) msg += `   Cor: ${item.cor}\n`;
+        if(item.tamanho) msg += `   Tamanho: ${item.tamanho}\n`;
         msg += "\n";
-
     });
 
+    msg += `Subtotal: ${formatarPreco(subtotal)}`;
+    msg += `\nEntrega: ${opcao.label}`;
+    if(obsHorario) msg += `\nHorário Preferencial: ${obsHorario}`;
+    msg += `\nFrete: ${frete === 0 ? "Grátis" : formatarPreco(frete)}`;
+    msg += `\nTotal: ${formatarPreco(subtotal + frete)}`;
+    msg += `\nForma de Pagamento: ${pagamento}`;
 
-    msg +=
-        `Subtotal: ${formatarPreco(subtotal)}`;
-
-
-    msg +=
-        `\nEntrega: ${opcao.label}`;
-
-
-    if(
-        opcao.diaSemana !== null &&
-        opcao.diaSemana !== undefined
-    ){
-
-        const proximaData =
-            proximaDataParaDiaSemana(
-                opcao.diaSemana
-            );
-
-
-        msg +=
-            ` (próxima entrega: ${formatarDataCurta(proximaData)} - ${NOMES_DIAS_SEMANA[opcao.diaSemana]})`;
-
+    // Salvar pedido automaticamente no Firestore para aparecer no Painel da Thay
+    try {
+        const db = window.firebaseDB;
+        if(db){
+            await addDoc(collection(db, "pedidos"), {
+                nome: nomeCliente,
+                whatsapp: whatsappCliente,
+                endereco: enderecoCliente,
+                cidade: opcao.label.includes("São João") ? "São João do Caiuá" : "Paranavaí",
+                itens: carrinho,
+                subtotal: subtotal,
+                frete: frete,
+                total: subtotal + frete,
+                pagamento: pagamento,
+                statusPagamento: "Pendente",
+                obsHorario: obsHorario || "Não informado",
+                status: "Pendente",
+                criadoEm: serverTimestamp()
+            });
+        }
+    } catch(e) {
+        console.error("Erro ao salvar pedido:", e);
     }
 
-
-    if(opcao.consultar){
-
-        msg +=
-            "\nFrete: a combinar";
-
-        msg +=
-            "\n\nVou passar minha cidade para calcularmos o frete.";
-
-    }else{
-
-        msg +=
-            `\nFrete: ${
-                frete === 0
-                ? "Grátis"
-                : formatarPreco(frete)
-            }`;
-
-        msg +=
-            `\nTotal: ${
-                formatarPreco(
-                    subtotal + frete
-                )
-            }`;
-
-    }
-
-
-    msg +=
-        `\nForma de pagamento: ${pagamento}`;
-
-
-    const url =
-        `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(msg)}`;
-
-
-    window.open(
-        url,
-        "_blank"
-    );
-
+    const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank");
 }
 
 
@@ -3527,9 +3420,7 @@ function finalizarNoWhatsapp(){
 ========================================================= */
 
 function pesquisarProdutos(){
-
     aplicarFiltros();
-
 }
 
 
@@ -3856,98 +3747,6 @@ window.firebaseAuth =
 
 
 /* =========================================================
-   LOGIN
-========================================================= */
-
-window.fazerLoginFirebase =
-    async function(email, senha){
-
-        try{
-
-            const resultado =
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    senha
-                );
-
-
-            console.log(
-                "Login realizado com sucesso!"
-            );
-
-
-            return resultado.user;
-
-        }catch(erro){
-
-            console.error(
-                "Erro ao fazer login:",
-                erro
-            );
-
-            throw erro;
-
-        }
-
-    };
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-window.sairFirebase =
-    async function(){
-
-        try{
-
-            await signOut(auth);
-
-            console.log(
-                "Usuário saiu da conta."
-            );
-
-        }catch(erro){
-
-            console.error(
-                "Erro ao sair:",
-                erro
-            );
-
-        }
-
-    };
-
-
-/* =========================================================
-   LOGIN OBSERVER
-========================================================= */
-
-onAuthStateChanged(
-    auth,
-    usuario => {
-
-        if(usuario){
-
-            console.log(
-                "Usuário logado:",
-                usuario.email
-            );
-
-        }else{
-
-            console.log(
-                "Nenhum usuário logado."
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
    CARREGAR PRODUTOS DO PAINEL
 ========================================================= */
 
@@ -3997,12 +3796,6 @@ function carregarProdutosDoFirebase(){
                         doc =>
                             normalizarProduto(doc)
                     );
-
-
-                console.log(
-                    "Produtos carregados:",
-                    PRODUTOS
-                );
 
 
                 montarVitrine();
@@ -4119,15 +3912,6 @@ function mostrarErroFirebase(erro){
 ========================================================= */
 
 carregarProdutosDoFirebase();
-
-
-console.log(
-    "Firebase conectado!"
-);
-
-console.log(
-    "Vitrine conectada à coleção Firestore: produtos"
-);
 
 </script>
 

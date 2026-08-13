@@ -1891,10 +1891,11 @@ const hojeStr = new Date().toISOString().split('T')[0];
 pedidos.forEach(p => {
 const st = (p.status || "").toLowerCase();
 const pag = (p.statusPagamento || "").toLowerCase();
+const ehNaoPago = pag.includes('nao') || pag.includes('não') || pag.includes('pendente') || pag.includes('aguardando');
 
 if(st === 'despachado' || st === 'enviado') {
 countDespachados++;
-} else if(pag === 'nao pago' || pag === 'pendente') {
+} else if(ehNaoPago) {
 countNaoPagos++;
 } else if(st === 'finalizado' || st === 'entregue') {
 countFinalizados++;
@@ -1904,7 +1905,6 @@ countAbertos++;
 
 // Faturamento do dia
 if(p.criadoEm) {
-// Se houver data, valida se é hoje
 let dataPed = p.criadoEm.toDate ? p.criadoEm.toDate().toISOString().split('T')[0] : '';
 if(dataPed === hojeStr) {
 faturamentoHoje += Number(p.total || p.valor || 0);
@@ -1938,7 +1938,7 @@ return st === 'despachado' || st === 'enviado';
 titulo.textContent = "Pedidos Não Pagos";
 filtrados = pedidos.filter(p => {
 const pag = (p.statusPagamento || "").toLowerCase();
-return pag === 'nao pago' || pag === 'pendente';
+return pag.includes('nao') || pag.includes('não') || pag.includes('pendente') || pag.includes('aguardando');
 });
 } else if(filtro === 'finalizado') {
 titulo.textContent = "Pedidos Finalizados";
@@ -2549,11 +2549,6 @@ return;
 
 }
 
-
-/*
-   Mantém quantidades já cadastradas
-   quando possível.
-*/
 
 const anteriores =
 new Map(
@@ -3187,10 +3182,6 @@ try{
 const imagens = [];
 
 
-/*
-   FOTOS JÁ EXISTENTES
-*/
-
 for(
 const foto of fotosAtuais
 ){
@@ -3226,10 +3217,6 @@ url
 btn.textContent =
 "Salvando produto...";
 
-
-/* =====================================================
-   ESTOQUE SALVO NO FIRESTORE
-===================================================== */
 
 const estoqueNormalizado =
 estoqueVariacoes
@@ -3292,8 +3279,6 @@ imagens:imagens,
 cores:cores,
 
 tamanhos:tamanhos,
-
-/* NOVOS CAMPOS */
 
 estoqueVariacoes:
 estoqueNormalizado,
@@ -3550,8 +3535,6 @@ document
 )
 .value = "";
 
-
-/* NOVO */
 
 estoqueVariacoes =
 [];

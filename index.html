@@ -1442,12 +1442,19 @@ function verificarFretePorCep(cep, dadosViaCep = null){
         } else if(cidade.includes("são joão do caiuá") || cidade.includes("sao joao do caiua")){
             valorFreteAtual = 20.00;
             
+            // Cálculo da data do próximo domingo
             const hoje = new Date();
-            const diaSemana = hoje.getDay(); 
-            let diasAtéDomingo = (0 - diaSemana + 7) % 7;
-            if(diasAtéDomingo === 0) diasAtéDomingo = 7;
+            const diaSemana = hoje.getDay(); // 0 = Domingo
+            let diasAteDomingo = (0 - diaSemana + 7) % 7;
+            if(diasAteDomingo === 0) {
+                diasAteDomingo = 7; // Se hoje for domingo, calcula para o próximo domingo (daqui a 7 dias)
+            }
             
-            freteValEl.innerHTML = `R$ 20,00 (Entrega neste domingo - em ${diasAtéDomingo} dia${diasAtéDomingo > 1 ? 's' : ''})`;
+            const dataDomingo = new Date(hoje);
+            dataDomingo.setDate(hoje.getDate() + diasAteDomingo);
+            const dataFormatada = dataDomingo.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+            
+            freteValEl.innerHTML = `R$ 20,00 (Entrega em ${dataFormatada})`;
             renderTotals();
             return;
         }

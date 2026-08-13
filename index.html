@@ -1746,6 +1746,7 @@ function finalizarPedidoSite(){
 }
 
 function pesquisarProdutos(){ aplicarFiltros(); }
+
 function aplicarFiltros(){
     const campo = document.getElementById("campoPesquisa");
     const termo = campo ? campo.value.toLowerCase().trim() : "";
@@ -1755,10 +1756,16 @@ function aplicarFiltros(){
         const index = Number(card.dataset.produtoIndex);
         const produto = PRODUTOS[index];
         if(!produto) return;
-        const texto = `${produto.nome} ${produto.descricao} ${produto.categoria} ${produto.tag}`.toLowerCase();
-        const correspondePesquisa = !termo || texto.includes(termo);
+
+        const nomeProd = String(produto.nome || "").toLowerCase();
+        const descProd = String(produto.descricao || "").toLowerCase();
+        const catProd = String(produto.categoria || "").toLowerCase();
+        const tagProd = String(produto.tag || "").toLowerCase();
+
+        const correspondePesquisa = !termo || nomeProd.includes(termo) || descProd.includes(termo) || catProd.includes(termo) || tagProd.includes(termo);
         const categoria = categoriaAtual.toLowerCase();
-        const correspondeCategoria = categoria === "todos" || String(produto.categoria || "").toLowerCase().includes(categoria) || String(produto.tag || "").toLowerCase().includes(categoria);
+        const correspondeCategoria = categoria === "todos" || catProd.includes(categoria) || tagProd.includes(categoria);
+
         card.style.display = correspondePesquisa && correspondeCategoria ? "" : "none";
     });
 }

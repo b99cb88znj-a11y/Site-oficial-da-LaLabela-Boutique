@@ -1366,6 +1366,11 @@ function salvarPerfilCliente(){
     perfilCliente.whatsapp = document.getElementById("perfilWhatsapp").value.trim();
     perfilCliente.email = document.getElementById("perfilEmail").value.trim();
     localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    
+    if (typeof window.salvarClienteNoFirebase === "function") {
+        window.salvarClienteNoFirebase(perfilCliente);
+    }
+
     alert("Perfil atualizado com sucesso!");
     fecharModalPerfil();
 }
@@ -1442,12 +1447,11 @@ function verificarFretePorCep(cep, dadosViaCep = null){
         } else if(cidade.includes("são joão do caiuá") || cidade.includes("sao joao do caiua")){
             valorFreteAtual = 20.00;
             
-            // Cálculo da data do próximo domingo
             const hoje = new Date();
-            const diaSemana = hoje.getDay(); // 0 = Domingo
+            const diaSemana = hoje.getDay(); 
             let diasAteDomingo = (0 - diaSemana + 7) % 7;
             if(diasAteDomingo === 0) {
-                diasAteDomingo = 7; // Se hoje for domingo, calcula para o próximo domingo (daqui a 7 dias)
+                diasAteDomingo = 7; 
             }
             
             const dataDomingo = new Date(hoje);
@@ -1779,6 +1783,11 @@ function finalizarPedidoSite(){
 
     perfilCliente.nome = nome; perfilCliente.cpf = cpf; perfilCliente.email = email;
     localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    
+    if (typeof window.salvarClienteNoFirebase === "function") {
+        window.salvarClienteNoFirebase(perfilCliente);
+    }
+
     alert("Pedido gerado com sucesso!");
     closeCart();
 }
@@ -1819,7 +1828,7 @@ carregarPerfilNaTela();
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
@@ -1832,6 +1841,26 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+window.salvarClienteNoFirebase = async function(dadosCliente) {
+    try {
+        const idUnico = dadosCliente.cpf ? dadosCliente.cpf.replace(/\D/g, "") : dadosCliente.email;
+        if (!idUnico) return;
+
+        await setDoc(doc(db, "clientes", idUnico), {
+            nome: dadosCliente.nome || "",
+            cpf: dadosCliente.cpf || "",
+            whatsapp: dadosCliente.whatsapp || "",
+            email: dadosCliente.email || "",
+            enderecos: dadosCliente.enderecos || [],
+            atualizadoEm: new Date().toISOString()
+        }, { merge: true });
+
+        console.log("Cliente salvo com sucesso no Firestore!");
+    } catch (erro) {
+        console.error("Erro ao salvar cliente:", erro);
+    }
+};
 
 function carregarProdutosDoFirebase(){
     const produtosRef = collection(db, "produtos");

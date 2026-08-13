@@ -1669,7 +1669,6 @@ function normalizarProduto(doc){
 
     let preco = Number(dados.preco ?? dados.preço ?? dados.valor ?? 0) || 0;
     
-    // Leitura correta do estoque do Firebase (aceita 'estoque', 'quantidade' ou 'qtd')
     let estoqueBruto = dados.estoque !== undefined ? dados.estoque : (dados.quantidade !== undefined ? dados.quantidade : (dados.qtd !== undefined ? dados.qtd : 0));
     let estoque = Number(estoqueBruto);
     if(isNaN(estoque)) estoque = 0;
@@ -1745,12 +1744,22 @@ function montarVitrine(){
                     <h3 onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.nome)}</h3>
                     <div class="desc" onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.descricao)}</div>
                     
-                    ${cores.length || tamanhos.length ? `
-                        <div class="opcoes-produto" onclick="event.stopPropagation()">
-                            ${cores.length ? `<div><label>Cor — Opcional</label><select id="cor-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
-                            ${tamanhos.length ? `<div><label>Tamanho — Opcional</label><select id="tamanho-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
+                    <div class="opcoes-produto" onclick="event.stopPropagation()">
+                        <div>
+                            <label>Cor *</label>
+                            <select id="cor-${i}">
+                                <option value="">Selecione a cor</option>
+                                ${cores.length ? cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("") : `<option value="Única">Cor única</option>`}
+                            </select>
                         </div>
-                    ` : ""}
+                        <div>
+                            <label>Tamanho *</label>
+                            <select id="tamanho-${i}">
+                                <option value="">Selecione o tamanho</option>
+                                ${tamanhos.length ? tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("") : `<option value="Único">Tamanho único</option>`}
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="price">${formatarPreco(p.preco)}</div>
                     <button class="add-btn" id="add-${i}" onclick="adicionarAoCarrinho(${i})" type="button">Adicionar</button>
@@ -1785,12 +1794,22 @@ function abrirDetalhesProduto(i){
             <div class="preco-grande">${formatarPreco(p.preco)}</div>
             <div class="descricao-completa">${escaparHTML(p.descricao || "Peça selecionada com carinho.")}</div>
             
-            ${cores.length || tamanhos.length ? `
-                <div class="opcoes-produto">
-                    ${cores.length ? `<div><label>Cor — Opcional</label><select id="cor-modal-${i}"><option value="">Não informar</option>${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select></div>` : ""}
-                    ${tamanhos.length ? `<div><label>Tamanho — Opcional</label><select id="tamanho-modal-${i}"><option value="">Não informar</option>${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select></div>` : ""}
+            <div class="opcoes-produto">
+                <div>
+                    <label>Cor *</label>
+                    <select id="cor-modal-${i}">
+                        <option value="">Selecione a cor</option>
+                        ${cores.length ? cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("") : `<option value="Única">Cor única</option>`}
+                    </select>
                 </div>
-            ` : ""}
+                <div>
+                    <label>Tamanho *</label>
+                    <select id="tamanho-modal-${i}">
+                        <option value="">Selecione o tamanho</option>
+                        ${tamanhos.length ? tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("") : `<option value="Único">Tamanho único</option>`}
+                    </select>
+                </div>
+            </div>
 
             <div class="modal-acoes">
                 <button class="btn-comprar-grande" onclick="adicionarDoModal(${i})">Adicionar à Sacola</button>
@@ -1813,10 +1832,21 @@ function adicionarDoModal(i){
     const cor = corEl ? corEl.value.trim() : "";
     const tamanho = tamEl ? tamEl.value.trim() : "";
 
+    if(!cor){
+        alert("Por favor, selecione a cor do produto.");
+        if(corEl) corEl.focus();
+        return;
+    }
+    if(!tamanho){
+        alert("Por favor, selecione o tamanho do produto.");
+        if(tamEl) tamEl.focus();
+        return;
+    }
+
     const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
     const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
 
-    if (qtdAtualNoCarrinho + 1 > p.estoque) {
+    if (p.estoque > 0 && qtdAtualNoCarrinho + 1 > p.estoque) {
         alert(`Estoque insuficiente! Apenas ${p.estoque} unidade(s) disponível(is) para este produto.`);
         return;
     }
@@ -1851,10 +1881,21 @@ function adicionarAoCarrinho(i){
     const cor = corElement ? corElement.value.trim() : "";
     const tamanho = tamanhoElement ? tamanhoElement.value.trim() : "";
 
+    if(!cor){
+        alert("Por favor, selecione a cor do produto.");
+        if(corElement) corElement.focus();
+        return;
+    }
+    if(!tamanho){
+        alert("Por favor, selecione o tamanho do produto.");
+        if(tamanhoElement) tamanhoElement.focus();
+        return;
+    }
+
     const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
     const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
 
-    if (qtdAtualNoCarrinho + 1 > p.estoque) {
+    if (p.estoque > 0 && qtdAtualNoCarrinho + 1 > p.estoque) {
         alert(`Estoque insuficiente! Apenas ${p.estoque} unidade(s) disponível(is) para este produto.`);
         return;
     }
@@ -1881,7 +1922,7 @@ function alterarQtd(chave, delta){
     if(!item) return;
 
     if (delta > 0) {
-        if (item.qtd + delta > item.estoque) {
+        if (item.estoque > 0 && item.qtd + delta > item.estoque) {
             alert(`Estoque insuficiente! Apenas ${item.estoque} unidade(s) disponível(is) no estoque.`);
             return;
         }
@@ -1916,7 +1957,7 @@ function atualizarCarrinho(){
                     <img src="${escaparHTML(item.imagem)}" alt="${escaparHTML(item.nome)}">
                     <div class="item-info">
                         <span class="name">${escaparHTML(item.nome)}</span>
-                        <span class="unit-price">${formatarPreco(item.preco)} / un. ${item.cor ? `| Cor: ${escaparHTML(item.cor)}` : ""} ${item.tamanho ? `| Tam: ${escaparHTML(item.tamanho)}` : ""}</span>
+                        <span class="unit-price">${formatarPreco(item.preco)} / un. | Cor: ${escaparHTML(item.cor)} | Tam: ${escaparHTML(item.tamanho)}</span>
                         <div class="qty-row">
                             <button onclick="alterarQtd('${chave}', -1)" type="button">−</button>
                             <span>${item.qtd}</span>

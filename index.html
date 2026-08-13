@@ -64,6 +64,7 @@
     --ink:#000000;
     --gold:#E91E63;
     --line:rgba(42,36,32,0.14);
+    --radius:2px;
 }
 
 *{
@@ -189,6 +190,7 @@ header{
     color:#fff;
     border:none;
     padding:9px 12px;
+    border-radius:0px;
     font-family:'Jost',sans-serif;
     font-size:13px;
     font-weight:600;
@@ -209,6 +211,7 @@ header{
     font-size:11px;
     min-width:18px;
     height:18px;
+    border-radius:0px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -280,6 +283,10 @@ header{
     background:transparent;
 }
 
+.barra-pesquisa input::placeholder{
+    color:#999;
+}
+
 .barra-pesquisa button{
     width:100px;
     height:50px;
@@ -289,6 +296,8 @@ header{
     display:flex;
     align-items:center;
     justify-content:center;
+    padding:0;
+    margin:0;
     cursor:pointer;
 }
 
@@ -329,6 +338,11 @@ header{
     transition:transform .25s ease,box-shadow .25s ease;
     width:100%;
     overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 18px 34px -22px rgba(42,36,32,.35);
 }
 
 .card .img-wrap{
@@ -439,7 +453,14 @@ header{
     font-size:14px;
     font-weight:600;
     cursor:pointer;
+    border-radius:0px;
     margin-bottom:25px;
+    transition:all .2s ease;
+}
+
+.btn-voltar-home:hover{
+    background:#ed1760;
+    color:#fff;
 }
 
 .modal-conteudo-grid{
@@ -478,12 +499,26 @@ header{
 .modal-info h2{
     font-size:2.2rem;
     margin:0;
+    line-height:1.1;
 }
 
 .modal-info .preco-grande{
     font-size:1.6rem;
     font-weight:500;
     color:#ed1760;
+}
+
+.modal-info .descricao-completa{
+    font-size:0.95rem;
+    color:rgba(42,36,32,.75);
+    line-height:1.6;
+}
+
+.modal-acoes{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-top:15px;
 }
 
 .btn-comprar-grande{
@@ -497,6 +532,12 @@ header{
     text-transform:uppercase;
     cursor:pointer;
     text-align:center;
+    border-radius:0px;
+    transition:background .2s;
+}
+
+.btn-comprar-grande:hover{
+    background:#c21250;
 }
 
 .galeria-produto{
@@ -528,10 +569,16 @@ header{
     display:flex;
     align-items:center;
     justify-content:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
 }
 
-.seta-esquerda{ left:8px; }
-.seta-direita{ right:8px; }
+.seta-esquerda{
+    left:8px;
+}
+
+.seta-direita{
+    right:8px;
+}
 
 .opcoes-produto{
     display:flex;
@@ -557,6 +604,29 @@ header{
     font-size:.8rem;
     color:#222;
     border-radius:6px;
+}
+
+.opcoes-produto select:focus{
+    outline:none;
+    border-color:#ed1764;
+}
+
+.mensagem-produtos{
+    width:100%;
+    text-align:center;
+    padding:80px 20px;
+    color:#888;
+    font-size:1.15rem;
+    line-height:1.8;
+}
+
+.mensagem-produtos strong{
+    color:#E91E63;
+}
+
+.mensagem-produtos .icone{
+    font-size:38px;
+    margin-bottom:15px;
 }
 
 .overlay{
@@ -599,6 +669,7 @@ header{
     display:flex;
     align-items:center;
     justify-content:space-between;
+    flex:none;
     background:#fff;
 }
 
@@ -612,6 +683,8 @@ header{
     border:none;
     font-size:1.4rem;
     cursor:pointer;
+    color:#000;
+    line-height:1;
 }
 
 .drawer-body-scroll{
@@ -626,6 +699,7 @@ header{
 .drawer-items{
     display:flex;
     flex-direction:column;
+    gap:0;
     border-bottom:1px solid var(--line);
     padding-bottom:10px;
 }
@@ -649,6 +723,7 @@ header{
     width:64px;
     height:78px;
     object-fit:cover;
+    flex:none;
     border-radius:2px;
 }
 
@@ -682,6 +757,14 @@ header{
     border:1px solid var(--line);
     background:#fff;
     cursor:pointer;
+    font-size:.85rem;
+    line-height:1;
+}
+
+.qty-row span{
+    font-size:.85rem;
+    min-width:14px;
+    text-align:center;
 }
 
 .remove-btn{
@@ -689,16 +772,20 @@ header{
     border:none!important;
     color:var(--wine)!important;
     font-size:.72rem!important;
+    letter-spacing:.05em;
     text-transform:uppercase;
     cursor:pointer;
     text-decoration:underline;
     margin-left:auto;
+    align-self:flex-start;
+    width:auto!important;
 }
 
 .item-total{
     font-family:'Cormorant Garamond';
     font-size:1.1rem;
     font-weight:600;
+    white-space:nowrap;
 }
 
 .form-checkout-group{
@@ -712,8 +799,11 @@ header{
 
 .form-checkout-group label{
     font-size:.72rem;
+    letter-spacing:.09em;
     text-transform:uppercase;
     color:rgba(42,36,32,.75);
+    display:block;
+    margin-bottom:2px;
     font-weight:600;
 }
 
@@ -725,6 +815,7 @@ header{
     background:#fff;
     font-family:'Jost';
     font-size:.88rem;
+    color:#000;
 }
 
 .cep-row{
@@ -732,12 +823,16 @@ header{
     gap:8px;
 }
 
-.cep-row input{ flex:1; }
+.cep-row input{
+    flex:1;
+}
+
 .cep-row button{
     background:#ed1760;
     color:#fff;
     border:none;
     padding:0 12px;
+    font-size:.8rem;
     cursor:pointer;
 }
 
@@ -762,21 +857,30 @@ header{
     color:var(--wine);
     border-top:1px solid var(--line);
     padding-top:10px;
+    margin-top:4px;
 }
 
 .checkout-btn{
     display:flex;
     align-items:center;
     justify-content:center;
+    gap:10px;
     background:#ed1760;
     color:#fff;
     border:none;
     padding:15px 18px;
+    font-family:'Jost';
     font-size:.9rem;
+    letter-spacing:.05em;
     text-transform:uppercase;
     cursor:pointer;
+    transition:filter .2s ease;
     width:100%;
     margin-top:10px;
+}
+
+.checkout-btn:hover{
+    filter:brightness(.94);
 }
 
 .modal-sistema{
@@ -790,7 +894,9 @@ header{
     padding:20px;
 }
 
-.modal-sistema.aberto{ display:flex; }
+.modal-sistema.aberto{
+    display:flex;
+}
 
 .modal-sistema-box{
     background:#fff;
@@ -800,6 +906,14 @@ header{
     overflow-y:auto;
     padding:25px;
     position:relative;
+    border-radius:4px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.modal-sistema-box h2{
+    margin-top:0;
+    font-size:1.8rem;
+    color:#ed1760;
 }
 
 .fechar-modal-sistema{
@@ -810,20 +924,28 @@ header{
     border:none;
     font-size:24px;
     cursor:pointer;
+    color:#666;
 }
 
-.grupo-campo{ margin-bottom:14px; }
+.grupo-campo{
+    margin-bottom:14px;
+}
+
 .grupo-campo label{
     display:block;
     font-size:0.75rem;
     text-transform:uppercase;
     font-weight:600;
     margin-bottom:5px;
+    color:#333;
 }
-.grupo-campo input{
+
+.grupo-campo input, .grupo-campo select{
     width:100%;
     padding:10px;
     border:1px solid var(--line);
+    font-family:'Jost',sans-serif;
+    font-size:0.95rem;
 }
 
 .btn-acao-modal{
@@ -853,6 +975,7 @@ header{
     border:none;
     color:#ed1760;
     cursor:pointer;
+    font-size:0.8rem;
     text-decoration:underline;
     margin-left:8px;
 }
@@ -864,6 +987,22 @@ header{
     text-align:center;
 }
 
+.delivery-info h2{
+    font-size:1.7rem;
+    margin-bottom:14px;
+}
+
+.delivery-info p{
+    color:rgba(42,36,32,.75);
+    font-size:.96rem;
+    line-height:1.75;
+    margin:0 0 22px;
+}
+
+.delivery-info p strong{
+    color:var(--wine);
+}
+
 .whatsapp-link{
     display:inline-flex;
     align-items:center;
@@ -871,6 +1010,8 @@ header{
     background:#25D366;
     color:#fff;
     padding:12px 22px;
+    font-size:.85rem;
+    letter-spacing:.04em;
     text-transform:uppercase;
     text-decoration:none;
 }
@@ -883,6 +1024,28 @@ header{
     grid-template-columns:repeat(4,1fr);
     gap:30px;
     margin-top:50px;
+    text-align:left;
+}
+
+.rodape-coluna{
+    min-width:0;
+}
+
+.rodape-icone{
+    font-size:30px;
+    margin-bottom:10px;
+}
+
+.rodape-coluna h3{
+    font-size:17px;
+    margin:0 0 12px;
+    font-weight:600;
+}
+
+.rodape-coluna p{
+    font-size:14px;
+    margin:6px 0;
+    line-height:1.5;
 }
 
 .menu-categorias{
@@ -890,22 +1053,36 @@ header{
     top:0;
     left:0;
     width:280px;
+    max-width:85vw;
     height:100vh;
     background:#fff;
     z-index:99999;
     transform:translateX(-100%);
     transition:transform .3s ease;
+    box-shadow:8px 0 25px rgba(0,0,0,.18);
     padding:70px 20px 25px;
     overflow-y:auto;
 }
 
-.menu-categorias.aberto{ transform:translateX(0); }
+.menu-categorias.aberto{
+    transform:translateX(0);
+}
+
+.menu-categorias h2{
+    margin:0 0 20px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:28px;
+    font-weight:500;
+    color:#000;
+}
 
 .fechar-categorias{
     position:absolute;
     top:18px;
     right:18px;
-    background:none;
+    width:40px;
+    height:40px;
+    background:#fff;
     border:none;
     font-size:32px;
     color:#E91E63;
@@ -922,10 +1099,28 @@ header{
     width:100%;
     padding:14px 16px;
     background:#fff;
+    color:#000;
     border:1px solid #E91E63;
     text-align:left;
+    font-family:'Jost',sans-serif;
+    font-size:14px;
     cursor:pointer;
     border-radius:6px;
+    transition:.2s ease;
+}
+
+.lista-categorias button:hover,
+.lista-categorias button.ativa{
+    background:#F8BBD0;
+}
+
+.menu-divisor{
+    margin:20px 0 10px;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    color:#888;
+    letter-spacing:1px;
+    font-weight:600;
 }
 
 .fundo-categorias{
@@ -941,6 +1136,28 @@ header{
 .fundo-categorias.aberto{
     opacity:1;
     visibility:visible;
+}
+
+@media(max-width:700px){
+    .rodape{
+        grid-template-columns:repeat(2,1fr);
+        padding:35px 20px 25px;
+        gap:30px 15px;
+    }
+}
+
+@media(max-width:560px){
+    .nav{
+        height:68px;
+        padding:0 10px;
+    }
+    .brand{
+        font-size:1.8rem;
+    }
+    .grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+    }
 }
 </style>
 </head>
@@ -993,17 +1210,37 @@ header{
     </div>
 </div>
 
+<div class="ribbon">
+    <svg viewBox="0 0 26 14" fill="none"><path d="M13 7C13 7 9 1 4 2C1 2.6 1 6 4 7C1 8 1 11.4 4 12C9 13 13 7 13 7ZM13 7C13 7 17 1 22 2C25 2.6 25 6 22 7C25 8 25 11.4 22 12C17 13 13 7 13 7Z" stroke="currentColor" stroke-width="1"/></svg>
+</div>
+
 <section class="delivery-info" id="entregas">
     <h2 class="serif">Entregas</h2>
-    <p>Fazemos entrega em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega calculada para o próximo domingo.</p>
+    <p>Fazemos entrega em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega calculada para o próximo domingo. Para outras cidades e regiões, consulte digitando seu CEP na sacola.</p>
     <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Dúvidas sobre frete no WhatsApp</a>
 </section>
 
 <footer class="rodape">
-    <div class="rodape-coluna"><h3>FALE CONOSCO</h3><p>(44) 99772-0350</p></div>
-    <div class="rodape-coluna"><h3>INSTAGRAM</h3><p>@lalabela_boutiquepvai</p></div>
-    <div class="rodape-coluna"><h3>ENTREGA EXPRESSA</h3><p>Paranavaí/PR & São João do Caiuá/PR</p></div>
-    <div class="rodape-coluna"><h3>CNPJ</h3><p>44.106.069/0001-70</p></div>
+    <div class="rodape-coluna">
+        <div class="rodape-icone"><i class="fa-brands fa-whatsapp"></i></div>
+        <h3>FALE CONOSCO</h3>
+        <p>(44) 99772-0350</p>
+    </div>
+    <div class="rodape-coluna">
+        <div class="rodape-icone"><i class="fa-brands fa-instagram"></i></div>
+        <h3>INSTAGRAM</h3>
+        <p>@lalabela_boutiquepvai</p>
+    </div>
+    <div class="rodape-coluna">
+        <div class="rodape-icone"><i class="fa-solid fa-truck"></i></div>
+        <h3>ENTREGA EXPRESSA</h3>
+        <p>Paranavaí/PR & São João do Caiuá/PR</p>
+    </div>
+    <div class="rodape-coluna">
+        <div class="rodape-icone"><i class="fa-solid fa-file-lines"></i></div>
+        <h3>CNPJ</h3>
+        <p>44.106.069/0001-70</p>
+    </div>
 </footer>
 
 <div class="fundo-categorias" id="fundoCategorias"></div>
@@ -1013,11 +1250,14 @@ header{
     <div class="lista-categorias">
         <button type="button" onclick="abrirModalPerfil()">👤 Meu Perfil e Endereços Salvos</button>
         <button type="button" onclick="abrirModalRastreio()">📦 Rastrear Pedido & Entregas</button>
-        <div style="margin:10px 0; font-size:0.75rem; text-transform:uppercase; color:#888; font-weight:600;">Categorias</div>
+        <div class="menu-divisor">Categorias de Produtos</div>
         <button type="button" onclick="filtrarCategoria('todos')">Todos</button>
         <button type="button" onclick="filtrarCategoria('Blusas')">Blusas</button>
         <button type="button" onclick="filtrarCategoria('Vestido')">Vestidos</button>
+        <button type="button" onclick="filtrarCategoria('Lançamento')">Lançamentos</button>
+        <button type="button" onclick="filtrarCategoria('Calça')">Calças</button>
         <button type="button" onclick="filtrarCategoria('Conjunto')">Conjuntos</button>
+        <button type="button" onclick="filtrarCategoria('Short')">Shorts</button>
         <button type="button" onclick="filtrarCategoria('Promoção')">Promoção</button>
     </div>
 </div>
@@ -1026,10 +1266,10 @@ header{
     <div class="modal-sistema-box">
         <button class="fechar-modal-sistema" onclick="fecharModalPerfil()">&times;</button>
         <h2>Meu Perfil</h2>
-        <div class="grupo-campo"><label>Seu Nome</label><input type="text" id="perfilNome" placeholder="Maria Silva"></div>
+        <div class="grupo-campo"><label>Seu Nome</label><input type="text" id="perfilNome" placeholder="Ex: Maria Silva"></div>
         <div class="grupo-campo"><label>CPF</label><input type="text" id="perfilCpf" placeholder="000.000.000-00"></div>
         <div class="grupo-campo"><label>WhatsApp</label><input type="text" id="perfilWhatsapp" placeholder="(44) 99999-9999"></div>
-        <div class="grupo-campo"><label>E-mail</label><input type="email" id="perfilEmail" placeholder="seu@email.com"></div>
+        <div class="grupo-campo"><label>E-mail (Obrigatório)</label><input type="email" id="perfilEmail" placeholder="seu@email.com"></div>
         <h3 style="margin-top:20px; font-size:1.2rem; color:#ed1760;">Endereços Salvos</h3>
         <div id="listaEnderecosSalvos"></div>
         <button class="btn-acao-modal" onclick="salvarPerfilCliente()">Salvar Alterações</button>
@@ -1040,7 +1280,7 @@ header{
     <div class="modal-sistema-box">
         <button class="fechar-modal-sistema" onclick="fecharModalRastreio()">&times;</button>
         <h2>Rastreio de Pedidos</h2>
-        <div class="grupo-campo"><label>Código ou E-mail</label><input type="text" id="inputBuscaRastreio" placeholder="Ex: #1024"></div>
+        <div class="grupo-campo"><label>Digite o Código do Pedido ou E-mail</label><input type="text" id="inputBuscaRastreio" placeholder="Ex: #1024 ou seu e-mail"></div>
         <button class="btn-acao-modal" onclick="consultarRastreio()">Consultar Status</button>
         <div id="resultadoRastreio" style="margin-top:20px;"></div>
     </div>
@@ -1055,25 +1295,33 @@ header{
     <div class="drawer-body-scroll">
         <div class="drawer-items" id="drawerItems"></div>
         <div class="form-checkout-group">
-            <label>Nome Completo *</label><input type="text" id="checkoutNome" required>
-            <label>CPF *</label><input type="text" id="checkoutCpf" required>
-            <label>E-mail *</label><input type="email" id="checkoutEmail" required>
-            <label>WhatsApp</label><input type="text" id="checkoutWhatsapp">
-            <label>CEP</label>
+            <label>Nome Completo (Obrigatório)</label>
+            <input type="text" id="checkoutNome" placeholder="Seu nome completo" required>
+            <label>CPF (Obrigatório)</label>
+            <input type="text" id="checkoutCpf" placeholder="000.000.000-00" required>
+            <label>E-mail (Obrigatório)</label>
+            <input type="email" id="checkoutEmail" placeholder="seu@email.com" required>
+            <label>WhatsApp</label>
+            <input type="text" id="checkoutWhatsapp" placeholder="(44) 99999-9999">
+            <label>Busca por CEP</label>
             <div class="cep-row">
                 <input type="text" id="checkoutCep" placeholder="00000-000" maxlength="9">
                 <button type="button" onclick="buscarCep()">Buscar</button>
             </div>
-            <label>Rua *</label><input type="text" id="checkoutRua">
-            <label>Número *</label><input type="text" id="checkoutNumero">
-            <label>Bairro *</label><input type="text" id="checkoutBairro">
-            <label>Complemento</label><input type="text" id="checkoutComplemento">
+            <label>Rua (Obrigatório)</label>
+            <input type="text" id="checkoutRua" placeholder="Nome da rua / avenida">
+            <label>Número (Obrigatório)</label>
+            <input type="text" id="checkoutNumero" placeholder="Ex: 123">
+            <label>Bairro (Obrigatório)</label>
+            <input type="text" id="checkoutBairro" placeholder="Bairro">
+            <label>Complemento</label>
+            <input type="text" id="checkoutComplemento" placeholder="Apto, Bloco, Casa (Opcional)">
         </div>
         <div class="form-checkout-group">
-            <label>Pagamento *</label>
+            <label>Forma de Pagamento (Direto no Site)</label>
             <select id="paymentSelect">
-                <option value="">Selecione</option>
-                <option value="Pix">Pix</option>
+                <option value="">Selecione o pagamento</option>
+                <option value="Pix">Pix (Aprovação imediata)</option>
                 <option value="Cartao">Cartão de Crédito</option>
             </select>
         </div>
@@ -1082,7 +1330,7 @@ header{
             <div class="row"><span>Frete</span><span id="freightVal">R$ 0,00</span></div>
             <div class="row grand"><span>Total</span><span id="totalVal">R$ 0,00</span></div>
         </div>
-        <button class="checkout-btn" onclick="finalizarPedidoSite()">Finalizar Pedido</button>
+        <button class="checkout-btn" id="checkoutBtn" onclick="finalizarPedidoSite()">Finalizar Pedido</button>
     </div>
 </div>
 
@@ -1108,6 +1356,7 @@ function carregarPerfilNaTela(){
     if(document.getElementById("checkoutCpf")) document.getElementById("checkoutCpf").value = perfilCliente.cpf || "";
     if(document.getElementById("checkoutEmail")) document.getElementById("checkoutEmail").value = perfilCliente.email || "";
     if(document.getElementById("checkoutWhatsapp")) document.getElementById("checkoutWhatsapp").value = perfilCliente.whatsapp || "";
+
     renderizarEnderecosSalvos();
 }
 
@@ -1125,15 +1374,15 @@ function renderizarEnderecosSalvos(){
     const container = document.getElementById("listaEnderecosSalvos");
     if(!container) return;
     if(!perfilCliente.enderecos || perfilCliente.enderecos.length === 0){
-        container.innerHTML = "<p style='font-size:0.85rem; color:#888;'>Nenhum endereço salvo.</p>";
+        container.innerHTML = "<p style='font-size:0.85rem; color:#888;'>Nenhum endereço salvo ainda.</p>";
         return;
     }
     container.innerHTML = perfilCliente.enderecos.map((end, index) => `
         <div class="cartao-salvo">
             <div><strong>${end.rua}, ${end.numero}</strong><br><small>${end.bairro} - CEP: ${end.cep}</small></div>
-            <div>
-                <button type="button" onclick="usarEndereco(${index})" style="background:none;border:none;color:#ed1760;cursor:pointer;text-decoration:underline;">Usar</button>
-                <button type="button" onclick="excluirEndereco(${index})" style="background:none;border:none;color:red;cursor:pointer;text-decoration:underline;margin-left:8px;">Excluir</button>
+            <div class="acoes-cartao">
+                <button type="button" onclick="usarEndereco(${index})">Usar</button>
+                <button type="button" onclick="excluirEndereco(${index})">Excluir</button>
             </div>
         </div>
     `).join("");
@@ -1145,6 +1394,7 @@ function usarEndereco(index){
     document.getElementById("checkoutRua").value = end.rua || "";
     document.getElementById("checkoutNumero").value = end.numero || "";
     document.getElementById("checkoutBairro").value = end.bairro || "";
+    document.getElementById("checkoutComplemento").value = end.complemento || "";
     document.getElementById("checkoutCep").value = end.cep || "";
     fecharModalPerfil();
     openCart();
@@ -1159,7 +1409,7 @@ function excluirEndereco(index){
 
 async function buscarCep(){
     const cepInput = document.getElementById("checkoutCep").value.replace(/\D/g, "");
-    if(cepInput.length !== 8){ alert("Digite um CEP válido."); return; }
+    if(cepInput.length !== 8){ alert("Digite um CEP válido com 8 dígitos."); return; }
     try{
         const resposta = await fetch(`https://viacep.com.br/ws/${cepInput}/json/`);
         const dados = await resposta.json();
@@ -1168,32 +1418,48 @@ async function buscarCep(){
         document.getElementById("checkoutBairro").value = dados.bairro || "";
         document.getElementById("checkoutNumero").focus();
 
-        const novoEnd = { cep: cepInput, rua: dados.logradouro || "", bairro: dados.bairro || "", numero: "" };
+        const novoEnd = { cep: cepInput, rua: dados.logradouro || "", bairro: dados.bairro || "", numero: "", complemento: "" };
         if(!perfilCliente.enderecos.some(e => e.cep === cepInput)){
             perfilCliente.enderecos.push(novoEnd);
             localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
             renderizarEnderecosSalvos();
         }
+
         verificarFretePorCep(cepInput, dados);
-    }catch(e){ alert("Erro ao buscar CEP."); }
+    }catch(erro){ alert("Não foi possível consultar o CEP no momento."); }
 }
 
 function verificarFretePorCep(cep, dadosViaCep = null){
     const freteValEl = document.getElementById("freightVal");
+    
     if(dadosViaCep && dadosViaCep.localidade){
         const cidade = dadosViaCep.localidade.toLowerCase();
         if(cidade.includes("paranavaí") || cidade.includes("paranavai")){
             valorFreteAtual = 10.00;
-            freteValEl.innerHTML = "R$ 10,00 (Até 2h ⚡)";
+            freteValEl.innerHTML = "R$ 10,00 (Até 2 horas ⚡)";
             renderTotals();
             return;
         } else if(cidade.includes("são joão do caiuá") || cidade.includes("sao joao do caiua")){
             valorFreteAtual = 20.00;
-            freteValEl.innerHTML = "R$ 20,00 (Domingo)";
+            
+            // Cálculo da data do próximo domingo
+            const hoje = new Date();
+            const diaSemana = hoje.getDay(); // 0 = Domingo
+            let diasAteDomingo = (0 - diaSemana + 7) % 7;
+            if(diasAteDomingo === 0) {
+                diasAteDomingo = 7; // Se hoje for domingo, calcula para o próximo domingo (daqui a 7 dias)
+            }
+            
+            const dataDomingo = new Date(hoje);
+            dataDomingo.setDate(hoje.getDate() + diasAteDomingo);
+            const dataFormatada = dataDomingo.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+            
+            freteValEl.innerHTML = `R$ 20,00 (Entrega em ${dataFormatada})`;
             renderTotals();
             return;
         }
     }
+
     valorFreteAtual = 15.00;
     freteValEl.textContent = formatarPreco(valorFreteAtual);
     renderTotals();
@@ -1206,27 +1472,43 @@ function fecharModalRastreio(){ document.getElementById("modalRastreio").classLi
 
 function consultarRastreio(){
     const termo = document.getElementById("inputBuscaRastreio").value.trim();
-    if(!termo){ alert("Digite um código."); return; }
-    document.getElementById("resultadoRastreio").innerHTML = `<div style="background:#fdf2f5;padding:15px;"><p><strong>Pedido:</strong> #${termo}</p><p><strong>Status:</strong> <span style="color:#ed1760">Em separação 📦</span></p></div>`;
+    const resultadoDiv = document.getElementById("resultadoRastreio");
+    if(!termo){ alert("Digite um código ou e-mail para rastrear."); return; }
+    resultadoDiv.innerHTML = `
+        <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
+            <p><strong>Pedido encontrado:</strong> #${termo}</p>
+            <p><strong>Status atual:</strong> <span style="color:#ed1760; font-weight:600;">Saiu para entrega 🚚</span></p>
+            <button class="btn-acao-modal" style="background:#25D366; margin-top:10px;" onclick="confirmarEntregaRecebida()">Confirmar Recebimento ✓</button>
+        </div>
+    `;
 }
 
-function escaparHTML(v){ return v ? String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;") : ""; }
-function formatarPreco(v){ return (Number(v) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+function confirmarEntregaRecebida(){ alert("Obrigada! Confirmação de recebimento registrada com sucesso."); fecharModalRastreio(); }
+function escaparHTML(valor){ if(valor === null || valor === undefined) return ""; return String(valor).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
+function formatarPreco(valor){ return (Number(valor) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
 
 function normalizarProduto(doc){
     const dados = doc.data ? doc.data() : doc;
-    let imagens = dados.imagens || [];
+    let imagens = dados.imagens || dados.images || dados.fotos || [];
     if(!Array.isArray(imagens)) imagens = [imagens];
+    imagens = imagens.filter(img => img && String(img).trim() !== "" && !String(img).includes("COLE-AQUI"));
+
+    let cores = dados.cores || dados.cor || [];
+    if(!Array.isArray(cores)) cores = String(cores).split(",").map(v => v.trim()).filter(Boolean);
+
+    let tamanhos = dados.tamanhos || dados.tamanho || [];
+    if(!Array.isArray(tamanhos)) tamanhos = String(tamanhos).split(",").map(v => v.trim()).filter(Boolean);
+
     return {
-        id: doc.id || "",
-        nome: String(dados.nome || "Produto"),
-        preco: Number(dados.preco || 0),
-        estoque: Number(dados.estoque || 0),
+        id: doc.id || dados.id || "",
+        nome: String(dados.nome || dados.name || "Produto"),
+        preco: Number(dados.preco ?? dados.preço ?? dados.valor ?? 0) || 0,
+        estoque: Number(dados.estoque ?? 0),
         estoqueVariacoes: Array.isArray(dados.estoqueVariacoes) ? dados.estoqueVariacoes : [],
         categoria: String(dados.categoria || ""),
-        imagens: imagens.filter(Boolean),
-        cores: Array.isArray(dados.cores) ? dados.cores : [],
-        tamanhos: Array.isArray(dados.tamanhos) ? dados.tamanhos : [],
+        imagens: imagens,
+        cores: cores,
+        tamanhos: tamanhos,
         descricao: String(dados.descricao || ""),
         tag: String(dados.tag || "")
     };
@@ -1234,207 +1516,310 @@ function normalizarProduto(doc){
 
 function obterEstoqueDisponivel(p, cor, tamanho){
     if(p.estoqueVariacoes && p.estoqueVariacoes.length > 0){
-        const v = p.estoqueVariacoes.find(x => x.cor?.toLowerCase() === cor?.toLowerCase() && x.tamanho?.toLowerCase() === tamanho?.toLowerCase());
-        if(v) return Number(v.quantidade || 0);
+        const variacao = p.estoqueVariacoes.find(v => 
+            String(v.cor || "").trim().toLowerCase() === String(cor).trim().toLowerCase() && 
+            String(v.tamanho || "").trim().toLowerCase() === String(tamanho).trim().toLowerCase()
+        );
+        if(variacao){
+            const qtd = variacao.quantidade !== undefined ? variacao.quantidade : variacao.qtd;
+            if(qtd !== undefined) return Number(qtd) || 0;
+        }
     }
     return Number(p.estoque || 0);
+}
+
+function mudarFotoVitrine(event, indexProduto, direcao){
+    event.stopPropagation();
+    const p = PRODUTOS[indexProduto];
+    if(!p || !p.imagens || p.imagens.length <= 1) return;
+    if(indicesFotoVitrine[indexProduto] === undefined) indicesFotoVitrine[indexProduto] = 0;
+    indicesFotoVitrine[indexProduto] += direcao;
+    if(indicesFotoVitrine[indexProduto] >= p.imagens.length) indicesFotoVitrine[indexProduto] = 0;
+    if(indicesFotoVitrine[indexProduto] < 0) indicesFotoVitrine[indexProduto] = p.imagens.length - 1;
+    const imgEl = document.getElementById(`foto-principal-${indexProduto}`);
+    if(imgEl) imgEl.src = p.imagens[indicesFotoVitrine[indexProduto]];
+}
+
+function mudarFotoModal(direcao, indexProduto){
+    const p = PRODUTOS[indexProduto];
+    if(!p || !p.imagens || p.imagens.length <= 1) return;
+    indiceFotoModal += direcao;
+    if(indiceFotoModal >= p.imagens.length) indiceFotoModal = 0;
+    if(indiceFotoModal < 0) indiceFotoModal = p.imagens.length - 1;
+    const imgEl = document.getElementById(`foto-modal-grande`);
+    if(imgEl) imgEl.src = p.imagens[indiceFotoModal];
 }
 
 function montarVitrine(){
     const grid = document.getElementById("productGrid");
     if(!grid) return;
     if(PRODUTOS.length === 0){
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:50px;color:#888;">Nenhum produto disponível.</div>`;
+        grid.innerHTML = `<div class="mensagem-produtos" style="grid-column:1/-1;"><div class="icone">🛍️</div>Nenhum produto disponível no momento.</div>`;
         return;
     }
-    grid.innerHTML = PRODUTOS.map((p,i) => `
-        <div class="card" data-produto-index="${i}">
-            <div class="img-wrap" onclick="abrirDetalhesProduto(${i})">
-                ${p.tag ? `<span class="badge">${escaparHTML(p.tag)}</span>` : ""}
-                <img src="${escaparHTML(p.imagens[0])}" alt="${escaparHTML(p.nome)}" loading="lazy">
-            </div>
-            <div class="card-body">
-                <h3 onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.nome)}</h3>
-                <div class="desc">${escaparHTML(p.descricao)}</div>
-                <div class="opcoes-produto" onclick="event.stopPropagation()">
-                    <label>Cor *</label>
-                    <select id="cor-${i}"><option value="">Selecione</option>${p.cores.map(c=>`<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select>
-                    <label>Tamanho *</label>
-                    <select id="tamanho-${i}"><option value="">Selecione</option>${p.tamanhos.map(t=>`<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select>
+
+    grid.innerHTML = PRODUTOS.map((p,i) => {
+        const imagens = p.imagens && p.imagens.length ? p.imagens : [];
+        const imagemPrincipal = imagens[0] || "https://via.placeholder.com/600x750?text=LaLabela";
+        const cores = p.cores && p.cores.length ? p.cores : ["Única"];
+        const tamanhos = p.tamanhos && p.tamanhos.length ? p.tamanhos : ["Único"];
+
+        return `
+            <div class="card" data-produto-index="${i}">
+                <div class="img-wrap galeria-produto" onclick="abrirDetalhesProduto(${i})">
+                    ${p.tag ? `<span class="badge">${escaparHTML(p.tag)}</span>` : ""}
+                    <img id="foto-principal-${i}" class="imagem-principal" src="${escaparHTML(imagemPrincipal)}" alt="${escaparHTML(p.nome)}" loading="lazy">
+                    ${imagens.length > 1 ? `
+                        <button type="button" class="seta-galeria seta-esquerda" onclick="mudarFotoVitrine(event, ${i}, -1)">‹</button>
+                        <button type="button" class="seta-galeria seta-direita" onclick="mudarFotoVitrine(event, ${i}, 1)">›</button>
+                    ` : ""}
                 </div>
-                <div class="price">${formatarPreco(p.preco)}</div>
-                <button class="add-btn" onclick="adicionarAoCarrinho(${i})">Adicionar</button>
+                <div class="card-body">
+                    <h3 onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.nome)}</h3>
+                    <div class="desc" onclick="abrirDetalhesProduto(${i})" style="cursor:pointer;">${escaparHTML(p.descricao)}</div>
+                    
+                    <div class="opcoes-produto" onclick="event.stopPropagation()">
+                        <div>
+                            <label>Cor *</label>
+                            <select id="cor-${i}">
+                                <option value="">Selecione a cor</option>
+                                ${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}
+                            </select>
+                        </div>
+                        <div>
+                            <label>Tamanho *</label>
+                            <select id="tamanho-${i}">
+                                <option value="">Selecione o tamanho</option>
+                                ${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="price">${formatarPreco(p.preco)}</div>
+                    <button class="add-btn" id="add-${i}" onclick="adicionarAoCarrinho(${i})" type="button">Adicionar</button>
+                </div>
             </div>
-        </div>
-    `).join("");
+        `;
+    }).join("");
     aplicarFiltros();
 }
 
 function abrirDetalhesProduto(i){
     const p = PRODUTOS[i];
+    if(!p) return;
+    indiceFotoModal = 0;
     const modal = document.getElementById("modalProduto");
-    document.getElementById("modalConteudoDetalhe").innerHTML = `
-        <div class="modal-img-wrap"><img src="${escaparHTML(p.imagens[0])}"></div>
+    const conteudo = document.getElementById("modalConteudoDetalhe");
+    const imagens = p.imagens && p.imagens.length ? p.imagens : ["https://via.placeholder.com/600x750?text=LaLabela"];
+    const cores = p.cores && p.cores.length ? p.cores : ["Única"];
+    const tamanhos = p.tamanhos && p.tamanhos.length ? p.tamanhos : ["Único"];
+
+    conteudo.innerHTML = `
+        <div class="modal-img-wrap galeria-produto">
+            <img id="foto-modal-grande" src="${escaparHTML(imagens[0])}" alt="${escaparHTML(p.nome)}">
+            ${imagens.length > 1 ? `
+                <button type="button" class="seta-galeria seta-esquerda" onclick="mudarFotoModal(-1, ${i})">‹</button>
+                <button type="button" class="seta-galeria seta-direita" onclick="mudarFotoModal(1, ${i})">›</button>
+            ` : ""}
+        </div>
         <div class="modal-info">
             <h2>${escaparHTML(p.nome)}</h2>
             <div class="preco-grande">${formatarPreco(p.preco)}</div>
-            <div>${escaparHTML(p.descricao)}</div>
+            <div class="descricao-completa">${escaparHTML(p.descricao || "Peça selecionada com carinho.")}</div>
+            
             <div class="opcoes-produto">
-                <label>Cor *</label><select id="cor-modal-${i}"><option value="">Selecione</option>${p.cores.map(c=>`<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}</select>
-                <label>Tamanho *</label><select id="tamanho-modal-${i}"><option value="">Selecione</option>${p.tamanhos.map(t=>`<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}</select>
+                <div>
+                    <label>Cor *</label>
+                    <select id="cor-modal-${i}">
+                        <option value="">Selecione a cor</option>
+                        ${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}
+                    </select>
+                </div>
+                <div>
+                    <label>Tamanho *</label>
+                    <select id="tamanho-modal-${i}">
+                        <option value="">Selecione o tamanho</option>
+                        ${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}
+                    </select>
+                </div>
             </div>
-            <button class="btn-comprar-grande" onclick="adicionarDoModal(${i})">Adicionar à Sacola</button>
+
+            <div class="modal-acoes">
+                <button class="btn-comprar-grande" onclick="adicionarDoModal(${i})">Adicionar à Sacola</button>
+            </div>
         </div>
     `;
     modal.classList.add("aberto");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function fecharDetalhesProduto(){ document.getElementById("modalProduto").classList.remove("aberto"); }
 
 function adicionarDoModal(i){
     const p = PRODUTOS[i];
-    const cor = document.getElementById(`cor-modal-${i}`).value.trim();
-    const tamanho = document.getElementById(`tamanho-modal-${i}`).value.trim();
-    if(!cor || !tamanho){ alert("Selecione cor e tamanho."); return; }
-    adicionarItemCarrinho(p, cor, tamanho);
+    const corEl = document.getElementById(`cor-modal-${i}`);
+    const tamEl = document.getElementById(`tamanho-modal-${i}`);
+    const cor = corEl ? corEl.value.trim() : "";
+    const tamanho = tamEl ? tamEl.value.trim() : "";
+
+    if(!cor){ alert("Por favor, selecione a cor do produto."); if(corEl) corEl.focus(); return; }
+    if(!tamanho){ alert("Por favor, selecione o tamanho do produto."); if(tamEl) tamEl.focus(); return; }
+
+    const estoqueMaximo = obterEstoqueDisponivel(p, cor, tamanho);
+    const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
+    const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
+
+    if (qtdAtualNoCarrinho + 1 > estoqueMaximo) {
+        alert(`Estoque insuficiente! Apenas ${estoqueMaximo} unidade(s) disponível(is) para (${cor} / ${tamanho}).`);
+        return;
+    }
+
+    if(existente){ existente.qtd += 1; } 
+    else { carrinho.push({ nome: p.nome, preco: p.preco, estoqueMax: estoqueMaximo, imagem: p.imagens[0] || "", qtd: 1, cor, tamanho }); }
+    atualizarCarrinho();
     fecharDetalhesProduto();
     openCart();
 }
 
+function criarChaveItem(item){ return `${item.nome}|${item.cor || ""}|${item.tamanho || ""}`; }
+
 function adicionarAoCarrinho(i){
     const p = PRODUTOS[i];
-    const cor = document.getElementById(`cor-${i}`).value.trim();
-    const tamanho = document.getElementById(`tamanho-${i}`).value.trim();
-    if(!cor || !tamanho){ alert("Selecione cor e tamanho."); return; }
-    adicionarItemCarrinho(p, cor, tamanho);
+    const corElement = document.getElementById(`cor-${i}`);
+    const tamanhoElement = document.getElementById(`tamanho-${i}`);
+    const cor = corElement ? corElement.value.trim() : "";
+    const tamanho = tamanhoElement ? tamanhoElement.value.trim() : "";
+
+    if(!cor){ alert("Por favor, selecione a cor do produto."); if(corElement) corElement.focus(); return; }
+    if(!tamanho){ alert("Por favor, selecione o tamanho do produto."); if(tamanhoElement) tamanhoElement.focus(); return; }
+
+    const estoqueMaximo = obterEstoqueDisponivel(p, cor, tamanho);
+    const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
+    const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
+
+    if (qtdAtualNoCarrinho + 1 > estoqueMaximo) {
+        alert(`Estoque insuficiente! Apenas ${estoqueMaximo} unidade(s) disponível(is) para (${cor} / ${tamanho}).`);
+        return;
+    }
+
+    if(existente){ existente.qtd += 1; } 
+    else { carrinho.push({ nome: p.nome, preco: p.preco, estoqueMax: estoqueMaximo, imagem: p.imagens[0] || "", qtd: 1, cor, tamanho }); }
+    atualizarCarrinho();
     openCart();
 }
-
-function adicionarItemCarrinho(p, cor, tamanho){
-    const estoqueMax = obterEstoqueDisponivel(p, cor, tamanho);
-    const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
-    const qtdAtual = existente ? existente.qtd : 0;
-    if(qtdAtual + 1 > estoqueMax){ alert(`Estoque insuficiente! Apenas ${estoqueMax} disponível(is).`); return; }
-    if(existente){ existente.qtd += 1; }
-    else { carrinho.push({ nome: p.nome, preco: p.preco, estoqueMax, imagem: p.imagens[0] || "", qtd: 1, cor, tamanho }); }
-    atualizarCarrinho();
-}
-
-function criarChaveItem(i){ return `${i.nome}|${i.cor}|${i.tamanho}`; }
 
 function alterarQtd(chave, delta){
     const item = carrinho.find(i => criarChaveItem(i) === chave);
     if(!item) return;
-    if(delta > 0 && item.qtd + delta > item.estoqueMax){ alert("Estoque máximo atingido."); return; }
+    if (delta > 0 && item.qtd + delta > item.estoqueMax) {
+        alert(`Estoque insuficiente! Apenas ${item.estoqueMax} unidade(s) disponível(is).`);
+        return;
+    }
     item.qtd += delta;
-    if(item.qtd <= 0) carrinho = carrinho.filter(i => criarChaveItem(i) !== chave);
+    if(item.qtd <= 0){ carrinho = carrinho.filter(i => criarChaveItem(i) !== chave); }
     atualizarCarrinho();
 }
 
 function removerItem(chave){ carrinho = carrinho.filter(i => criarChaveItem(i) !== chave); atualizarCarrinho(); }
 
 function atualizarCarrinho(){
-    document.getElementById("cartCount").textContent = carrinho.reduce((s,i) => s + i.qtd, 0);
+    const cartCount = document.getElementById("cartCount");
+    if(cartCount) cartCount.textContent = carrinho.reduce((s,i) => s + i.qtd, 0);
     const wrap = document.getElementById("drawerItems");
-    if(carrinho.length === 0){ wrap.innerHTML = `<div class="empty-msg">Sua sacola está vazia.</div>`; renderTotals(); return; }
-    wrap.innerHTML = carrinho.map(item => `
-        <div class="item">
-            <img src="${escaparHTML(item.imagem)}">
-            <div class="item-info">
-                <span class="name">${escaparHTML(item.nome)}</span>
-                <span class="unit-price">${formatarPreco(item.preco)} | ${item.cor} / ${item.tamanho}</span>
-                <div class="qty-row">
-                    <button onclick="alterarQtd('${criarChaveItem(item)}', -1)">-</button>
-                    <span>${item.qtd}</span>
-                    <button onclick="alterarQtd('${criarChaveItem(item)}', 1)">+</button>
-                    <button class="remove-btn" onclick="removerItem('${criarChaveItem(item)}')">remover</button>
+    if(!wrap) return;
+
+    if(carrinho.length === 0){
+        wrap.innerHTML = `<div class="empty-msg">Sua sacola está vazia.</div>`;
+    } else {
+        wrap.innerHTML = carrinho.map(item => {
+            const chave = criarChaveItem(item);
+            return `
+                <div class="item">
+                    <img src="${escaparHTML(item.imagem)}" alt="${escaparHTML(item.nome)}">
+                    <div class="item-info">
+                        <span class="name">${escaparHTML(item.nome)}</span>
+                        <span class="unit-price">${formatarPreco(item.preco)} / un. | Cor: ${escaparHTML(item.cor)} | Tam: ${escaparHTML(item.tamanho)}</span>
+                        <div class="qty-row">
+                            <button onclick="alterarQtd('${chave}', -1)" type="button">−</button>
+                            <span>${item.qtd}</span>
+                            <button onclick="alterarQtd('${chave}', 1)" type="button">+</button>
+                            <button class="remove-btn" onclick="removerItem('${chave}')" type="button">remover</button>
+                        </div>
+                    </div>
+                    <div class="item-total">${formatarPreco(item.preco * item.qtd)}</div>
                 </div>
-            </div>
-            <div class="item-total">${formatarPreco(item.preco * item.qtd)}</div>
-        </div>
-    `).join("");
+            `;
+        }).join("");
+    }
     renderTotals();
 }
 
 function getSubtotal(){ return carrinho.reduce((s,i) => s + i.preco * i.qtd, 0); }
 function renderTotals(){
-    const sub = getSubtotal();
-    document.getElementById("subtotalVal").textContent = formatarPreco(sub);
-    document.getElementById("totalVal").textContent = formatarPreco(sub + valorFreteAtual);
+    const subtotal = getSubtotal();
+    document.getElementById("subtotalVal").textContent = formatarPreco(subtotal);
+    document.getElementById("totalVal").textContent = formatarPreco(subtotal + valorFreteAtual);
 }
 
 function openCart(){ document.getElementById("drawer").classList.add("open"); document.getElementById("overlay").classList.add("open"); }
 function closeCart(){ document.getElementById("drawer").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); }
 
-async function finalizarPedidoSite(){
+function finalizarPedidoSite(){
     const nome = document.getElementById("checkoutNome").value.trim();
     const cpf = document.getElementById("checkoutCpf").value.trim();
     const email = document.getElementById("checkoutEmail").value.trim();
-    const whatsapp = document.getElementById("checkoutWhatsapp").value.trim();
     const rua = document.getElementById("checkoutRua").value.trim();
     const numero = document.getElementById("checkoutNumero").value.trim();
     const bairro = document.getElementById("checkoutBairro").value.trim();
     const pagamento = document.getElementById("paymentSelect").value;
 
-    if(!nome || !cpf || !email || !rua || !numero || !bairro){ alert("Preencha todos os campos obrigatórios."); return; }
+    if(!nome || !cpf || !email){ alert("Nome, CPF e E-mail são obrigatórios."); return; }
+    if(!rua || !numero || !bairro){ alert("Preencha o endereço completo."); return; }
     if(!pagamento){ alert("Selecione a forma de pagamento."); return; }
-    if(carrinho.length === 0){ alert("Sua sacola está vazia."); return; }
 
-    try {
-        const dadosPedido = {
-            cliente: nome,
-            emailCliente: email,
-            telefoneCliente: whatsapp,
-            cpfCliente: cpf,
-            endereco: `${rua}, nº ${numero} - ${bairro}`,
-            itens: carrinho.map(item => ({ nome: item.nome, quantidade: item.qtd, preco: item.preco, cor: item.cor, tamanho: item.tamanho })),
-            subtotal: getSubtotal(),
-            frete: valorFreteAtual,
-            total: getSubtotal() + valorFreteAtual,
-            formaPagamento: pagamento,
-            statusPagamento: pagamento === "Pix" ? "Aprovado" : "Pendente",
-            status: "Aberto"
-        };
-
-        await window.salvarPedidoNoFirebase(dadosPedido);
-
-        perfilCliente.nome = nome; perfilCliente.cpf = cpf; perfilCliente.email = email; perfilCliente.whatsapp = whatsapp;
-        localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
-
-        alert("Pedido realizado com sucesso!");
-        carrinho = [];
-        atualizarCarrinho();
-        closeCart();
-    } catch(e) {
-        console.error(e);
-        alert("Erro ao finalizar pedido.");
-    }
+    perfilCliente.nome = nome; perfilCliente.cpf = cpf; perfilCliente.email = email;
+    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    alert("Pedido gerado com sucesso!");
+    closeCart();
 }
 
 function pesquisarProdutos(){ aplicarFiltros(); }
+
 function aplicarFiltros(){
-    const termo = document.getElementById("campoPesquisa").value.toLowerCase().trim();
-    document.querySelectorAll("#productGrid .card").forEach(card => {
-        const p = PRODUTOS[Number(card.dataset.produtoIndex)];
-        if(!p) return;
-        const matchTermo = !termo || p.nome.toLowerCase().includes(termo) || p.descricao.toLowerCase().includes(termo);
-        const matchCat = categoriaAtual === "todos" || p.categoria.toLowerCase().includes(categoriaAtual.toLowerCase()) || p.tag.toLowerCase().includes(categoriaAtual.toLowerCase());
-        card.style.display = matchTermo && matchCat ? "" : "none";
+    const campo = document.getElementById("campoPesquisa");
+    const termo = campo ? campo.value.toLowerCase().trim() : "";
+    const cards = document.querySelectorAll("#productGrid .card");
+
+    cards.forEach(card => {
+        const index = Number(card.dataset.produtoIndex);
+        const produto = PRODUTOS[index];
+        if(!produto) return;
+
+        const nomeProd = String(produto.nome || "").toLowerCase();
+        const descProd = String(produto.descricao || "").toLowerCase();
+        const catProd = String(produto.categoria || "").toLowerCase();
+        const tagProd = String(produto.tag || "").toLowerCase();
+
+        const correspondePesquisa = !termo || nomeProd.includes(termo) || descProd.includes(termo) || catProd.includes(termo) || tagProd.includes(termo);
+        const categoria = categoriaAtual.toLowerCase();
+        const correspondeCategoria = categoria === "todos" || catProd.includes(categoria) || tagProd.includes(categoria);
+
+        card.style.display = correspondePesquisa && correspondeCategoria ? "" : "none";
     });
 }
 
 function abrirFiltro(){ document.getElementById("menuCategorias").classList.add("aberto"); document.getElementById("fundoCategorias").classList.add("aberto"); carregarPerfilNaTela(); }
 function fecharFiltro(){ document.getElementById("menuCategorias").classList.remove("aberto"); document.getElementById("fundoCategorias").classList.remove("aberto"); }
-function filtrarCategoria(cat){ categoriaAtual = cat; aplicarFiltros(); fecharFiltro(); }
+function filtrarCategoria(cat){ categoriaAtual = cat; aplicarFiltros(); fecharFiltro(); document.getElementById("shop").scrollIntoView({ behavior: "smooth", block: "start" }); }
 
 document.getElementById("fundoCategorias").addEventListener("click", fecharFiltro);
-document.getElementById("deliveryWhatsapp").href = `https://wa.me/5544997720350?text=${encodeURIComponent("Olá! Dúvidas sobre frete.")}`;
+document.getElementById("deliveryWhatsapp").href = `https://wa.me/5544997720350?text=${encodeURIComponent("Olá! Gostaria de tirar dúvidas sobre o frete.")}`;
 carregarPerfilNaTela();
 </script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
@@ -1448,17 +1833,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window.salvarPedidoNoFirebase = async function(dadosPedido) {
-    await addDoc(collection(db, "pedidos"), {
-        ...dadosPedido,
-        criadoEm: serverTimestamp()
-    });
-};
+function carregarProdutosDoFirebase(){
+    const produtosRef = collection(db, "produtos");
+    onSnapshot(produtosRef, snapshot => {
+        PRODUTOS = snapshot.docs.map(doc => normalizarProduto(doc));
+        montarVitrine();
+    }, erro => { console.error("Erro ao buscar produtos:", erro); });
+}
 
-onSnapshot(collection(db, "produtos"), snapshot => {
-    PRODUTOS = snapshot.docs.map(doc => normalizarProduto(doc));
-    montarVitrine();
-}, error => console.error(error));
+carregarProdutosDoFirebase();
 </script>
 
 </body>

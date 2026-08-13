@@ -1678,7 +1678,7 @@ function normalizarProduto(doc){
         nome: String(dados.nome || dados.name || "Produto"),
         preco: preco,
         estoque: estoque,
-        estoqueVariacoes: dados.estoqueVariacoes || [],
+        estoqueVariacoes: Array.isArray(dados.estoqueVariacoes) ? dados.estoqueVariacoes : [],
         categoria: String(dados.categoria || ""),
         imagens: imagens,
         cores: cores,
@@ -1727,8 +1727,8 @@ function montarVitrine(){
     grid.innerHTML = PRODUTOS.map((p,i) => {
         const imagens = p.imagens && p.imagens.length ? p.imagens : [];
         const imagemPrincipal = imagens[0] || "https://via.placeholder.com/600x750?text=LaLabela";
-        const cores = p.cores || [];
-        const tamanhos = p.tamanhos || [];
+        const cores = p.cores && p.cores.length ? p.cores : ["Única"];
+        const tamanhos = p.tamanhos && p.tamanhos.length ? p.tamanhos : ["Único"];
 
         return `
             <div class="card" data-produto-index="${i}">
@@ -1749,14 +1749,14 @@ function montarVitrine(){
                             <label>Cor *</label>
                             <select id="cor-${i}">
                                 <option value="">Selecione a cor</option>
-                                ${cores.length ? cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("") : `<option value="Única">Cor única</option>`}
+                                ${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}
                             </select>
                         </div>
                         <div>
                             <label>Tamanho *</label>
                             <select id="tamanho-${i}">
                                 <option value="">Selecione o tamanho</option>
-                                ${tamanhos.length ? tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("") : `<option value="Único">Tamanho único</option>`}
+                                ${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}
                             </select>
                         </div>
                     </div>
@@ -1778,8 +1778,8 @@ function abrirDetalhesProduto(i){
     const modal = document.getElementById("modalProduto");
     const conteudo = document.getElementById("modalConteudoDetalhe");
     const imagens = p.imagens && p.imagens.length ? p.imagens : ["https://via.placeholder.com/600x750?text=LaLabela"];
-    const cores = p.cores || [];
-    const tamanhos = p.tamanhos || [];
+    const cores = p.cores && p.cores.length ? p.cores : ["Única"];
+    const tamanhos = p.tamanhos && p.tamanhos.length ? p.tamanhos : ["Único"];
 
     conteudo.innerHTML = `
         <div class="modal-img-wrap galeria-produto">
@@ -1799,14 +1799,14 @@ function abrirDetalhesProduto(i){
                     <label>Cor *</label>
                     <select id="cor-modal-${i}">
                         <option value="">Selecione a cor</option>
-                        ${cores.length ? cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("") : `<option value="Única">Cor única</option>`}
+                        ${cores.map(c => `<option value="${escaparHTML(c)}">${escaparHTML(c)}</option>`).join("")}
                     </select>
                 </div>
                 <div>
                     <label>Tamanho *</label>
                     <select id="tamanho-modal-${i}">
                         <option value="">Selecione o tamanho</option>
-                        ${tamanhos.length ? tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("") : `<option value="Único">Tamanho único</option>`}
+                        ${tamanhos.map(t => `<option value="${escaparHTML(t)}">${escaparHTML(t)}</option>`).join("")}
                     </select>
                 </div>
             </div>
@@ -1822,6 +1822,19 @@ function abrirDetalhesProduto(i){
 
 function fecharDetalhesProduto(){
     document.getElementById("modalProduto").classList.remove("aberto");
+}
+
+function obterEstoqueDisponivel(p, cor, tamanho){
+    if(p.estoqueVariacoes && p.estoqueVariacoes.length > 0){
+        const variacao = p.estoqueVariacoes.find(v => 
+            String(v.cor || "").trim().toLowerCase() === String(cor).trim().toLowerCase() && 
+            String(v.tamanho || "").trim().toLowerCase() === String(tamanho).trim().toLowerCase()
+        );
+        if(variacao && variacao.qtd !== undefined){
+            return Number(variacao.qtd) || 0;
+        }
+    }
+    return p.estoque;
 }
 
 function adicionarDoModal(i){
@@ -1843,11 +1856,12 @@ function adicionarDoModal(i){
         return;
     }
 
+    const estoqueMaximo = obterEstoqueDisponivel(p, cor, tamanho);
     const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
     const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
 
-    if (p.estoque > 0 && qtdAtualNoCarrinho + 1 > p.estoque) {
-        alert(`Estoque insuficiente! Apenas ${p.estoque} unidade(s) disponível(is) para este produto.`);
+    if (qtdAtualNoCarrinho + 1 > estoqueMaximo) {
+        alert(`Estoque insuficiente para a combinação (${cor} / ${tamanho})! Apenas ${estoqueMaximo} unidade(s) disponível(is).`);
         return;
     }
 
@@ -1857,7 +1871,7 @@ function adicionarDoModal(i){
         carrinho.push({
             nome: p.nome,
             preco: p.preco,
-            estoque: p.estoque,
+            estoqueMax: estoqueMaximo,
             imagem: p.imagens[0] || "",
             qtd: 1,
             cor: cor,
@@ -1892,11 +1906,12 @@ function adicionarAoCarrinho(i){
         return;
     }
 
+    const estoqueMaximo = obterEstoqueDisponivel(p, cor, tamanho);
     const existente = carrinho.find(item => item.nome === p.nome && item.cor === cor && item.tamanho === tamanho);
     const qtdAtualNoCarrinho = existente ? existente.qtd : 0;
 
-    if (p.estoque > 0 && qtdAtualNoCarrinho + 1 > p.estoque) {
-        alert(`Estoque insuficiente! Apenas ${p.estoque} unidade(s) disponível(is) para este produto.`);
+    if (qtdAtualNoCarrinho + 1 > estoqueMaximo) {
+        alert(`Estoque insuficiente para a combinação (${cor} / ${tamanho})! Apenas ${estoqueMaximo} unidade(s) disponível(is).`);
         return;
     }
 
@@ -1906,7 +1921,7 @@ function adicionarAoCarrinho(i){
         carrinho.push({
             nome: p.nome,
             preco: p.preco,
-            estoque: p.estoque,
+            estoqueMax: estoqueMaximo,
             imagem: p.imagens[0] || "",
             qtd: 1,
             cor: cor,
@@ -1922,8 +1937,8 @@ function alterarQtd(chave, delta){
     if(!item) return;
 
     if (delta > 0) {
-        if (item.estoque > 0 && item.qtd + delta > item.estoque) {
-            alert(`Estoque insuficiente! Apenas ${item.estoque} unidade(s) disponível(is) no estoque.`);
+        if (item.qtd + delta > item.estoqueMax) {
+            alert(`Estoque insuficiente! Apenas ${item.estoqueMax} unidade(s) disponível(is) para esta variação.`);
             return;
         }
     }

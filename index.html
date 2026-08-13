@@ -1286,6 +1286,27 @@ header{
     </div>
 </div>
 
+<!-- MODAL PARA EXIBIR O PIX TRANSPARENTE NA TELA -->
+<div class="modal-sistema" id="modalPixTransparente">
+    <div class="modal-sistema-box" style="text-align:center;">
+        <button class="fechar-modal-sistema" onclick="fecharModalPix()">&times;</button>
+        <h2 style="color:#ed1760;">Pagamento via Pix</h2>
+        <p style="font-size:0.9rem; color:#666;">Escaneie o QR Code abaixo com o aplicativo do seu banco ou copie a chave Pix.</p>
+        
+        <div id="containerQrCode" style="margin:20px 0;">
+            <img id="imgQrCodePix" src="" alt="QR Code Pix" style="max-width:220px; border:1px solid #ddd; padding:5px;">
+        </div>
+
+        <div class="grupo-campo" style="text-align:left;">
+            <label>Pix Copia e Cola</label>
+            <textarea id="inputPixCopiaCola" readonly style="width:100%; height:80px; font-size:0.8rem; padding:8px; border:1px solid #ddd; background:#f9f9f9; resize:none;"></textarea>
+        </div>
+
+        <button class="btn-acao-modal" onclick="copiarChavePix()">Copiar Chave Pix</button>
+        <p id="avisoPixCopiado" style="color:green; font-size:0.8rem; margin-top:5px; display:none;">Chave copiada com sucesso!</p>
+    </div>
+</div>
+
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
 <div class="drawer" id="drawer">
     <div class="drawer-head">
@@ -1320,9 +1341,8 @@ header{
         <div class="form-checkout-group">
             <label>Forma de Pagamento (Direto no Site)</label>
             <select id="paymentSelect">
-                <option value="">Selecione o pagamento</option>
-                <option value="Pix">Pix (Aprovação imediata)</option>
-                <option value="Cartao">Cartão de Crédito</option>
+                <option value="PIX">Pix (Aprovação imediata)</option>
+                <option value="CREDIT_CARD">Cartão de Crédito</option>
             </select>
         </div>
         <div class="totals">
@@ -1342,7 +1362,6 @@ let indicesFotoVitrine = {};
 let indiceFotoModal = 0;
 let valorFreteAtual = 0;
 
-// SISTEMA DE SEGURANÇA E EXPIRAÇÃO DE DADOS APÓS INATIVIDADE (Algumas horas)
 function verificarExpiracaoSessao() {
     const ultimoAcesso = localStorage.getItem("lalabela_ultimo_acesso");
     const agora = new Date().getTime();
@@ -1359,7 +1378,6 @@ let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
     nome: "", cpf: "", whatsapp: "", email: "", enderecos: []
 };
 
-// MÁSCARAS AUTOMÁTICAS (CPF e Telefone)
 function mascaraCpf(input) {
     let v = input.value.replace(/\D/g, "");
     if (v.length > 11) v = v.slice(0, 11);
@@ -1493,9 +1511,7 @@ function verificarFretePorCep(cep, dadosViaCep = null){
             const hoje = new Date();
             const diaSemana = hoje.getDay(); 
             let diasAteDomingo = (0 - diaSemana + 7) % 7;
-            if(diasAteDomingo === 0) {
-                diasAteDomingo = 7; 
-            }
+            if(diasAteDomingo === 0) diasAteDomingo = 7; 
             
             const dataDomingo = new Date(hoje);
             dataDomingo.setDate(hoje.getDate() + diasAteDomingo);
@@ -1516,6 +1532,22 @@ function abrirModalPerfil(){ fecharFiltro(); carregarPerfilNaTela(); document.ge
 function fecharModalPerfil(){ document.getElementById("modalPerfil").classList.remove("aberto"); }
 function abrirModalRastreio(){ fecharFiltro(); document.getElementById("modalRastreio").classList.add("aberto"); }
 function fecharModalRastreio(){ document.getElementById("modalRastreio").classList.remove("aberto"); }
+
+function fecharModalPix(){ 
+    document.getElementById("modalPixTransparente").classList.remove("aberto"); 
+    window.location.reload(); 
+}
+
+function copiarChavePix() {
+    const inputCopia = document.getElementById("inputPixCopiaCola");
+    inputCopia.select();
+    inputCopia.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(inputCopia.value);
+    
+    const aviso = document.getElementById("avisoPixCopiado");
+    aviso.style.display = "block";
+    setTimeout(() => { aviso.style.display = "none"; }, 3000);
+}
 
 function consultarRastreio(){
     const termo = document.getElementById("inputBuscaRastreio").value.trim();
@@ -1850,7 +1882,7 @@ async function finalizarPedidoSite(){
     const numero = document.getElementById("checkoutNumero")?.value.trim();
     const bairro = document.getElementById("checkoutBairro")?.value.trim();
     const complemento = document.getElementById("checkoutComplemento")?.value.trim();
-    const pagamento = document.getElementById("paymentSelect")?.value;
+    const billingType = document.getElementById("paymentSelect")?.value;
 
     if(!nome || !cpf || !email || !telefone){
         alert("Preencha nome, CPF, e-mail e WhatsApp (obrigatório).");
@@ -1862,7 +1894,7 @@ async function finalizarPedidoSite(){
         return;
     }
 
-    if(!pagamento){
+    if(!billingType){
         alert("Selecione uma forma de pagamento.");
         return;
     }
@@ -1876,7 +1908,6 @@ async function finalizarPedidoSite(){
     const total = subtotal + valorFreteAtual;
     const numeroPedido = "#LB-" + Math.floor(100000 + Math.random() * 900000);
 
-    // Salva o pedido inicial no Firebase com status "Aguardando pagamento"
     const dadosPedido = {
         numeroPedido,
         nome,
@@ -1900,7 +1931,6 @@ async function finalizarPedidoSite(){
         await window.salvarPedidoNoFirebase(dadosPedido);
     }
 
-    // WORKER DE PAGAMENTO — NÃO REMOVER
     const WORKER_URL = "https://wispy-math-2575.zt9mchhnvj.workers.dev";
 
     const dadosPagamento = {
@@ -1915,7 +1945,8 @@ async function finalizarPedidoSite(){
         bairro: bairro,
         complemento: complemento,
         valor: total,
-        pedido: `Pedido ${numeroPedido} - LaLabela Boutique`
+        pedido: `Pedido ${numeroPedido} - LaLabela Boutique`,
+        billingType: billingType
     };
 
     fetch(WORKER_URL, {
@@ -1939,22 +1970,27 @@ async function finalizarPedidoSite(){
         return resultado;
     })
     .then(resultado => {
-        if(resultado.checkoutUrl){
-            perfilCliente.nome = nome;
-            perfilCliente.cpf = cpf;
-            perfilCliente.email = email;
-            perfilCliente.whatsapp = telefone;
+        perfilCliente.nome = nome;
+        perfilCliente.cpf = cpf;
+        perfilCliente.email = email;
+        perfilCliente.whatsapp = telefone;
 
-            localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
-            localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
+        localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+        localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
 
-            if(typeof window.salvarClienteNoFirebase === "function"){
-                window.salvarClienteNoFirebase(perfilCliente);
-            }
+        if(typeof window.salvarClienteNoFirebase === "function"){
+            window.salvarClienteNoFirebase(perfilCliente);
+        }
 
-            window.location.href = resultado.checkoutUrl;
+        closeCart();
+
+        if(billingType === "PIX" && resultado.payload){
+            document.getElementById("imgQrCodePix").src = "data:image/jpeg;base64," + resultado.encodedImage;
+            document.getElementById("inputPixCopiaCola").value = resultado.payload;
+            document.getElementById("modalPixTransparente").classList.add("aberto");
         } else {
-            alert("Pagamento criado, mas o link de pagamento não foi recebido.");
+            alert("Pedido criado com sucesso! Status: " + resultado.status);
+            window.location.reload();
         }
     })
     .catch(erro => {
@@ -2073,7 +2109,6 @@ window.buscarPedidoNoFirebase = async function(termo){
             return docSnap.data();
         }
 
-        // Se não achou pelo ID exato, busca por email
         const q = query(collection(db, "pedidos"), where("email", "==", termo));
         const querySnapshot = await getDocs(q);
         if(!querySnapshot.empty){

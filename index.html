@@ -1769,24 +1769,89 @@ function openCart(){ document.getElementById("drawer").classList.add("open"); do
 function closeCart(){ document.getElementById("drawer").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); }
 
 function finalizarPedidoSite(){
-    const nome = document.getElementById("checkoutNome").value.trim();
-    const cpf = document.getElementById("checkoutCpf").value.trim();
-    const email = document.getElementById("checkoutEmail").value.trim();
-    const rua = document.getElementById("checkoutRua").value.trim();
-    const numero = document.getElementById("checkoutNumero").value.trim();
-    const bairro = document.getElementById("checkoutBairro").value.trim();
-    const pagamento = document.getElementById("paymentSelect").value;
 
-    if(!nome || !cpf || !email){ alert("Nome, CPF e E-mail são obrigatórios."); return; }
-    if(!rua || !numero || !bairro){ alert("Preencha o endereço completo."); return; }
-    if(!pagamento){ alert("Selecione a forma de pagamento."); return; }
+  const nome = document.getElementById("nome")?.value.trim();
+  const cpf = document.getElementById("cpf")?.value.trim();
+  const email = document.getElementById("email")?.value.trim();
+  const rua = document.getElementById("rua")?.value.trim();
+  const numero = document.getElementById("numero")?.value.trim();
+  const bairro = document.getElementById("bairro")?.value.trim();
+  const pagamento = document.getElementById("pagamento")?.value;
 
-    perfilCliente.nome = nome; perfilCliente.cpf = cpf; perfilCliente.email = email;
-    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
-    
-    if (typeof window.salvarClienteNoFirebase === "function") {
-        window.salvarClienteNoFirebase(perfilCliente);
+  if(!nome || !cpf || !email){
+    alert("Preencha nome, CPF e e-mail.");
+    return;
+  }
+
+  if(!rua || !numero || !bairro){
+    alert("Preencha seu endereço completo.");
+    return;
+  }
+
+  if(!pagamento){
+    alert("Selecione uma forma de pagamento.");
+    return;
+  }
+
+  const subtotal = getSubtotal();
+
+  if(!subtotal || subtotal <= 0){
+    alert("Sua sacola está vazia.");
+    return;
+  }
+
+  const WORKER_URL = const WORKER_URL = "https://wispy-math-2575.zt9mchhnvj.workers.dev";
+
+  const dadosPagamento = {
+    nome: nome,
+    email: email,
+    cpfCnpj: cpf,
+    valor: subtotal,
+    pedido: "Pedido LaLabela Boutique"
+  };
+
+  fetch(WORKER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(dadosPagamento)
+  })
+  .then(async resposta => {
+
+    const resultado = await resposta.json();
+
+    if(!resposta.ok || !resultado.sucesso){
+      throw new Error(
+        resultado.error ||
+        "Não foi possível criar o pagamento."
+      );
     }
+
+    return resultado;
+
+  })
+  .then(resultado => {
+
+    if(resultado.checkoutUrl){
+      window.location.href = resultado.checkoutUrl;
+    } else {
+      alert("Pagamento criado, mas o link não foi recebido.");
+    }
+
+  })
+  .catch(erro => {
+
+    console.error("Erro ao criar pagamento:", erro);
+
+    alert(
+      "Não foi possível iniciar o pagamento.\n\n" +
+      erro.message
+    );
+
+  });
+
+}
 
     alert("Pedido gerado com sucesso!");
     closeCart();

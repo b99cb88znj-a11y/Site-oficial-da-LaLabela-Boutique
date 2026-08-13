@@ -1841,36 +1841,291 @@ function openCart(){ document.getElementById("drawer").classList.add("open"); do
 function closeCart(){ document.getElementById("drawer").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); }
 
 async function finalizarPedidoSite(){
-    const nome = document.getElementById("checkoutNome")?.value.trim();
-    const cpf = document.getElementById("checkoutCpf")?.value.trim();
-    const email = document.getElementById("checkoutEmail")?.value.trim();
-    const telefone = document.getElementById("checkoutWhatsapp")?.value.trim();
-    const cep = document.getElementById("checkoutCep")?.value.trim();
-    const rua = document.getElementById("checkoutRua")?.value.trim();
-    const numero = document.getElementById("checkoutNumero")?.value.trim();
-    const bairro = document.getElementById("checkoutBairro")?.value.trim();
-    const complemento = document.getElementById("checkoutComplemento")?.value.trim();
-    const pagamento = document.getElementById("paymentSelect")?.value;
 
-    if(!nome || !cpf || !email || !telefone){
-        alert("Preencha nome, CPF, e-mail e WhatsApp (obrigatório).");
-        return;
-    }
+    const botao = document.getElementById("checkoutBtn");
 
-    if(!rua || !numero || !bairro || !cep){
-        alert("Preencha seu endereço completo, incluindo o CEP.");
-        return;
-    }
+    try {
 
-    if(!pagamento){
-        alert("Selecione uma forma de pagamento.");
-        return;
-    }
+        const nome = document.getElementById("checkoutNome")?.value.trim();
+        const cpf = document.getElementById("checkoutCpf")?.value.trim();
+        const email = document.getElementById("checkoutEmail")?.value.trim();
+        const telefone = document.getElementById("checkoutWhatsapp")?.value.trim();
+        const cep = document.getElementById("checkoutCep")?.value.trim();
+        const rua = document.getElementById("checkoutRua")?.value.trim();
+        const numero = document.getElementById("checkoutNumero")?.value.trim();
+        const bairro = document.getElementById("checkoutBairro")?.value.trim();
+        const complemento = document.getElementById("checkoutComplemento")?.value.trim();
+        const pagamento = document.getElementById("paymentSelect")?.value;
 
-    if(carrinho.length === 0){
-        alert("Sua sacola está vazia.");
-        return;
+        // =========================
+        // VALIDAÇÕES
+        // =========================
+
+        if(!nome || !cpf || !email || !telefone){
+            alert("Preencha nome, CPF, e-mail e WhatsApp.");
+            return;
+        }
+
+        if(!cep || !rua || !numero || !bairro){
+            alert("Preencha seu endereço completo, incluindo o CEP.");
+            return;
+        }
+
+        if(!pagamento){
+            alert("Selecione uma forma de pagamento.");
+            return;
+        }
+
+        if(carrinho.length === 0){
+            alert("Sua sacola está vazia.");
+            return;
+        }
+
+        // =========================
+        // BLOQUEIA DUPLO CLIQUE
+        // =========================
+
+        if(botao){
+            botao.disabled = true;
+            botao.dataset.textoOriginal = botao.textContent;
+            botao.textContent = "Processando pedido...";
+            botao.style.opacity = "0.6";
+            botao.style.cursor = "not-allowed";
+        }
+
+        // =========================
+        // VALORES
+        // =========================
+
+        const subtotal = getSubtotal();
+        const total = subtotal + valorFreteAtual;
+
+        // Número do pedido
+        const numeroPedido =
+            "#LB-" + Math.floor(100000 + Math.random() * 900000);
+
+        // =========================
+        // MONTA PEDIDO
+        // =========================
+
+        const dadosPedido = {
+            numeroPedido: numeroPedido,
+            nome: nome,
+            email: email,
+            cpf: cpf,
+            telefone: telefone,
+            cep: cep,
+            rua: rua,
+            numero: numero,
+            bairro: bairro,
+            complemento: complemento || "",
+            itens: carrinho.map(item => ({
+                nome: item.nome,
+                preco: Number(item.preco) || 0,
+                qtd: Number(item.qtd) || 1,
+                cor: item.cor || "",
+                tamanho: item.tamanho || "",
+                imagem: item.imagem || ""
+            })),
+            subtotal: subtotal,
+            frete: valorFreteAtual,
+            total: total,
+            pagamento: pagamento,
+            status: "Aguardando pagamento",
+            criadoEm: new Date().toISOString()
+        };
+
+        console.log("PEDIDO GERADO:", dadosPedido);
+
+        // =========================
+        // SALVA NO FIREBASE
+        // =========================
+
+        if(typeof window.salvarPedidoNoFirebase === "function"){
+
+            console.log("Salvando pedido no Firebase...");
+
+            await window.salvarPedidoNoFirebase(dadosPedido);
+
+            console.log("Pedido salvo no Firebase:", numeroPedido);
+
+        } else {
+
+            console.warn(
+                "A função salvarPedidoNoFirebase ainda não está disponível."
+            );
+        }
+
+        // =========================
+        // WORKER ASAAS
+        // =========================
+
+        const WORKER_URL =
+            "https://wispy-math-2575.zt9mchhnvj.workers.dev";
+
+        const dadosPagamento = {
+            numeroPedido: numeroPedido,
+            nome: nome,
+            email: email,
+            cpfCnpj: cpf.replace(/\D/g, ""),
+            telefone: telefone.replace(/\D/g, ""),
+            cep: cep.replace(/\D/g, ""),
+            endereco: rua,
+            numero: numero,
+            bairro: bairro,
+            complemento: complemento || "",
+            valor: Number(total.toFixed(2)),
+            pedido: `Pedido ${numeroPedido} - LaLabela Boutique`
+        };
+
+        console.log("Enviando pagamento para o Worker:", dadosPagamento);
+
+        const resposta = await fetch(WORKER_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dadosPagamento)
+        });
+
+        // =========================
+        // LÊ RESPOSTA DO WORKER
+        // =========================
+
+        let resultado;
+
+        const textoResposta = await resposta.text();
+
+        console.log("RESPOSTA BRUTA DO WORKER:", textoResposta);
+
+        try {
+            resultado = textoResposta
+                ? JSON.parse(textoResposta)
+                : {};
+        } catch(erroJson){
+
+            console.error(
+                "O Worker não retornou JSON válido:",
+                textoResposta
+            );
+
+            throw new Error(
+                "O servidor de pagamento retornou uma resposta inválida."
+            );
+        }
+
+        console.log("RESPOSTA DO ASAAS:", resultado);
+
+        // =========================
+        // VERIFICA ERRO
+        // =========================
+
+        if(!resposta.ok || !resultado.sucesso){
+
+            console.error(
+                "ERRO COMPLETO DO ASAAS:",
+                resultado
+            );
+
+            if(typeof window.atualizarStatusPedidoFirebase === "function"){
+                await window.atualizarStatusPedidoFirebase(
+                    numeroPedido,
+                    "Pagamento recusado"
+                );
+            }
+
+            const mensagem =
+                resultado.error ||
+                resultado.erro ||
+                resultado.message ||
+                "Não foi possível criar o pagamento.";
+
+            throw new Error(mensagem);
+        }
+
+        // =========================
+        // SALVA PERFIL DO CLIENTE
+        // =========================
+
+        perfilCliente.nome = nome;
+        perfilCliente.cpf = cpf;
+        perfilCliente.email = email;
+        perfilCliente.whatsapp = telefone;
+
+        localStorage.setItem(
+            "lalabela_perfil",
+            JSON.stringify(perfilCliente)
+        );
+
+        localStorage.setItem(
+            "lalabela_ultimo_acesso",
+            new Date().getTime()
+        );
+
+        if(typeof window.salvarClienteNoFirebase === "function"){
+            try {
+                await window.salvarClienteNoFirebase(perfilCliente);
+            } catch(erroCliente){
+                console.warn(
+                    "Não foi possível atualizar o perfil do cliente:",
+                    erroCliente
+                );
+            }
+        }
+
+        // =========================
+        // ABRE CHECKOUT
+        // =========================
+
+        if(resultado.checkoutUrl){
+
+            console.log(
+                "Checkout criado com sucesso:",
+                resultado.checkoutUrl
+            );
+
+            // Não limpamos o carrinho aqui.
+            // O cliente será levado para o pagamento.
+            window.location.href = resultado.checkoutUrl;
+
+            return;
+        }
+
+        // =========================
+        // PAGAMENTO CRIADO SEM LINK
+        // =========================
+
+        throw new Error(
+            "O pagamento foi criado, mas o link de pagamento não foi recebido."
+        );
+
+    } catch(erro){
+
+        console.error(
+            "ERRO AO FINALIZAR PEDIDO:",
+            erro
+        );
+
+        alert(
+            "Não foi possível finalizar o pedido.\n\n" +
+            (erro?.message || "Erro desconhecido.")
+        );
+
+    } finally {
+
+        // =========================
+        // LIBERA O BOTÃO
+        // =========================
+
+        if(botao){
+            botao.disabled = false;
+            botao.textContent =
+                botao.dataset.textoOriginal || "Finalizar Pedido";
+            botao.style.opacity = "1";
+            botao.style.cursor = "pointer";
+        }
     }
+}
 
     const subtotal = getSubtotal();
     const total = subtotal + valorFreteAtual;

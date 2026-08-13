@@ -1824,11 +1824,32 @@ function finalizarPedidoSite(){
         const resultado = await resposta.json();
 
         if(!resposta.ok || !resultado.sucesso){
-            throw new Error(
-                resultado.error ||
-                "Não foi possível criar o pagamento."
-            );
-        }
+
+  console.error("ERRO COMPLETO DO ASAAS:", resultado);
+
+  let mensagem = resultado.error || "Não foi possível criar o pagamento.";
+
+  if(resultado.detalhes){
+
+    if(Array.isArray(resultado.detalhes.errors)){
+
+      mensagem += "\n\n";
+
+      resultado.detalhes.errors.forEach((erro) => {
+        mensagem +=
+          (erro.description || erro.code || "Erro desconhecido") +
+          "\n";
+      });
+
+    } else {
+      mensagem +=
+        "\n\nDetalhes: " +
+        JSON.stringify(resultado.detalhes);
+    }
+  }
+
+  throw new Error(mensagem);
+}
 
         return resultado;
 

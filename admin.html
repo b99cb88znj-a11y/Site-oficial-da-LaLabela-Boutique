@@ -1,380 +1,3658 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>LaLabela Boutique — Painel</title>
+
 <style>
-*{ box-sizing:border-box; }
-body{ margin:0; font-family:Arial, sans-serif; background:#fafafa; color:#171717; }
-#telaLogin{ position:fixed; inset:0; background:linear-gradient(135deg,#fff5f9,#ffffff); display:flex; align-items:center; justify-content:center; padding:20px; z-index:99999; }
-.login-box{ width:100%; max-width:420px; background:#fff; border:1px solid #eee; border-radius:22px; padding:35px; box-shadow:0 15px 50px rgba(0,0,0,.08); }
-.login-logo{ text-align:center; margin-bottom:30px; }
-.login-logo .nome{ font-family:Georgia,serif; font-size:38px; color:#e52b79; }
-.login-logo .sub{ color:#e52b79; letter-spacing:5px; font-size:11px; }
-.login-group{ margin-bottom:18px; }
-.login-group label{ display:block; font-size:13px; font-weight:bold; margin-bottom:7px; }
-.login-group input{ width:100%; border:1px solid #ddd; border-radius:10px; padding:14px; font-size:15px; outline:none; }
-#btnLogin{ width:100%; border:0; background:#e52b79; color:#fff; border-radius:10px; padding:14px; font-size:15px; font-weight:bold; cursor:pointer; }
-#painel{ display:none; }
-.layout{ display:flex; min-height:100vh; }
-.sidebar{ width:260px; background:#fff; border-right:1px solid #eee; position:fixed; left:0; top:0; bottom:0; padding:25px 18px; }
-.logo{ text-align:center; margin-bottom:35px; }
-.logo .nome{ font-family:Georgia,serif; font-size:34px; color:#e52b79; }
-.logo .sub{ color:#e52b79; letter-spacing:4px; font-size:12px; }
-.menu{ display:flex; flex-direction:column; gap:7px; }
-.menu button{ border:0; background:transparent; padding:14px; border-radius:10px; text-align:left; font-size:15px; cursor:pointer; }
-.menu button:hover, .menu button.ativo{ background:#fff0f6; color:#e52b79; }
-.main{ margin-left:260px; width:calc(100% - 260px); }
-.topbar{ height:70px; background:#fff; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; padding:0 30px; }
-.content{ padding:32px; }
-.welcome{ display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; }
-.btn-primary{ background:#e52b79; color:#fff; border:0; border-radius:8px; padding:13px 22px; cursor:pointer; }
-.cards{ display:grid; grid-template-columns:repeat(5,1fr); gap:15px; margin-bottom:25px; }
-.card{ background:#fff; border:1px solid #eee; border-radius:14px; padding:20px; cursor:pointer; }
-.card-value{ font-size:26px; font-weight:bold; margin-top:8px; }
-.section{ background:#fff; border:1px solid #eee; border-radius:14px; overflow:hidden; margin-bottom:25px; }
-.section-header{ padding:20px 25px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; }
-.table-head, .product-row{ display:grid; grid-template-columns:2.5fr 1.2fr 1fr 1fr 1fr 150px; align-items:center; padding:12px 25px; }
-.table-head{ background:#fff8fb; color:#555; font-size:13px; }
-.product-row{ border-top:1px solid #eee; }
-.product{ display:flex; align-items:center; gap:15px; }
-.product img{ width:62px; height:62px; object-fit:cover; border-radius:9px; background:#f5f5f5; }
-.action{ min-width:42px; height:38px; border:1px solid #ddd; background:#fff; border-radius:8px; cursor:pointer; padding:0 8px; }
-.action:hover{ background:#fff0f6; color:#e52b79; }
-.modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:100; align-items:center; justify-content:center; padding:20px; }
-.modal.aberto{ display:flex; }
-.modal-box{ background:#fff; width:100%; max-width:700px; max-height:92vh; overflow:auto; border-radius:18px; padding:28px; }
-.form-group{ margin-bottom:17px; }
-.form-group label{ display:block; font-size:13px; font-weight:bold; margin-bottom:7px; }
-.form-group input, .form-group textarea, .form-group select{ width:100%; border:1px solid #ddd; border-radius:9px; padding:12px; font-size:14px; }
-.fotos-container{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px; }
-.foto-item{ position:relative; height:130px; }
-.foto-item img{ width:100%; height:100%; object-fit:cover; border-radius:10px; }
-.adicionar-foto{ height:130px; border:2px dashed #e52b79; border-radius:10px; background:#fff7fa; color:#e52b79; cursor:pointer; }
-#fotoInput{ display:none; }
-.estoque-box{ border:1px solid #eee; border-radius:12px; padding:15px; background:#fff8fb; margin-top:8px; }
-.estoque-linha{ display:grid; grid-template-columns:1fr 1fr 110px 38px; gap:8px; align-items:center; margin-bottom:8px; }
-.estoque-linha input{ width:100%; border:1px solid #ddd; border-radius:8px; padding:9px; }
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#fafafa;
+    color:#171717;
+}
+
+#telaLogin{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(135deg,#fff5f9,#ffffff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:99999;
+}
+
+.login-box{
+    width:100%;
+    max-width:420px;
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:22px;
+    padding:35px;
+    box-shadow:0 15px 50px rgba(0,0,0,.08);
+}
+
+.login-logo{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.login-logo .nome{
+    font-family:Georgia,serif;
+    font-size:38px;
+    color:#e52b79;
+}
+
+.login-logo .sub{
+    color:#e52b79;
+    letter-spacing:5px;
+    font-size:11px;
+    margin-top:-3px;
+}
+
+.login-box h2{
+    text-align:center;
+    margin:0 0 8px;
+    font-size:24px;
+}
+
+.login-subtitulo{
+    text-align:center;
+    color:#888;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.login-group{
+    margin-bottom:18px;
+}
+
+.login-group label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.login-group input{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:14px;
+    font-size:15px;
+    outline:none;
+}
+
+.login-group input:focus{
+    border-color:#e52b79;
+}
+
+#btnLogin{
+    width:100%;
+    border:0;
+    background:#e52b79;
+    color:#fff;
+    border-radius:10px;
+    padding:14px;
+    font-size:15px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#btnLogin:hover{
+    background:#c91d63;
+}
+
+#btnLogin:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+#erroLogin{
+    display:none;
+    margin-top:15px;
+    background:#fff0f0;
+    color:#d00000;
+    border-radius:8px;
+    padding:12px;
+    font-size:13px;
+    text-align:center;
+}
+
+#carregandoLogin{
+    display:none;
+    text-align:center;
+    color:#888;
+    margin-top:15px;
+    font-size:13px;
+}
+
+#painel{
+    display:none;
+}
+
+.layout{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:260px;
+    background:#fff;
+    border-right:1px solid #eee;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    padding:25px 18px;
+    z-index:20;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo .nome{
+    font-family:Georgia,serif;
+    font-size:34px;
+    color:#e52b79;
+}
+
+.logo .sub{
+    color:#e52b79;
+    letter-spacing:4px;
+    font-size:12px;
+    margin-top:-4px;
+}
+
+.admin{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:30px;
+}
+
+.admin strong{
+    display:block;
+    font-size:15px;
+}
+
+.admin span{
+    display:block;
+    color:#e52b79;
+    font-size:13px;
+    margin-top:4px;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.menu button{
+    border:0;
+    background:transparent;
+    padding:14px;
+    border-radius:10px;
+    text-align:left;
+    font-size:15px;
+    cursor:pointer;
+    color:#171717;
+    transition:.2s;
+}
+
+.menu button:hover,
+.menu button.ativo{
+    background:#fff0f6;
+    color:#e52b79;
+}
+
+.whatsapp-box{
+    position:absolute;
+    bottom:20px;
+    left:18px;
+    right:18px;
+    background:#fff0f6;
+    padding:18px;
+    border-radius:10px;
+    font-size:13px;
+}
+
+.whatsapp-box strong{
+    color:#e52b79;
+    display:block;
+    margin-bottom:5px;
+}
+
+.main{
+    margin-left:260px;
+    width:calc(100% - 260px);
+}
+
+.topbar{
+    height:70px;
+    background:#fff;
+    border-bottom:1px solid #eee;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+}
+
+.topbar-left{
+    font-size:18px;
+    font-weight:bold;
+    color:#e52b79;
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.account{
+    border-left:1px solid #eee;
+    padding-left:20px;
+    font-size:14px;
+}
+
+.content{
+    padding:32px;
+}
+
+.welcome{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.welcome h1{
+    margin:0;
+    font-size:27px;
+}
+
+.welcome p{
+    color:#777;
+    margin:7px 0 0;
+}
+
+.btn-primary{
+    background:#e52b79;
+    color:#fff;
+    border:0;
+    border-radius:8px;
+    padding:13px 22px;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.btn-primary:hover{
+    background:#c91d63;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:14px;
+    padding:20px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.card:hover{
+    border-color:#e52b79;
+    background:#fffcfd;
+}
+
+.card-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.card-icon{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#e52b79;
+}
+
+.card-title{
+    font-size:14px;
+}
+
+.card-value{
+    font-size:26px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.card-info{
+    color:#888;
+    font-size:12px;
+    margin-top:5px;
+}
+
+.section{
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+
+.section-header{
+    padding:20px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+}
+
+.section-header h2{
+    margin:0;
+    font-size:20px;
+}
+
+.link{
+    color:#d62973;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.table{
+    width:100%;
+}
+
+.table-head,
+.product-row{
+    display:grid;
+    grid-template-columns:
+    2.5fr 1.2fr 1fr 1fr 1fr 150px;
+    align-items:center;
+    padding:12px 25px;
+}
+
+.table-head{
+    background:#fff8fb;
+    color:#555;
+    font-size:13px;
+}
+
+.product-row{
+    border-top:1px solid #eee;
+}
+
+.product{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.product img{
+    width:62px;
+    height:62px;
+    object-fit:cover;
+    border-radius:9px;
+    background:#f5f5f5;
+}
+
+.product-name{
+    font-weight:500;
+}
+
+.price{
+    font-weight:bold;
+}
+
+.stock{
+    color:#29934a;
+    font-weight:600;
+}
+
+.status{
+    display:inline-block;
+    background:#e9f8ed;
+    color:#29934a;
+    border-radius:20px;
+    padding:6px 12px;
+    font-size:12px;
+    width:max-content;
+}
+
+.actions{
+    display:flex;
+    gap:7px;
+}
+
+.action{
+    min-width:42px;
+    height:38px;
+    border:1px solid #ddd;
+    background:#fff;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:12px;
+    padding:0 8px;
+}
+
+.action:hover{
+    background:#fff0f6;
+    color:#e52b79;
+}
+
+.delete:hover{
+    background:#fff0f0;
+    color:red;
+}
+
+.carregando-produtos{
+    padding:50px;
+    text-align:center;
+    color:#888;
+}
+
+.sem-produtos{
+    padding:50px;
+    text-align:center;
+    color:#888;
+}
+
+/* ESTOQUE */
+
+.estoque-box{
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:15px;
+    background:#fff8fb;
+    margin-top:8px;
+}
+
+.estoque-topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.estoque-total{
+    font-weight:bold;
+    color:#e52b79;
+}
+
+.btn-estoque{
+    border:1px solid #e52b79;
+    background:#fff;
+    color:#e52b79;
+    border-radius:8px;
+    padding:9px 12px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.btn-estoque:hover{
+    background:#fff0f6;
+}
+
+.estoque-lista{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.estoque-linha{
+    display:grid;
+    grid-template-columns:1fr 1fr 110px 38px;
+    gap:8px;
+    align-items:center;
+}
+
+.estoque-linha input{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:9px;
+    font-size:13px;
+    background:#fff;
+}
+
+.remover-estoque{
+    height:36px;
+    width:36px;
+    border:1px solid #ddd;
+    background:#fff;
+    border-radius:8px;
+    color:#d00000;
+    cursor:pointer;
+}
+
+.remover-estoque:hover{
+    background:#fff0f0;
+}
+
+.estoque-vazio{
+    font-size:13px;
+    color:#888;
+    padding:8px 0;
+}
+
+.estoque-ajuda{
+    font-size:12px;
+    color:#888;
+    margin-top:8px;
+    line-height:1.4;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.aberto{
+    display:flex;
+}
+
+.modal-box{
+    background:#fff;
+    width:100%;
+    max-width:700px;
+    max-height:92vh;
+    overflow:auto;
+    border-radius:18px;
+    padding:28px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.modal-header h2{
+    margin:0;
+}
+
+.fechar{
+    border:0;
+    background:#f3f3f3;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.form-group{
+    margin-bottom:17px;
+}
+
+.form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    border:1px solid #ddd;
+    border-radius:9px;
+    padding:12px;
+    font-size:14px;
+}
+
+.form-group textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.fotos-container{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-top:10px;
+}
+
+.foto-item{
+    position:relative;
+    height:130px;
+}
+
+.foto-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+.remover-foto{
+    position:absolute;
+    top:5px;
+    right:5px;
+    width:28px;
+    height:28px;
+    border:0;
+    border-radius:50%;
+    background:#fff;
+    color:#e00000;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.adicionar-foto{
+    height:130px;
+    border:2px dashed #e52b79;
+    border-radius:10px;
+    background:#fff7fa;
+    color:#e52b79;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.adicionar-foto:hover{
+    background:#ffeaf3;
+}
+
+#fotoInput{
+    display:none;
+}
+
+.modal-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:25px;
+}
+
+.btn-cancel{
+    border:1px solid #ddd;
+    background:#fff;
+    border-radius:8px;
+    padding:12px 20px;
+    cursor:pointer;
+}
+
+.btn-save{
+    border:0;
+    background:#e52b79;
+    color:#fff;
+    border-radius:8px;
+    padding:12px 25px;
+    cursor:pointer;
+}
+
+.btn-save:hover{
+    background:#c91d63;
+}
+
+.btn-save:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:220px;
+    }
+
+    .main{
+        margin-left:220px;
+        width:calc(100% - 220px);
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .table-head,
+    .product-row{
+        grid-template-columns:
+        2fr 1fr 1fr 100px;
+    }
+
+    .table-head div:nth-child(4),
+    .table-head div:nth-child(5),
+    .product-row > div:nth-child(4),
+    .product-row > div:nth-child(5){
+        display:none;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+    }
+
+    .content{
+        padding:18px;
+    }
+
+    .topbar{
+        padding:0 18px;
+    }
+
+    .cards{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .welcome{
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .welcome h1{
+        font-size:21px;
+    }
+
+    .welcome .btn-primary{
+        padding:11px 14px;
+        font-size:13px;
+    }
+
+    .table-head{
+        display:none;
+    }
+
+    .product-row{
+        display:flex;
+        flex-wrap:wrap;
+        gap:15px;
+        padding:15px;
+    }
+
+    .product{
+        width:100%;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .fotos-container{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .login-box{
+        padding:25px;
+    }
+
+    .estoque-linha{
+        grid-template-columns:1fr 1fr 90px 36px;
+    }
+
+}
+
 </style>
+
 </head>
+
 <body>
 
 <div id="telaLogin">
-    <div class="login-box">
-        <div class="login-logo"><div class="nome">LaLabela</div><div class="sub">BOUTIQUE</div></div>
-        <h2>Acesso administrativo</h2>
-        <div class="login-group"><label>E-mail</label><input id="emailLogin" type="email"></div>
-        <div class="login-group"><label>Senha</label><input id="senhaLogin" type="password"></div>
-        <button id="btnLogin" onclick="fazerLogin()">Entrar</button>
-        <div id="erroLogin" style="display:none;color:red;text-align:center;margin-top:10px;">E-mail ou senha incorretos.</div>
-    </div>
+
+<div class="login-box">
+
+<div class="login-logo">
+
+<div class="nome">
+LaLabela
+</div>
+
+<div class="sub">
+BOUTIQUE
+</div>
+
+</div>
+
+<h2>
+Acesso administrativo
+</h2>
+
+<div class="login-subtitulo">
+Entre para acessar o painel da sua loja.
+</div>
+
+<div class="login-group">
+
+<label>
+E-mail
+</label>
+
+<input
+id="emailLogin"
+type="email"
+placeholder="seuemail@gmail.com"
+autocomplete="email">
+
+</div>
+
+<div class="login-group">
+
+<label>
+Senha
+</label>
+
+<input
+id="senhaLogin"
+type="password"
+placeholder="Digite sua senha"
+autocomplete="current-password">
+
+</div>
+
+<button
+id="btnLogin"
+onclick="fazerLogin()">
+
+Entrar no painel
+
+</button>
+
+<div id="carregandoLogin">
+Verificando acesso...
+</div>
+
+<div id="erroLogin">
+E-mail ou senha incorretos.
+</div>
+
+</div>
+
 </div>
 
 <div id="painel">
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="logo"><div class="nome">LaLabela</div><div class="sub">BOUTIQUE</div></div>
-            <div class="menu">
-                <button class="ativo" onclick="menuNavegar('Dashboard',this)">Dashboard</button>
-                <button onclick="menuNavegar('Produtos',this)">Produtos</button>
-                <button onclick="fazerLogout()">Sair</button>
-            </div>
-        </aside>
-        <main class="main">
-            <header class="topbar">
-                <div style="font-weight:bold;color:#e52b79;">Thay Costa</div>
-                <div>LaLabela Boutique</div>
-            </header>
-            <div class="content">
-                <div class="welcome">
-                    <div><h1>Painel de Controle</h1><p>Resumo da loja hoje.</p></div>
-                    <button class="btn-primary" onclick="abrirNovoProduto()">+ Novo Produto</button>
-                </div>
-                <div class="cards">
-                    <div class="card" onclick="abrirModalPedidos('todos')"><div class="card-title">Pedidos</div><div class="card-value" id="totalPedidosAbertos">0</div></div>
-                    <div class="card" onclick="abrirModalPedidos('despachado')"><div class="card-title">Despachado</div><div class="card-value" id="totalPedidosDespachados">0</div></div>
-                    <div class="card" onclick="abrirModalPedidos('finalizado')"><div class="card-title">Finalizado</div><div class="card-value" id="totalPedidosFinalizados">0</div></div>
-                    <div class="card"><div class="card-title">Faturamento Hoje</div><div class="card-value" id="totalFaturamento">R$ 0,00</div></div>
-                </div>
-                <section class="section" id="secaoProdutos">
-                    <div class="section-header"><h2>Produtos</h2></div>
-                    <div class="table">
-                        <div class="table-head"><div>Produto</div><div>Categoria</div><div>Preço</div><div>Estoque</div><div>Status</div><div>Ações</div></div>
-                        <div id="listaProdutos"><div style="padding:20px;text-align:center;">Carregando...</div></div>
-                    </div>
-                </section>
-            </div>
-        </main>
-    </div>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<div class="nome">
+LaLabela
 </div>
 
-<div class="modal" id="modalProduto">
-    <div class="modal-box">
-        <h2 id="tituloModal">Novo produto</h2>
-        <div class="form-group"><label>Nome</label><input id="nomeProduto" type="text"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <div class="form-group"><label>Preço</label><input id="precoProduto" type="number" step="0.01"></div>
-            <div class="form-group"><label>Categoria</label><select id="categoriaProduto"><option>Conjunto</option><option>Vestido</option><option>Blusa</option><option>Calça</option></select></div>
-        </div>
-        <div class="form-group"><label>Cores (separadas por vírgula)</label><input id="coresProduto" type="text"></div>
-        <div class="form-group"><label>Tamanhos (separados por vírgula)</label><input id="tamanhosProduto" type="text"></div>
-        <div class="form-group">
-            <label>Estoque por combinação</label>
-            <div class="estoque-box">
-                <button type="button" class="btn-primary" style="padding:6px 12px;font-size:12px;margin-bottom:10px;" onclick="gerarVariacoesEstoque()">Gerar Combinações</button>
-                <div id="estoqueLista"></div>
-            </div>
-        </div>
-        <div class="form-group"><label>Descrição</label><textarea id="descricaoProduto"></textarea></div>
-        <div class="form-group"><label>Etiqueta</label><input id="tagProduto" type="text"></div>
-        <div class="form-group">
-            <label>Fotos</label>
-            <div class="fotos-container" id="fotosContainer"></div>
-            <input type="file" id="fotoInput" accept="image/*" multiple onchange="adicionarFotos(event)">
-        </div>
-        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
-            <button class="action" onclick="fecharModal()">Cancelar</button>
-            <button class="btn-primary" id="btnSalvarProduto" onclick="salvarProduto()">Salvar</button>
-        </div>
-    </div>
+<div class="sub">
+BOUTIQUE
 </div>
 
+</div>
+
+<div class="admin">
+
+<div style="
+width:48px;
+height:48px;
+border-radius:50%;
+background:#ffe4ef;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
+color:#e52b79;
+font-weight:bold;">
+
+TC
+
+</div>
+
+<div>
+
+<strong>
+Olá, Thay!
+</strong>
+
+<span>
+Administrador
+</span>
+
+</div>
+
+</div>
+
+<div class="menu">
+
+<button
+class="ativo"
+onclick="menuNavegar('Dashboard',this)">
+Dashboard
+</button>
+
+<button
+onclick="menuNavegar('Produtos',this)">
+Produtos
+</button>
+
+<button
+onclick="menuNavegar('Categorias',this)">
+Categorias
+</button>
+
+<button
+onclick="menuNavegar('Pedidos',this)">
+Pedidos
+</button>
+
+<button
+onclick="menuNavegar('Clientes',this)">
+Clientes
+</button>
+
+<button
+onclick="menuNavegar('Cupons',this)">
+Cupons
+</button>
+
+<button
+onclick="menuNavegar('Configurações',this)">
+Configurações
+</button>
+
+<button
+onclick="menuNavegar('Banners',this)">
+Banners
+</button>
+
+<button
+onclick="fazerLogout()">
+Sair
+</button>
+
+</div>
+
+<div class="whatsapp-box">
+
+<strong>
+Atendimento via WhatsApp
+</strong>
+
+(44) 99772-0350
+
+</div>
+
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+
+<div
+class="topbar-left"
+id="tituloTopo">
+
+Thay Costa
+
+</div>
+
+<div class="topbar-right">
+
+<div class="account">
+LaLabela Boutique
+</div>
+
+</div>
+
+</header>
+
+<div class="content">
+
+<div class="welcome">
+
+<div>
+
+<h1>
+Bem-vinda de volta, Thay!
+</h1>
+
+<p>
+Aqui está o resumo da sua loja hoje.
+</p>
+
+</div>
+
+<button
+class="btn-primary"
+onclick="abrirNovoProduto()">
+
++ Novo Produto
+
+</button>
+
+</div>
+
+<div class="cards">
+
+<div class="card" onclick="abrirModalPedidos('todos')">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Pedidos
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalPedidosAbertos">
+0
+</div>
+
+<div class="card-info">
+Visualizar pedidos
+</div>
+
+</div>
+
+<div class="card" onclick="abrirModalPedidos('despachado')">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Despachado
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalPedidosDespachados">
+0
+</div>
+
+<div class="card-info">
+Em rota de entrega
+</div>
+
+</div>
+
+<div class="card" onclick="abrirModalPedidos('nao_pago')">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Não pago
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalPedidosNaoPagos">
+0
+</div>
+
+<div class="card-info">
+Aguardando pagamento
+</div>
+
+</div>
+
+<div class="card" onclick="abrirModalPedidos('finalizado')">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Finalizado
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalPedidosFinalizados">
+0
+</div>
+
+<div class="card-info">
+Entregues com sucesso
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-top">
+
+<div class="card-icon"></div>
+
+<div class="card-title">
+Faturamento
+</div>
+
+</div>
+
+<div
+class="card-value"
+id="totalFaturamento">
+R$ 0,00
+</div>
+
+<div class="card-info">
+Faturamento do dia
+</div>
+
+</div>
+
+</div>
+
+<section
+class="section"
+id="secaoProdutos">
+
+<div class="section-header">
+
+<h2>
+Produtos
+</h2>
+
+<span
+class="link"
+onclick="verTodosProdutos()">
+
+Atualização automática
+
+</span>
+
+</div>
+
+<div class="table">
+
+<div class="table-head">
+
+<div>Produto</div>
+<div>Categoria</div>
+<div>Preço</div>
+<div>Estoque</div>
+<div>Status</div>
+<div>Ações</div>
+
+</div>
+
+<div id="listaProdutos">
+
+<div class="carregando-produtos">
+Carregando produtos...
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="section-header">
+
+<h2>
+Vendas — Últimos 7 dias
+</h2>
+
+</div>
+
+<div style="
+height:220px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#aaa;">
+
+Os dados de vendas aparecerão aqui.
+
+</div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+</div>
+
+<div
+class="modal"
+id="modalProduto">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<h2 id="tituloModal">
+Novo produto
+</h2>
+
+<button
+class="fechar"
+onclick="fecharModal()">
+
+×
+
+</button>
+
+</div>
+
+<div class="form-group">
+
+<label>
+Nome do produto
+</label>
+
+<input
+id="nomeProduto"
+type="text"
+placeholder="Ex: Conjunto Zandeya">
+
+</div>
+
+<div class="grid">
+
+<div class="form-group">
+
+<label>
+Preço
+</label>
+
+<input
+id="precoProduto"
+type="number"
+step="0.01"
+placeholder="69.90">
+
+</div>
+
+<div class="form-group">
+
+<label>
+Categoria
+</label>
+
+<select id="categoriaProduto">
+
+<option>Conjunto</option>
+<option>Vestido</option>
+<option>Blusa</option>
+<option>Calça</option>
+<option>Short</option>
+<option>Saia</option>
+<option>Macacão</option>
+<option>Outro</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label>
+Cores
+</label>
+
+<input
+id="coresProduto"
+type="text"
+placeholder="Marrom, Bege, Preto">
+
+</div>
+
+<div class="form-group">
+
+<label>
+Tamanhos
+</label>
+
+<input
+id="tamanhosProduto"
+type="text"
+placeholder="P, M, G">
+
+</div>
+
+<div class="form-group">
+
+<label>
+Estoque por cor e tamanho
+</label>
+
+<div class="estoque-box">
+
+<div class="estoque-topo">
+
+<div class="estoque-total">
+Total: <span id="estoqueTotal">0</span> unidade(s)
+</div>
+
+<button
+type="button"
+class="btn-estoque"
+onclick="gerarVariacoesEstoque()">
+
+Gerar combinações
+
+</button>
+
+</div>
+
+<div
+id="estoqueLista"
+class="estoque-lista">
+</div>
+
+<div class="estoque-ajuda">
+
+Preencha Cores e Tamanhos acima e clique em
+“Gerar combinações”. Depois informe a quantidade
+de cada combinação.
+
+</div>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label>
+Descrição
+</label>
+
+<textarea
+id="descricaoProduto"
+placeholder="Descrição do produto..."></textarea>
+
+</div>
+
+<div class="form-group">
+
+<label>
+Etiqueta
+</label>
+
+<input
+id="tagProduto"
+type="text"
+placeholder="Promoção">
+
+</div>
+
+<div class="form-group">
+
+<label>
+Fotos do produto
+</label>
+
+<div
+class="fotos-container"
+id="fotosContainer">
+</div>
+
+<input
+type="file"
+id="fotoInput"
+accept="image/*"
+multiple
+onchange="adicionarFotos(event)">
+
+</div>
+
+<div class="modal-footer">
+
+<button
+class="btn-cancel"
+onclick="fecharModal()">
+
+Cancelar
+
+</button>
+
+<button
+class="btn-save"
+id="btnSalvarProduto"
+onclick="salvarProduto()">
+
+Salvar produto
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MODAL DE PEDIDOS -->
 <div class="modal" id="modalPedidos">
-    <div class="modal-box">
-        <h2 id="tituloModalPedidos">Gerenciar Pedidos</h2>
-        <div id="listaPedidosModal" style="display:flex;flex-direction:column;gap:10px;"></div>
-        <button class="action" style="margin-top:20px;" onclick="document.getElementById('modalPedidos').classList.remove('aberto')">Fechar</button>
-    </div>
+<div class="modal-box" style="max-width: 850px;">
+<div class="modal-header">
+<h2 id="tituloModalPedidos">Gerenciar Pedidos</h2>
+<button class="fechar" onclick="fecharModalPedidos()">×</button>
+</div>
+<div id="listaPedidosModal" style="display:flex; flex-direction:column; gap:15px;">
+<!-- Conteúdo dinâmico de pedidos -->
+</div>
+</div>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+import {
+initializeApp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+getAuth,
+signInWithEmailAndPassword,
+onAuthStateChanged,
+signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+onSnapshot,
+addDoc,
+updateDoc,
+deleteDoc,
+doc,
+serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
-    authDomain: "lalabela-boutique.firebaseapp.com",
-    projectId: "lalabela-boutique",
-    storageBucket: "lalabela-boutique.firebasestorage.app",
-    messagingSenderId: "642045507952",
-    appId: "1:642045507952:web:8953c11428090b4a41b7b5"
+
+apiKey:
+"AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
+
+authDomain:
+"lalabela-boutique.firebaseapp.com",
+
+projectId:
+"lalabela-boutique",
+
+storageBucket:
+"lalabela-boutique.firebasestorage.app",
+
+messagingSenderId:
+"642045507952",
+
+appId:
+"1:642045507952:web:8953c11428090b4a41b7b5"
+
 };
 
-const CLOUDINARY_CLOUD_NAME = "ddhdmddq";
-const CLOUDINARY_UPLOAD_PRESET = "lalabela_produtos";
-const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const CLOUDINARY_CLOUD_NAME =
+"ddhdmddq";
+
+const CLOUDINARY_UPLOAD_PRESET =
+"lalabela_produtos";
+
+const CLOUDINARY_UPLOAD_URL =
+"https://api.cloudinary.com/v1_1/" +
+CLOUDINARY_CLOUD_NAME +
+"/image/upload";
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getFirestore(app);
+
 
 let produtos = [];
 let pedidos = [];
+
 let produtoEditando = null;
+
 let fotosAtuais = [];
+
+let listenerProdutosIniciado = false;
+let listenerPedidosIniciado = false;
+
+/* NOVO: ESTOQUE */
 let estoqueVariacoes = [];
 
-onAuthStateChanged(auth, user => {
-    if(user){
-        document.getElementById("telaLogin").style.display = "none";
-        document.getElementById("painel").style.display = "block";
-        carregarProdutosFirebase();
-        carregarPedidosFirebase();
-    } else {
-        document.getElementById("telaLogin").style.display = "flex";
-        document.getElementById("painel").style.display = "none";
-    }
-});
 
-window.fazerLogin = async function(){
-    const email = document.getElementById("emailLogin").value.trim();
-    const senha = document.getElementById("senhaLogin").value;
-    try {
-        await signInWithEmailAndPassword(auth, email, senha);
-    } catch(e) {
-        document.getElementById("erroLogin").style.display = "block";
-    }
+const telaLogin =
+document.getElementById("telaLogin");
+
+const painel =
+document.getElementById("painel");
+
+const erroLogin =
+document.getElementById("erroLogin");
+
+const carregandoLogin =
+document.getElementById("carregandoLogin");
+
+const btnLogin =
+document.getElementById("btnLogin");
+
+
+onAuthStateChanged(
+auth,
+usuario => {
+
+if(usuario){
+
+telaLogin.style.display =
+"none";
+
+painel.style.display =
+"block";
+
+carregarProdutosFirebase();
+carregarPedidosFirebase();
+
+}else{
+
+telaLogin.style.display =
+"flex";
+
+painel.style.display =
+"none";
+
+}
+
+}
+);
+
+
+window.fazerLogin =
+async function(){
+
+const email =
+document
+.getElementById("emailLogin")
+.value
+.trim();
+
+const senha =
+document
+.getElementById("senhaLogin")
+.value;
+
+erroLogin.style.display =
+"none";
+
+
+if(!email || !senha){
+
+erroLogin.textContent =
+"Digite seu e-mail e sua senha.";
+
+erroLogin.style.display =
+"block";
+
+return;
+
+}
+
+
+btnLogin.disabled =
+true;
+
+carregandoLogin.style.display =
+"block";
+
+
+try{
+
+await signInWithEmailAndPassword(
+auth,
+email,
+senha
+);
+
+}catch(error){
+
+console.error(
+"Erro de login:",
+error
+);
+
+let mensagem =
+"E-mail ou senha incorretos.";
+
+if(
+error.code ===
+"auth/user-not-found"
+){
+
+mensagem =
+"Este e-mail não está cadastrado no Firebase.";
+
+}
+
+if(
+error.code ===
+"auth/wrong-password"
+){
+
+mensagem =
+"A senha está incorreta.";
+
+}
+
+if(
+error.code ===
+"auth/invalid-credential"
+){
+
+mensagem =
+"E-mail ou senha incorretos.";
+
+}
+
+if(
+error.code ===
+"auth/invalid-email"
+){
+
+mensagem =
+"Digite um e-mail válido.";
+
+}
+
+erroLogin.textContent =
+mensagem;
+
+erroLogin.style.display =
+"block";
+
+}finally{
+
+btnLogin.disabled =
+false;
+
+carregandoLogin.style.display =
+"none";
+
+}
+
 };
 
-window.fazerLogout = async function(){ await signOut(auth); };
+
+window.fazerLogout =
+async function(){
+
+if(
+!confirm(
+"Deseja realmente sair do painel?"
+)
+){
+
+return;
+
+}
+
+try{
+
+await signOut(auth);
+
+}catch(error){
+
+console.error(error);
+
+alert(
+"Não foi possível sair."
+);
+
+}
+
+};
+
+
+document
+.getElementById("senhaLogin")
+.addEventListener(
+"keydown",
+event => {
+
+if(event.key === "Enter"){
+
+fazerLogin();
+
+}
+
+}
+);
+
 
 function carregarProdutosFirebase(){
-    onSnapshot(collection(db, "produtos"), snapshot => {
-        produtos = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderizarProdutos();
-    });
+
+if(listenerProdutosIniciado){
+
+return;
+
+}
+
+listenerProdutosIniciado =
+true;
+
+
+const lista =
+document.getElementById(
+"listaProdutos"
+);
+
+
+lista.innerHTML = `
+<div class="carregando-produtos">
+Carregando produtos...
+</div>
+`;
+
+
+onSnapshot(
+collection(db,"produtos"),
+
+snapshot => {
+
+produtos =
+snapshot.docs.map(
+item => {
+
+return {
+id:item.id,
+...item.data()
+};
+
+}
+);
+
+
+renderizarProdutos();
+
+},
+
+error => {
+
+console.error(
+"Erro Firestore:",
+error
+);
+
+lista.innerHTML = `
+<div class="sem-produtos">
+
+⚠️ Não foi possível carregar os produtos.
+
+<br><br>
+
+Verifique as regras do Firestore.
+
+</div>
+`;
+
+}
+
+);
+
 }
 
 function carregarPedidosFirebase(){
-    onSnapshot(collection(db, "pedidos"), snapshot => {
-        pedidos = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        atualizarCardsPedidos();
-    });
+if(listenerPedidosIniciado) return;
+listenerPedidosIniciado = true;
+
+onSnapshot(
+collection(db, "pedidos"),
+snapshot => {
+pedidos = snapshot.docs.map(item => ({
+id: item.id,
+...item.data()
+}));
+atualizarCardsPedidos();
+},
+error => {
+console.error("Erro ao carregar pedidos:", error);
+}
+);
 }
 
-function atualizarCardsPedidos(){
-    let despachados = 0, finalizados = 0, faturamento = 0;
-    pedidos.forEach(p => {
-        const st = (p.status || "").toLowerCase();
-        if(st === 'despachado') despachados++;
-        if(st === 'finalizado') finalizados++;
-        faturamento += Number(p.total || 0);
-    });
-    document.getElementById("totalPedidosAbertos").textContent = pedidos.length;
-    document.getElementById("totalPedidosDespachados").textContent = despachados;
-    document.getElementById("totalPedidosFinalizados").textContent = finalizados;
-    document.getElementById("totalFaturamento").textContent = "R$ " + faturamento.toFixed(2).replace(".",",");
+window.atualizarCardsPedidos = function() {
+let countAbertos = 0;
+let countDespachados = 0;
+let countNaoPagos = 0;
+let countFinalizados = 0;
+let faturamentoHoje = 0;
+
+const hojeStr = new Date().toISOString().split('T')[0];
+
+pedidos.forEach(p => {
+const st = (p.status || "").toLowerCase();
+const pag = (p.statusPagamento || "").toLowerCase();
+
+if(st === 'despachado' || st === 'enviado') {
+countDespachados++;
+} else if(pag === 'nao pago' || pag === 'pendente') {
+countNaoPagos++;
+} else if(st === 'finalizado' || st === 'entregue') {
+countFinalizados++;
+} else {
+countAbertos++;
 }
 
-window.abrirModalPedidos = function(filtro){
-    const modal = document.getElementById("modalPedidos");
-    const lista = document.getElementById("listaPedidosModal");
-    modal.classList.add("aberto");
-    let filtrados = pedidos;
-    if(filtro === 'despachado') filtrados = pedidos.filter(p => p.status === 'Despachado');
-    if(filtro === 'finalizado') filtrados = pedidos.filter(p => p.status === 'Finalizado');
-    
-    lista.innerHTML = filtrados.length === 0 ? "<div>Nenhum pedido encontrado.</div>" : filtrados.map(p => `
-        <div style="border:1px solid #eee;padding:10px;border-radius:8px;">
-            <strong>Pedido #${p.id.slice(-6)}</strong> - ${p.cliente} (${p.formaPagamento})<br>
-            Total: R$ ${Number(p.total).toFixed(2).replace('.',',')} | Status: ${p.status}
-            <div style="margin-top:8px;"><button class="btn-primary" style="padding:6px 12px;font-size:12px;" onclick="despacharPedido('${p.id}')">Despachar</button></div>
-        </div>
-    `).join("");
+// Faturamento do dia
+if(p.criadoEm) {
+// Se houver data, valida se é hoje
+let dataPed = p.criadoEm.toDate ? p.criadoEm.toDate().toISOString().split('T')[0] : '';
+if(dataPed === hojeStr) {
+faturamentoHoje += Number(p.total || p.valor || 0);
+}
+}
+});
+
+document.getElementById("totalPedidosAbertos").textContent = pedidos.length;
+document.getElementById("totalPedidosDespachados").textContent = countDespachados;
+document.getElementById("totalPedidosNaoPagos").textContent = countNaoPagos;
+document.getElementById("totalPedidosFinalizados").textContent = countFinalizados;
+document.getElementById("totalFaturamento").textContent = "R$ " + faturamentoHoje.toFixed(2).replace(".",",");
 }
 
-window.despacharPedido = async function(id){
-    await updateDoc(doc(db, "pedidos", id), { status: "Despachado" });
-    alert("Pedido despachado!");
-    document.getElementById('modalPedidos').classList.remove('aberto');
+window.abrirModalPedidos = function(filtro) {
+const modal = document.getElementById("modalPedidos");
+const titulo = document.getElementById("tituloModalPedidos");
+const lista = document.getElementById("listaPedidosModal");
+
+modal.classList.add("aberto");
+lista.innerHTML = "";
+
+let filtrados = pedidos;
+if(filtro === 'despachado') {
+titulo.textContent = "Pedidos Despachados";
+filtrados = pedidos.filter(p => {
+const st = (p.status || "").toLowerCase();
+return st === 'despachado' || st === 'enviado';
+});
+} else if(filtro === 'nao_pago') {
+titulo.textContent = "Pedidos Não Pagos";
+filtrados = pedidos.filter(p => {
+const pag = (p.statusPagamento || "").toLowerCase();
+return pag === 'nao pago' || pag === 'pendente';
+});
+} else if(filtro === 'finalizado') {
+titulo.textContent = "Pedidos Finalizados";
+filtrados = pedidos.filter(p => {
+const st = (p.status || "").toLowerCase();
+return st === 'finalizado' || st === 'entregue';
+});
+} else {
+titulo.textContent = "Todos os Pedidos";
 }
 
-function renderizarProdutos(){
-    const lista = document.getElementById("listaProdutos");
-    if(produtos.length === 0){ lista.innerHTML = `<div style="padding:30px;text-align:center;">Nenhum produto.</div>`; return; }
-    lista.innerHTML = produtos.map((p, i) => `
-        <div class="product-row">
-            <div class="product"><img src="${p.imagens?.[0] || ''}"><span>${p.nome}</span></div>
-            <div>${p.categoria}</div>
-            <div>R$ ${Number(p.preco).toFixed(2).replace('.',',')}</div>
-            <div>${p.estoque || 0}</div>
-            <div>Ativo</div>
-            <div style="display:flex;gap:5px;">
-                <button class="action" onclick="editarProduto(${i})">Editar</button>
-                <button class="action" onclick="excluirProduto('${p.id}')">Excluir</button>
-            </div>
-        </div>
-    `).join("");
+if(filtrados.length === 0) {
+lista.innerHTML = `<div style="text-align:center; color:#888; padding:30px;">Nenhum pedido encontrado nesta categoria.</div>`;
+return;
 }
 
-window.abrirNovoProduto = function(){ produtoEditando = null; limparFormularios(); document.getElementById("modalProduto").classList.add("aberto"); }
-window.fecharModal = function(){ document.getElementById("modalProduto").classList.remove("aberto"); }
-
-window.gerarVariacoesEstoque = function(){
-    const cores = document.getElementById("coresProduto").value.split(",").map(s => s.trim()).filter(Boolean);
-    const tamanhos = document.getElementById("tamanhosProduto").value.split(",").map(s => s.trim()).filter(Boolean);
-    estoqueVariacoes = [];
-    cores.forEach(c => tamanhos.forEach(t => estoqueVariacoes.push({ cor: c, tamanho: t, quantidade: 0 })));
-    renderizarEstoque();
+filtrados.forEach(p => {
+let modelosHtml = "";
+if(p.itens && Array.isArray(p.itens)) {
+p.itens.forEach(item => {
+modelosHtml += `<div>• ${item.nome || 'Produto'} (Qtd: ${item.quantidade || 1}) - Cor: ${item.cor || '-'} / Tam: ${item.tamanho || '-'}</div>`;
+});
+} else {
+modelosHtml = `<div>${p.descricao || 'Pedido realizado na loja'}</div>`;
 }
 
-function renderizarEstoque(){
-    document.getElementById("estoqueLista").innerHTML = estoqueVariacoes.map((item, idx) => `
-        <div class="estoque-linha">
-            <span>${item.cor}</span>
-            <span>${item.tamanho}</span>
-            <input type="number" min="0" value="${item.quantidade}" onchange="estoqueVariacoes[${idx}].quantidade = Number(this.value)">
-        </div>
-    `).join("");
+lista.innerHTML += `
+<div style="border:1px solid #eee; border-radius:10px; padding:15px; background:#fafafa;">
+<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+<strong>Pedido #${p.id.slice(-6)}</strong>
+<span style="color:#e52b79; font-weight:bold;">R$ ${Number(p.total || p.valor || 0).toFixed(2).replace('.',',')}</span>
+</div>
+<div style="font-size:13px; color:#555; display:flex; flex-direction:column; gap:5px; margin-bottom:12px;">
+<div><strong>Cliente:</strong> ${p.cliente || p.nomeCliente || 'Cliente'}</div>
+<div><strong>Modelos / Itens:</strong></div>
+<div style="padding-left:10px;">${modelosHtml}</div>
+<div><strong>Informações de Entrega:</strong> ${p.endereco || p.infoEntrega || 'Endereço não informado'}</div>
+<div><strong>Status de Pagamento:</strong> <span style="color: ${p.statusPagamento === 'Pago' ? 'green' : 'orange'};">${p.statusPagamento || 'Pendente'}</span></div>
+<div><strong>Status do Pedido:</strong> ${p.status || 'Aberto'}</div>
+</div>
+<div style="display:flex; gap:10px;">
+<button class="btn-primary" style="padding:8px 14px; font-size:13px;" onclick="despacharPedido('${p.id}')">Despachar Pedido</button>
+</div>
+</div>
+`;
+});
 }
 
-window.adicionarFotos = function(e){
-    [...e.target.files].forEach(file => fotosAtuais.push({ file, preview: URL.createObjectURL(file) }));
-    renderizarFotos();
+window.fecharModalPedidos = function() {
+document.getElementById("modalPedidos").classList.remove("aberto");
 }
 
-function renderizarFotos(){
-    document.getElementById("fotosContainer").innerHTML = fotosAtuais.map((f, i) => `
-        <div class="foto-item"><img src="${f.preview || f}"><button onclick="fotosAtuais.splice(${i},1);renderizarFotos()">×</button></div>
-    `).join("") + `<button type="button" class="adicionar-foto" onclick="document.getElementById('fotoInput').click()">+</button>`;
+window.despacharPedido = async function(idPedido) {
+try {
+await updateDoc(doc(db, "pedidos", idPedido), {
+status: "Despachado"
+});
+alert("Pedido despachado com sucesso!");
+fecharModalPedidos();
+carregarPedidosFirebase();
+} catch(e) {
+console.error(e);
+alert("Erro ao despachar o pedido.");
+}
 }
 
-window.salvarProduto = async function(){
-    const nome = document.getElementById("nomeProduto").value.trim();
-    const preco = Number(document.getElementById("precoProduto").value);
-    const categoria = document.getElementById("categoriaProduto").value;
-    const cores = document.getElementById("coresProduto").value.split(",").map(s => s.trim()).filter(Boolean);
-    const tamanhos = document.getElementById("tamanhosProduto").value.split(",").map(s => s.trim()).filter(Boolean);
-    const descricao = document.getElementById("descricaoProduto").value.trim();
-    const tag = document.getElementById("tagProduto").value.trim();
 
-    if(!nome || !preco){ alert("Preencha nome e preço."); return; }
+/* =====================================================
+   TOTAL DO ESTOQUE
+===================================================== */
 
-    const imagens = [];
-    for(const f of fotosAtuais){
-        if(typeof f === "string"){ imagens.push(f); }
-        else {
-            const fd = new FormData();
-            fd.append("file", f.file);
-            fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-            const res = await fetch(CLOUDINARY_UPLOAD_URL, { method: "POST", body: fd });
-            const data = await res.json();
-            if(data.secure_url) imagens.push(data.secure_url);
-        }
-    }
+function obterEstoqueTotal(produto){
 
-    const totalEstoque = estoqueVariacoes.reduce((s,i) => s + i.quantidade, 0);
+if(
+Array.isArray(
+produto.estoqueVariacoes
+)
+){
 
-    const dados = { nome, preco, categoria, cores, tamanhos, estoqueVariacoes, estoque: totalEstoque, descricao, tag, imagens };
+return produto.estoqueVariacoes.reduce(
+(total,item) =>
+total +
+(Number(item.quantidade) || 0),
+0
+);
 
-    if(produtoEditando === null){
-        await addDoc(collection(db, "produtos"), { ...dados, criadoEm: serverTimestamp() });
-        alert("Produto cadastrado!");
-    } else {
-        await updateDoc(doc(db, "produtos", produtos[produtoEditando].id), dados);
-        alert("Produto atualizado!");
-    }
-    fecharModal();
 }
 
-window.editarProduto = function(i){
-    produtoEditando = i;
-    const p = produtos[i];
-    document.getElementById("nomeProduto").value = p.nome;
-    document.getElementById("precoProduto").value = p.preco;
-    document.getElementById("categoriaProduto").value = p.categoria;
-    document.getElementById("coresProduto").value = p.cores.join(", ");
-    document.getElementById("tamanhosProduto").value = p.tamanhos.join(", ");
-    document.getElementById("descricaoProduto").value = p.descricao;
-    document.getElementById("tagProduto").value = p.tag;
-    estoqueVariacoes = p.estoqueVariacoes || [];
-    renderizarEstoque();
-    fotosAtuais = p.imagens || [];
-    renderizarFotos();
-    document.getElementById("modalProduto").classList.add("aberto");
+
+/* Compatibilidade com produtos antigos */
+
+return Number(
+produto.estoque
+) || 0;
+
 }
 
-window.excluirProduto = async function(id){
-    if(confirm("Excluir produto?")) await deleteDoc(doc(db, "produtos", id));
+
+/* =====================================================
+   RENDERIZAR PRODUTOS
+===================================================== */
+
+window.renderizarProdutos =
+function(){
+
+const lista =
+document.getElementById(
+"listaProdutos"
+);
+
+
+lista.innerHTML = "";
+
+
+if(produtos.length === 0){
+
+lista.innerHTML = `
+
+<div class="sem-produtos">
+
+Nenhum produto cadastrado.
+
+<br><br>
+
+Clique em
+<strong>+ Novo Produto</strong>
+para adicionar o primeiro.
+
+</div>
+
+`;
+
+}else{
+
+produtos.forEach(
+(produto,index) => {
+
+const foto =
+Array.isArray(
+produto.imagens
+) &&
+produto.imagens.length
+?
+produto.imagens[0]
+:
+"";
+
+
+const totalEstoque =
+obterEstoqueTotal(
+produto
+);
+
+
+lista.innerHTML += `
+
+<div class="product-row">
+
+<div class="product">
+
+${
+foto
+?
+`<img
+src="${foto}"
+alt="${produto.nome || ""}"
+>`
+:
+`<div style="
+width:62px;
+height:62px;
+border-radius:9px;
+background:#f3f3f3;
+display:flex;
+align-items:center;
+justify-content:center;">
+🛍️
+</div>`
 }
 
-function limparFormularios(){
-    document.getElementById("nomeProduto").value = "";
-    document.getElementById("precoProduto").value = "";
-    document.getElementById("coresProduto").value = "";
-    document.getElementById("tamanhosProduto").value = "";
-    document.getElementById("descricaoProduto").value = "";
-    document.getElementById("tagProduto").value = "";
-    estoqueVariacoes = [];
-    fotosAtuais = [];
-    renderizarEstoque();
-    renderizarFotos();
+<div class="product-name">
+
+${produto.nome || "Sem nome"}
+
+</div>
+
+</div>
+
+
+<div>
+
+${produto.categoria || "-"}
+
+</div>
+
+
+<div class="price">
+
+R$
+
+${Number(
+produto.preco || 0
+)
+.toFixed(2)
+.replace(".",",")}
+
+</div>
+
+
+<div class="stock">
+
+${totalEstoque}
+
+</div>
+
+
+<div>
+
+<span class="status">
+
+Ativo
+
+</span>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="action"
+onclick="editarProduto(${index})">
+
+Editar
+
+</button>
+
+
+<button
+class="action delete"
+onclick="excluirProduto(${index})">
+
+Excluir
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+);
+
 }
 
-window.menuNavegar = function(nome){ if(nome !== 'Dashboard' && nome !== 'Produtos') alert("Em breve."); }
+
+document
+.getElementById("totalProdutos")
+.textContent =
+produtos.length;
+
+
+document
+.getElementById("totalPromocoes")
+.textContent =
+produtos.filter(
+produto =>
+produto.tag &&
+produto.tag.trim() !== ""
+).length;
+
+};
+
+
+/* =====================================================
+   MENU
+===================================================== */
+
+window.menuNavegar =
+function(nome,botao){
+
+document
+.querySelectorAll(".menu button")
+.forEach(
+btn =>
+btn.classList.remove("ativo")
+);
+
+
+if(botao){
+
+botao.classList.add("ativo");
+
+}
+
+
+const tituloTopo =
+document.getElementById(
+"tituloTopo"
+);
+
+
+if(nome === "Dashboard"){
+
+tituloTopo.textContent =
+"Thay Costa";
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+return;
+
+}
+
+
+if(nome === "Produtos"){
+
+tituloTopo.textContent =
+"Produtos";
+
+document
+.getElementById(
+"secaoProdutos"
+)
+.scrollIntoView({
+behavior:"smooth"
+});
+
+return;
+
+}
+
+
+tituloTopo.textContent =
+nome;
+
+
+if(nome !== "Sair"){
+
+alert(
+nome +
+" será configurado em uma próxima etapa."
+);
+
+}
+
+};
+
+
+/* =====================================================
+   VER PRODUTOS
+===================================================== */
+
+window.verTodosProdutos =
+function(){
+
+document
+.getElementById(
+"secaoProdutos"
+)
+.scrollIntoView({
+behavior:"smooth"
+});
+
+};
+
+
+/* =====================================================
+   NOVO PRODUTO
+===================================================== */
+
+window.abrirNovoProduto =
+function(){
+
+produtoEditando =
+null;
+
+document
+.getElementById(
+"tituloModal"
+)
+.textContent =
+"Novo produto";
+
+
+limparFormulario();
+
+
+document
+.getElementById(
+"modalProduto"
+)
+.classList
+.add("aberto");
+
+};
+
+
+/* =====================================================
+   EDITAR PRODUTO
+===================================================== */
+
+window.editarProduto =
+function(index){
+
+const produto =
+produtos[index];
+
+
+if(!produto){
+
+return;
+
+}
+
+
+produtoEditando =
+index;
+
+
+document
+.getElementById(
+"tituloModal"
+)
+.textContent =
+"Editar produto";
+
+
+document
+.getElementById(
+"nomeProduto"
+)
+.value =
+produto.nome || "";
+
+
+document
+.getElementById(
+"precoProduto"
+)
+.value =
+produto.preco || "";
+
+
+document
+.getElementById(
+"categoriaProduto"
+)
+.value =
+produto.categoria ||
+"Conjunto";
+
+
+document
+.getElementById(
+"coresProduto"
+)
+.value =
+Array.isArray(
+produto.cores
+)
+?
+produto.cores.join(", ")
+:
+"";
+
+
+document
+.getElementById(
+"tamanhosProduto"
+)
+.value =
+Array.isArray(
+produto.tamanhos
+)
+?
+produto.tamanhos.join(", ")
+:
+"";
+
+
+document
+.getElementById(
+"descricaoProduto"
+)
+.value =
+produto.descricao || "";
+
+
+document
+.getElementById(
+"tagProduto"
+)
+.value =
+produto.tag || "";
+
+
+/* =====================================================
+   CARREGAR ESTOQUE EXISTENTE
+===================================================== */
+
+estoqueVariacoes =
+Array.isArray(
+produto.estoqueVariacoes
+)
+?
+produto.estoqueVariacoes.map(
+item => {
+
+return {
+
+cor:
+item.cor || "",
+
+tamanho:
+item.tamanho || "",
+
+quantidade:
+Number(
+item.quantidade
+) || 0
+
+};
+
+}
+)
+:
+[];
+
+
+renderizarEstoque();
+
+
+fotosAtuais =
+Array.isArray(
+produto.imagens
+)
+?
+[...produto.imagens]
+:
+[];
+
+
+renderizarFotos();
+
+
+document
+.getElementById(
+"modalProduto"
+)
+.classList
+.add("aberto");
+
+};
+
+
+/* =====================================================
+   LER CORES E TAMANHOS
+===================================================== */
+
+function lerListaInput(id){
+
+return document
+.getElementById(id)
+.value
+.split(",")
+.map(
+item =>
+item.trim()
+)
+.filter(Boolean);
+
+}
+
+
+/* =====================================================
+   GERAR COMBINAÇÕES DE ESTOQUE
+===================================================== */
+
+window.gerarVariacoesEstoque =
+function(){
+
+const cores =
+lerListaInput(
+"coresProduto"
+);
+
+const tamanhos =
+lerListaInput(
+"tamanhosProduto"
+);
+
+
+if(
+!cores.length ||
+!tamanhos.length
+){
+
+alert(
+"Preencha primeiro as Cores e os Tamanhos."
+);
+
+return;
+
+}
+
+
+/*
+   Mantém quantidades já cadastradas
+   quando possível.
+*/
+
+const anteriores =
+new Map(
+estoqueVariacoes.map(
+item => [
+
+item.cor +
+"|||" +
+item.tamanho,
+
+Number(
+item.quantidade
+) || 0
+
+]
+)
+);
+
+
+const novas = [];
+
+
+cores.forEach(
+cor => {
+
+tamanhos.forEach(
+tamanho => {
+
+const chave =
+cor +
+"|||" +
+tamanho;
+
+
+novas.push({
+
+cor:cor,
+
+tamanho:tamanho,
+
+quantidade:
+anteriores.has(chave)
+?
+anteriores.get(chave)
+:
+0
+
+});
+
+}
+);
+
+}
+);
+
+
+estoqueVariacoes =
+novas;
+
+
+renderizarEstoque();
+
+};
+
+
+/* =====================================================
+   TOTAL DO ESTOQUE
+===================================================== */
+
+function atualizarTotalEstoque(){
+
+const total =
+estoqueVariacoes.reduce(
+(soma,item) =>
+soma +
+(
+Number(item.quantidade)
+||
+0
+),
+0
+);
+
+
+document
+.getElementById(
+"estoqueTotal"
+)
+.textContent =
+total;
+
+
+return total;
+
+}
+
+
+/* =====================================================
+   RENDERIZAR ESTOQUE
+===================================================== */
+
+window.renderizarEstoque =
+function(){
+
+const lista =
+document.getElementById(
+"estoqueLista"
+);
+
+
+lista.innerHTML = "";
+
+
+if(
+!estoqueVariacoes.length
+){
+
+lista.innerHTML = `
+
+<div class="estoque-vazio">
+
+Nenhuma combinação adicionada ainda.
+
+</div>
+
+`;
+
+atualizarTotalEstoque();
+
+return;
+
+}
+
+
+estoqueVariacoes.forEach(
+(item,index) => {
+
+lista.innerHTML += `
+
+<div class="estoque-linha">
+
+<input
+type="text"
+value="${String(item.cor).replace(/"/g,"&quot;")}"
+placeholder="Cor"
+onchange="
+alterarEstoqueCampo(
+${index},
+'cor',
+this.value
+)">
+
+
+<input
+type="text"
+value="${String(item.tamanho).replace(/"/g,"&quot;")}"
+placeholder="Tamanho"
+onchange="
+alterarEstoqueCampo(
+${index},
+'tamanho',
+this.value
+)">
+
+
+<input
+type="number"
+min="0"
+step="1"
+value="${Number(item.quantidade) || 0}"
+placeholder="Qtd."
+onchange="
+alterarEstoqueCampo(
+${index},
+'quantidade',
+this.value
+)">
+
+
+<button
+type="button"
+class="remover-estoque"
+onclick="
+removerVariacaoEstoque(
+${index}
+)
+">
+
+×
+
+</button>
+
+</div>
+
+`;
+
+}
+);
+
+
+atualizarTotalEstoque();
+
+};
+
+
+/* =====================================================
+   ALTERAR ESTOQUE
+===================================================== */
+
+window.alterarEstoqueCampo =
+function(
+index,
+campo,
+valor
+){
+
+if(
+!estoqueVariacoes[index]
+){
+
+return;
+
+}
+
+
+if(
+campo === "quantidade"
+){
+
+estoqueVariacoes[index][campo] =
+Math.max(
+0,
+parseInt(
+valor,
+10
+) || 0
+);
+
+}else{
+
+estoqueVariacoes[index][campo] =
+valor.trim();
+
+}
+
+
+atualizarTotalEstoque();
+
+};
+
+
+/* =====================================================
+   REMOVER VARIAÇÃO
+===================================================== */
+
+window.removerVariacaoEstoque =
+function(index){
+
+estoqueVariacoes.splice(
+index,
+1
+);
+
+renderizarEstoque();
+
+};
+
+
+/* =====================================================
+   FOTOS
+===================================================== */
+
+window.renderizarFotos =
+function(){
+
+const container =
+document.getElementById(
+"fotosContainer"
+);
+
+
+container.innerHTML = "";
+
+
+fotosAtuais.forEach(
+(foto,index) => {
+
+let preview = "";
+
+
+if(
+typeof foto === "string"
+){
+
+preview =
+foto;
+
+}else if(
+foto &&
+foto.preview
+){
+
+preview =
+foto.preview;
+
+}
+
+
+container.innerHTML += `
+
+<div class="foto-item">
+
+<img
+src="${preview}"
+alt="Foto ${index + 1}"
+>
+
+
+<button
+type="button"
+class="remover-foto"
+onclick="
+removerFoto(${index})
+">
+
+×
+
+</button>
+
+</div>
+
+`;
+
+}
+);
+
+
+container.innerHTML += `
+
+<button
+type="button"
+class="adicionar-foto"
+onclick="
+document
+.getElementById('fotoInput')
+.click()
+">
+
++
+
+<br>
+
+Adicionar foto
+
+</button>
+
+`;
+
+};
+
+
+/* =====================================================
+   REMOVER FOTO
+===================================================== */
+
+window.removerFoto =
+function(index){
+
+const foto =
+fotosAtuais[index];
+
+
+if(
+foto &&
+typeof foto === "object" &&
+foto.preview
+){
+
+URL.revokeObjectURL(
+foto.preview
+);
+
+}
+
+
+fotosAtuais.splice(
+index,
+1
+);
+
+
+renderizarFotos();
+
+};
+
+
+/* =====================================================
+   ADICIONAR FOTOS
+===================================================== */
+
+window.adicionarFotos =
+function(event){
+
+const arquivos =
+[
+...event.target.files
+];
+
+
+arquivos.forEach(
+arquivo => {
+
+if(
+!arquivo.type.startsWith(
+"image/"
+)
+){
+
+return;
+
+}
+
+
+const preview =
+URL.createObjectURL(
+arquivo
+);
+
+
+fotosAtuais.push({
+
+file:arquivo,
+
+preview:preview
+
+});
+
+}
+);
+
+
+renderizarFotos();
+
+
+event.target.value = "";
+
+};
+
+
+/* =====================================================
+   CLOUDINARY
+===================================================== */
+
+async function enviarFotoCloudinary(
+arquivo
+){
+
+const formData =
+new FormData();
+
+
+formData.append(
+"file",
+arquivo
+);
+
+
+formData.append(
+"upload_preset",
+CLOUDINARY_UPLOAD_PRESET
+);
+
+
+formData.append(
+"folder",
+"lalabela/produtos"
+);
+
+
+const resposta =
+await fetch(
+CLOUDINARY_UPLOAD_URL,
+{
+method:"POST",
+body:formData
+}
+);
+
+
+const dados =
+await resposta.json();
+
+
+if(
+!resposta.ok
+){
+
+console.error(
+"Erro Cloudinary:",
+dados
+);
+
+throw new Error(
+dados.error?.message ||
+"Erro ao enviar imagem para o Cloudinary."
+);
+
+}
+
+
+if(
+!dados.secure_url
+){
+
+throw new Error(
+"Cloudinary não retornou a URL da imagem."
+);
+
+}
+
+
+return dados.secure_url;
+
+}
+
+
+/* =====================================================
+   SALVAR PRODUTO
+===================================================== */
+
+window.salvarProduto =
+async function(){
+
+const btn =
+document.getElementById(
+"btnSalvarProduto"
+);
+
+
+const nome =
+document
+.getElementById(
+"nomeProduto"
+)
+.value
+.trim();
+
+
+const preco =
+Number(
+document
+.getElementById(
+"precoProduto"
+)
+.value
+);
+
+
+const categoria =
+document
+.getElementById(
+"categoriaProduto"
+)
+.value;
+
+
+const cores =
+lerListaInput(
+"coresProduto"
+);
+
+
+const tamanhos =
+lerListaInput(
+"tamanhosProduto"
+);
+
+
+const descricao =
+document
+.getElementById(
+"descricaoProduto"
+)
+.value
+.trim();
+
+
+const tag =
+document
+.getElementById(
+"tagProduto"
+)
+.value
+.trim();
+
+
+if(!nome){
+
+alert(
+"Digite o nome do produto."
+);
+
+return;
+
+}
+
+
+if(
+!preco ||
+preco <= 0
+){
+
+alert(
+"Digite um preço válido."
+);
+
+return;
+
+}
+
+
+btn.disabled =
+true;
+
+btn.textContent =
+"Enviando fotos...";
+
+
+try{
+
+const imagens = [];
+
+
+/*
+   FOTOS JÁ EXISTENTES
+*/
+
+for(
+const foto of fotosAtuais
+){
+
+if(
+typeof foto === "string"
+){
+
+imagens.push(
+foto
+);
+
+}else if(
+foto &&
+foto.file
+){
+
+const url =
+await enviarFotoCloudinary(
+foto.file
+);
+
+
+imagens.push(
+url
+);
+
+}
+
+}
+
+
+btn.textContent =
+"Salvando produto...";
+
+
+/* =====================================================
+   ESTOQUE SALVO NO FIRESTORE
+===================================================== */
+
+const estoqueNormalizado =
+estoqueVariacoes
+.map(
+item => {
+
+return {
+
+cor:
+String(
+item.cor || ""
+)
+.trim(),
+
+tamanho:
+String(
+item.tamanho || ""
+)
+.trim(),
+
+quantidade:
+Math.max(
+0,
+parseInt(
+item.quantidade,
+10
+) || 0
+)
+
+};
+
+}
+)
+.filter(
+item =>
+item.cor ||
+item.tamanho
+);
+
+
+const estoque =
+estoqueNormalizado.reduce(
+(total,item) =>
+total +
+item.quantidade,
+0
+);
+
+
+const produto = {
+
+nome:nome,
+
+preco:preco,
+
+categoria:categoria,
+
+imagens:imagens,
+
+cores:cores,
+
+tamanhos:tamanhos,
+
+/* NOVOS CAMPOS */
+
+estoqueVariacoes:
+estoqueNormalizado,
+
+estoque:
+estoque,
+
+descricao:descricao,
+
+tag:tag,
+
+atualizadoEm:
+serverTimestamp()
+
+};
+
+
+if(
+produtoEditando === null
+){
+
+await addDoc(
+collection(
+db,
+"produtos"
+),
+{
+
+...produto,
+
+criadoEm:
+serverTimestamp()
+
+}
+);
+
+
+alert(
+"Produto adicionado com sucesso!"
+);
+
+}else{
+
+const produtoAtual =
+produtos[
+produtoEditando
+];
+
+
+if(!produtoAtual){
+
+throw new Error(
+"Produto não encontrado."
+);
+
+}
+
+
+await updateDoc(
+doc(
+db,
+"produtos",
+produtoAtual.id
+),
+produto
+);
+
+
+alert(
+"Produto atualizado com sucesso!"
+);
+
+}
+
+
+fecharModal();
+
+
+produtoEditando =
+null;
+
+
+}catch(error){
+
+console.error(
+"Erro ao salvar:",
+error
+);
+
+
+if(
+error.code ===
+"permission-denied"
+){
+
+alert(
+"O Firebase bloqueou a gravação. Verifique as regras do Firestore."
+);
+
+}else{
+
+alert(
+"Não foi possível salvar o produto.\n\n" +
+error.message
+);
+
+}
+
+}finally{
+
+btn.disabled =
+false;
+
+btn.textContent =
+"Salvar produto";
+
+}
+
+};
+
+
+/* =====================================================
+   EXCLUIR PRODUTO
+===================================================== */
+
+window.excluirProduto =
+async function(index){
+
+const produto =
+produtos[index];
+
+
+if(!produto){
+
+return;
+
+}
+
+
+const confirmar =
+confirm(
+"Deseja realmente excluir o produto:\n\n" +
+produto.nome +
+"?"
+);
+
+
+if(!confirmar){
+
+return;
+
+}
+
+
+try{
+
+await deleteDoc(
+doc(
+db,
+"produtos",
+produto.id
+)
+);
+
+
+alert(
+"Produto excluído com sucesso!"
+);
+
+
+}catch(error){
+
+console.error(
+"Erro ao excluir:",
+error
+);
+
+
+if(
+error.code ===
+"permission-denied"
+){
+
+alert(
+"O Firebase bloqueou a exclusão. Verifique as regras do Firestore."
+);
+
+}else{
+
+alert(
+"Não foi possível excluir o produto."
+);
+
+}
+
+}
+
+};
+
+
+/* =====================================================
+   LIMPAR FORMULÁRIO
+===================================================== */
+
+window.limparFormulario =
+function(){
+
+document
+.getElementById(
+"nomeProduto"
+)
+.value = "";
+
+
+document
+.getElementById(
+"precoProduto"
+)
+.value = "";
+
+
+document
+.getElementById(
+"categoriaProduto"
+)
+.value =
+"Conjunto";
+
+
+document
+.getElementById(
+"coresProduto"
+)
+.value = "";
+
+
+document
+.getElementById(
+"tamanhosProduto"
+)
+.value = "";
+
+
+document
+.getElementById(
+"descricaoProduto"
+)
+.value = "";
+
+
+document
+.getElementById(
+"tagProduto"
+)
+.value = "";
+
+
+/* NOVO */
+
+estoqueVariacoes =
+[];
+
+
+renderizarEstoque();
+
+
+fotosAtuais =
+[];
+
+
+renderizarFotos();
+
+};
+
+
+/* =====================================================
+   FECHAR MODAL
+===================================================== */
+
+window.fecharModal =
+function(){
+
+document
+.getElementById(
+"modalProduto"
+)
+.classList
+.remove("aberto");
+
+
+produtoEditando =
+null;
+
+};
+
+
+/* =====================================================
+   FECHAR FORA DO MODAL
+===================================================== */
+
+document
+.getElementById(
+"modalProduto"
+)
+.addEventListener(
+"click",
+function(event){
+
+if(
+event.target === this
+){
+
+fecharModal();
+
+}
+
+}
+);
+
+
+/* =====================================================
+   INICIAL
+===================================================== */
+
+renderizarFotos();
+
+renderizarEstoque();
+
+
+console.log(
+"======================================"
+);
+
+console.log(
+"LaLabela Admin iniciado."
+);
+
+console.log(
+"Firebase conectado."
+);
+
+console.log(
+"Firestore: produtos"
+);
+
+console.log(
+"Cloudinary conectado."
+);
+
+console.log(
+"Estoque por cor + tamanho conectado."
+);
+
+console.log(
+"======================================"
+);
+
 </script>
 
 </body>
+
 </html>

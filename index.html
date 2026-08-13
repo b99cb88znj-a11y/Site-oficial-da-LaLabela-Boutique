@@ -1267,8 +1267,8 @@ header{
         <button class="fechar-modal-sistema" onclick="fecharModalPerfil()">&times;</button>
         <h2>Meu Perfil</h2>
         <div class="grupo-campo"><label>Seu Nome</label><input type="text" id="perfilNome" placeholder="Ex: Maria Silva"></div>
-        <div class="grupo-campo"><label>CPF</label><input type="text" id="perfilCpf" placeholder="000.000.000-00"></div>
-        <div class="grupo-campo"><label>WhatsApp</label><input type="text" id="perfilWhatsapp" placeholder="(44) 99999-9999"></div>
+        <div class="grupo-campo"><label>CPF</label><input type="text" id="perfilCpf" placeholder="000.000.000-00" oninput="mascaraCpf(this)"></div>
+        <div class="grupo-campo"><label>WhatsApp</label><input type="text" id="perfilWhatsapp" placeholder="(44) 99999-9999" oninput="mascaraTelefone(this)"></div>
         <div class="grupo-campo"><label>E-mail (Obrigatório)</label><input type="email" id="perfilEmail" placeholder="seu@email.com"></div>
         <h3 style="margin-top:20px; font-size:1.2rem; color:#ed1760;">Endereços Salvos</h3>
         <div id="listaEnderecosSalvos"></div>
@@ -1280,7 +1280,7 @@ header{
     <div class="modal-sistema-box">
         <button class="fechar-modal-sistema" onclick="fecharModalRastreio()">&times;</button>
         <h2>Rastreio de Pedidos</h2>
-        <div class="grupo-campo"><label>Digite o Código do Pedido ou E-mail</label><input type="text" id="inputBuscaRastreio" placeholder="Ex: #1024 ou seu e-mail"></div>
+        <div class="grupo-campo"><label>Digite o Número do Pedido ou E-mail</label><input type="text" id="inputBuscaRastreio" placeholder="Ex: #LB-12345 ou seu e-mail"></div>
         <button class="btn-acao-modal" onclick="consultarRastreio()">Consultar Status</button>
         <div id="resultadoRastreio" style="margin-top:20px;"></div>
     </div>
@@ -1298,11 +1298,11 @@ header{
             <label>Nome Completo (Obrigatório)</label>
             <input type="text" id="checkoutNome" placeholder="Seu nome completo" required>
             <label>CPF (Obrigatório)</label>
-            <input type="text" id="checkoutCpf" placeholder="000.000.000-00" required>
+            <input type="text" id="checkoutCpf" placeholder="000.000.000-00" oninput="mascaraCpf(this)" required>
             <label>E-mail (Obrigatório)</label>
             <input type="email" id="checkoutEmail" placeholder="seu@email.com" required>
-            <label>WhatsApp</label>
-            <input type="text" id="checkoutWhatsapp" placeholder="(44) 99999-9999">
+            <label>WhatsApp (Obrigatório)</label>
+            <input type="text" id="checkoutWhatsapp" placeholder="(44) 99999-9999" oninput="mascaraTelefone(this)" required>
             <label>Busca por CEP</label>
             <div class="cep-row">
                 <input type="text" id="checkoutCep" placeholder="00000-000" maxlength="9">
@@ -1342,9 +1342,51 @@ let indicesFotoVitrine = {};
 let indiceFotoModal = 0;
 let valorFreteAtual = 0;
 
+// SISTEMA DE SEGURANÇA E EXPIRAÇÃO DE DADOS APÓS INATIVIDADE (Algumas horas)
+function verificarExpiracaoSessao() {
+    const ultimoAcesso = localStorage.getItem("lalabela_ultimo_acesso");
+    const agora = new Date().getTime();
+    const duasHorasEmMs = 2 * 60 * 60 * 1000;
+
+    if (ultimoAcesso && (agora - Number(ultimoAcesso) > duasHorasEmMs)) {
+        localStorage.removeItem("lalabela_perfil");
+    }
+    localStorage.setItem("lalabela_ultimo_acesso", agora);
+}
+verificarExpiracaoSessao();
+
 let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
     nome: "", cpf: "", whatsapp: "", email: "", enderecos: []
 };
+
+// MÁSCARAS AUTOMÁTICAS (CPF e Telefone)
+function mascaraCpf(input) {
+    let v = input.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    if (v.length > 9) {
+        v = v.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})/, "$1.$2.$3-$4");
+    } else if (v.length > 6) {
+        v = v.replace(/^(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
+    } else if (v.length > 3) {
+        v = v.replace(/^(\d{3})(\d{1,3})/, "$1.$2");
+    }
+    input.value = v;
+}
+
+function mascaraTelefone(input) {
+    let v = input.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    if (v.length > 10) {
+        v = v.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    } else if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+    } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+    } else if (v.length > 0) {
+        v = v.replace(/^(\d{0,2})/, "($1");
+    }
+    input.value = v;
+}
 
 function carregarPerfilNaTela(){
     document.getElementById("perfilNome").value = perfilCliente.nome || "";
@@ -1366,6 +1408,7 @@ function salvarPerfilCliente(){
     perfilCliente.whatsapp = document.getElementById("perfilWhatsapp").value.trim();
     perfilCliente.email = document.getElementById("perfilEmail").value.trim();
     localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
     
     if (typeof window.salvarClienteNoFirebase === "function") {
         window.salvarClienteNoFirebase(perfilCliente);
@@ -1477,17 +1520,46 @@ function fecharModalRastreio(){ document.getElementById("modalRastreio").classLi
 function consultarRastreio(){
     const termo = document.getElementById("inputBuscaRastreio").value.trim();
     const resultadoDiv = document.getElementById("resultadoRastreio");
-    if(!termo){ alert("Digite um código ou e-mail para rastrear."); return; }
-    resultadoDiv.innerHTML = `
-        <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
-            <p><strong>Pedido encontrado:</strong> #${termo}</p>
-            <p><strong>Status atual:</strong> <span style="color:#ed1760; font-weight:600;">Saiu para entrega 🚚</span></p>
-            <button class="btn-acao-modal" style="background:#25D366; margin-top:10px;" onclick="confirmarEntregaRecebida()">Confirmar Recebimento ✓</button>
-        </div>
-    `;
+    if(!termo){ alert("Digite o código do pedido ou e-mail para rastrear."); return; }
+    
+    resultadoDiv.innerHTML = `<p style="text-align:center; color:#888;">Buscando pedido...</p>`;
+
+    if(window.buscarPedidoNoFirebase){
+        window.buscarPedidoNoFirebase(termo).then(pedido => {
+            if(!pedido){
+                resultadoDiv.innerHTML = `<div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0; color:#c21250;"><p>Nenhum pedido encontrado para: <strong>${termo}</strong></p></div>`;
+                return;
+            }
+            
+            resultadoDiv.innerHTML = `
+                <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
+                    <p><strong>Pedido:</strong> ${pedido.numeroPedido}</p>
+                    <p><strong>Cliente:</strong> ${pedido.nome}</p>
+                    <p><strong>Status atual:</strong> <span style="color:#ed1760; font-weight:600;">${pedido.status || 'Aguardando pagamento'}</span></p>
+                    ${pedido.status === 'Saiu para entrega' ? `<button class="btn-acao-modal" style="background:#25D366; margin-top:10px;" onclick="confirmarEntregaRecebida('${pedido.numeroPedido}')">Confirmar Recebimento ✓</button>` : ''}
+                </div>
+            `;
+        }).catch(err => {
+            resultadoDiv.innerHTML = `<p style="color:red;">Erro ao buscar pedido.</p>`;
+        });
+    } else {
+        resultadoDiv.innerHTML = `
+            <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
+                <p><strong>Pedido encontrado:</strong> #${termo}</p>
+                <p><strong>Status atual:</strong> <span style="color:#ed1760; font-weight:600;">Aguardando pagamento</span></p>
+            </div>
+        `;
+    }
 }
 
-function confirmarEntregaRecebida(){ alert("Obrigada! Confirmação de recebimento registrada com sucesso."); fecharModalRastreio(); }
+function confirmarEntregaRecebida(numPedido){ 
+    if(window.atualizarStatusPedidoFirebase){
+        window.atualizarStatusPedidoFirebase(numPedido, "Finalizado");
+    }
+    alert("Obrigada! Confirmação de recebimento registrada com sucesso."); 
+    fecharModalRastreio(); 
+}
+
 function escaparHTML(valor){ if(valor === null || valor === undefined) return ""; return String(valor).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
 function formatarPreco(valor){ return (Number(valor) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
 
@@ -1768,7 +1840,7 @@ function renderTotals(){
 function openCart(){ document.getElementById("drawer").classList.add("open"); document.getElementById("overlay").classList.add("open"); }
 function closeCart(){ document.getElementById("drawer").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); }
 
-function finalizarPedidoSite(){
+async function finalizarPedidoSite(){
     const nome = document.getElementById("checkoutNome")?.value.trim();
     const cpf = document.getElementById("checkoutCpf")?.value.trim();
     const email = document.getElementById("checkoutEmail")?.value.trim();
@@ -1780,8 +1852,8 @@ function finalizarPedidoSite(){
     const complemento = document.getElementById("checkoutComplemento")?.value.trim();
     const pagamento = document.getElementById("paymentSelect")?.value;
 
-    if(!nome || !cpf || !email){
-        alert("Preencha nome, CPF e e-mail.");
+    if(!nome || !cpf || !email || !telefone){
+        alert("Preencha nome, CPF, e-mail e WhatsApp (obrigatório).");
         return;
     }
 
@@ -1802,11 +1874,37 @@ function finalizarPedidoSite(){
 
     const subtotal = getSubtotal();
     const total = subtotal + valorFreteAtual;
+    const numeroPedido = "#LB-" + Math.floor(100000 + Math.random() * 900000);
+
+    // Salva o pedido inicial no Firebase com status "Aguardando pagamento"
+    const dadosPedido = {
+        numeroPedido,
+        nome,
+        email,
+        cpf,
+        telefone,
+        cep,
+        rua,
+        numero,
+        bairro,
+        complemento,
+        itens: carrinho,
+        subtotal,
+        frete: valorFreteAtual,
+        total,
+        status: "Aguardando pagamento",
+        criadoEm: new Date().toISOString()
+    };
+
+    if(window.salvarPedidoNoFirebase){
+        await window.salvarPedidoNoFirebase(dadosPedido);
+    }
 
     // WORKER DE PAGAMENTO — NÃO REMOVER
     const WORKER_URL = "https://wispy-math-2575.zt9mchhnvj.workers.dev";
 
     const dadosPagamento = {
+        numeroPedido: numeroPedido,
         nome: nome,
         email: email,
         cpfCnpj: cpf,
@@ -1817,7 +1915,7 @@ function finalizarPedidoSite(){
         bairro: bairro,
         complemento: complemento,
         valor: total,
-        pedido: "Pedido LaLabela Boutique"
+        pedido: `Pedido ${numeroPedido} - LaLabela Boutique`
     };
 
     fetch(WORKER_URL, {
@@ -1832,37 +1930,28 @@ function finalizarPedidoSite(){
 
         if(!resposta.ok || !resultado.sucesso){
             console.error("ERRO COMPLETO DO ASAAS:", resultado);
-            let mensagem = resultado.error || "Não foi possível criar o pagamento.";
-            if(resultado.detalhes){
-                if(Array.isArray(resultado.detalhes.errors)){
-                    mensagem += "\n\n";
-                    resultado.detalhes.errors.forEach((erro) => {
-                        mensagem += (erro.description || erro.code || "Erro desconhecido") + "\n";
-                    });
-                } else {
-                    mensagem += "\n\nDetalhes: " + JSON.stringify(resultado.detalhes);
-                }
+            if(window.atualizarStatusPedidoFirebase){
+                window.atualizarStatusPedidoFirebase(numeroPedido, "Pagamento recusado");
             }
+            let mensagem = resultado.error || "Não foi possível criar o pagamento.";
             throw new Error(mensagem);
         }
         return resultado;
     })
     .then(resultado => {
         if(resultado.checkoutUrl){
-            // Salva os dados do cliente localmente
             perfilCliente.nome = nome;
             perfilCliente.cpf = cpf;
             perfilCliente.email = email;
             perfilCliente.whatsapp = telefone;
 
             localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+            localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
 
-            // Salva cliente no Firebase
             if(typeof window.salvarClienteNoFirebase === "function"){
                 window.salvarClienteNoFirebase(perfilCliente);
             }
 
-            // Vai para o pagamento
             window.location.href = resultado.checkoutUrl;
         } else {
             alert("Pagamento criado, mas o link de pagamento não foi recebido.");
@@ -1916,7 +2005,11 @@ import {
     onSnapshot,
     doc,
     setDoc,
-    updateDoc
+    updateDoc,
+    getDoc,
+    query,
+    where,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1944,78 +2037,55 @@ window.salvarClienteNoFirebase = async function(dadosCliente) {
             enderecos: dadosCliente.enderecos || [],
             atualizadoEm: new Date().toISOString()
         }, { merge: true });
-
-        console.log("Cliente salvo com sucesso no Firestore!");
     } catch (erro) {
         console.error("Erro ao salvar cliente:", erro);
     }
 };
-// =====================================================
-// SALVAR PEDIDO NO FIRESTORE
-// =====================================================
 
 window.salvarPedidoNoFirebase = async function(pedido){
-
     try{
-
         if(!pedido || !pedido.numeroPedido){
             throw new Error("Número do pedido não informado.");
         }
-
-        await setDoc(
-            doc(db, "pedidos", pedido.numeroPedido),
-            pedido
-        );
-
-        console.log(
-            "PEDIDO SALVO NO FIREBASE:",
-            pedido.numeroPedido
-        );
-
+        await setDoc(doc(db, "pedidos", pedido.numeroPedido), pedido);
     }catch(erro){
-
-        console.error(
-            "ERRO AO SALVAR PEDIDO:",
-            erro
-        );
-
+        console.error("ERRO AO SALVAR PEDIDO:", erro);
         throw erro;
     }
 };
 
-
-// =====================================================
-// ATUALIZAR DADOS DO PAGAMENTO
-// =====================================================
-
-window.atualizarPedidoPagamento = async function(
-    numeroPedido,
-    dadosPagamento
-){
-
+window.atualizarStatusPedidoFirebase = async function(numeroPedido, novoStatus){
     try{
-
-        await updateDoc(
-            doc(db, "pedidos", numeroPedido),
-            {
-                ...dadosPagamento,
-                atualizadoEm: new Date().toISOString()
-            }
-        );
-
-        console.log(
-            "PEDIDO ATUALIZADO:",
-            numeroPedido
-        );
-
+        await updateDoc(doc(db, "pedidos", numeroPedido), {
+            status: novoStatus,
+            atualizadoEm: new Date().toISOString()
+        });
     }catch(erro){
-
-        console.error(
-            "ERRO AO ATUALIZAR PEDIDO:",
-            erro
-        );
+        console.error("Erro ao atualizar status do pedido:", erro);
     }
 };
+
+window.buscarPedidoNoFirebase = async function(termo){
+    try{
+        const pedidoRef = doc(db, "pedidos", termo);
+        const docSnap = await getDoc(pedidoRef);
+        if(docSnap.exists()){
+            return docSnap.data();
+        }
+
+        // Se não achou pelo ID exato, busca por email
+        const q = query(collection(db, "pedidos"), where("email", "==", termo));
+        const querySnapshot = await getDocs(q);
+        if(!querySnapshot.empty){
+            return querySnapshot.docs[0].data();
+        }
+        return null;
+    }catch(err){
+        console.error("Erro ao buscar pedido:", err);
+        return null;
+    }
+};
+
 function carregarProdutosDoFirebase(){
     const produtosRef = collection(db, "produtos");
     onSnapshot(produtosRef, snapshot => {

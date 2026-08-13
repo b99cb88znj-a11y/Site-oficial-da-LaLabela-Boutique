@@ -1769,13 +1769,15 @@ function openCart(){ document.getElementById("drawer").classList.add("open"); do
 function closeCart(){ document.getElementById("drawer").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); }
 
 function finalizarPedidoSite(){
-
     const nome = document.getElementById("checkoutNome")?.value.trim();
     const cpf = document.getElementById("checkoutCpf")?.value.trim();
     const email = document.getElementById("checkoutEmail")?.value.trim();
+    const telefone = document.getElementById("checkoutWhatsapp")?.value.trim();
+    const cep = document.getElementById("checkoutCep")?.value.trim();
     const rua = document.getElementById("checkoutRua")?.value.trim();
     const numero = document.getElementById("checkoutNumero")?.value.trim();
     const bairro = document.getElementById("checkoutBairro")?.value.trim();
+    const complemento = document.getElementById("checkoutComplemento")?.value.trim();
     const pagamento = document.getElementById("paymentSelect")?.value;
 
     if(!nome || !cpf || !email){
@@ -1783,8 +1785,8 @@ function finalizarPedidoSite(){
         return;
     }
 
-    if(!rua || !numero || !bairro){
-        alert("Preencha seu endereço completo.");
+    if(!rua || !numero || !bairro || !cep){
+        alert("Preencha seu endereço completo, incluindo o CEP.");
         return;
     }
 
@@ -1808,6 +1810,12 @@ function finalizarPedidoSite(){
         nome: nome,
         email: email,
         cpfCnpj: cpf,
+        telefone: telefone,
+        cep: cep,
+        endereco: rua,
+        numero: numero,
+        bairro: bairro,
+        complemento: complemento,
         valor: total,
         pedido: "Pedido LaLabela Boutique"
     };
@@ -1820,55 +1828,34 @@ function finalizarPedidoSite(){
         body: JSON.stringify(dadosPagamento)
     })
     .then(async resposta => {
-
         const resultado = await resposta.json();
 
         if(!resposta.ok || !resultado.sucesso){
-
-  console.error("ERRO COMPLETO DO ASAAS:", resultado);
-
-  let mensagem = resultado.error || "Não foi possível criar o pagamento.";
-
-  if(resultado.detalhes){
-
-    if(Array.isArray(resultado.detalhes.errors)){
-
-      mensagem += "\n\n";
-
-      resultado.detalhes.errors.forEach((erro) => {
-        mensagem +=
-          (erro.description || erro.code || "Erro desconhecido") +
-          "\n";
-      });
-
-    } else {
-      mensagem +=
-        "\n\nDetalhes: " +
-        JSON.stringify(resultado.detalhes);
-    }
-  }
-
-  throw new Error(mensagem);
-}
-
+            console.error("ERRO COMPLETO DO ASAAS:", resultado);
+            let mensagem = resultado.error || "Não foi possível criar o pagamento.";
+            if(resultado.detalhes){
+                if(Array.isArray(resultado.detalhes.errors)){
+                    mensagem += "\n\n";
+                    resultado.detalhes.errors.forEach((erro) => {
+                        mensagem += (erro.description || erro.code || "Erro desconhecido") + "\n";
+                    });
+                } else {
+                    mensagem += "\n\nDetalhes: " + JSON.stringify(resultado.detalhes);
+                }
+            }
+            throw new Error(mensagem);
+        }
         return resultado;
-
     })
     .then(resultado => {
-
         if(resultado.checkoutUrl){
-
             // Salva os dados do cliente localmente
             perfilCliente.nome = nome;
             perfilCliente.cpf = cpf;
             perfilCliente.email = email;
-            perfilCliente.whatsapp =
-                document.getElementById("checkoutWhatsapp")?.value.trim() || "";
+            perfilCliente.whatsapp = telefone;
 
-            localStorage.setItem(
-                "lalabela_perfil",
-                JSON.stringify(perfilCliente)
-            );
+            localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
 
             // Salva cliente no Firebase
             if(typeof window.salvarClienteNoFirebase === "function"){
@@ -1877,26 +1864,15 @@ function finalizarPedidoSite(){
 
             // Vai para o pagamento
             window.location.href = resultado.checkoutUrl;
-
         } else {
-
             alert("Pagamento criado, mas o link de pagamento não foi recebido.");
-
         }
-
     })
     .catch(erro => {
-
         console.error("Erro ao criar pagamento:", erro);
-
-        alert(
-            "Não foi possível iniciar o pagamento.\n\n" +
-            erro.message
-        );
-
+        alert("Não foi possível iniciar o pagamento.\n\n" + erro.message);
     });
 }
-
 
 function pesquisarProdutos(){ aplicarFiltros(); }
 

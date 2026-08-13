@@ -1431,26 +1431,21 @@ async function buscarCep(){
 
 function verificarFretePorCep(cep, dadosViaCep = null){
     const freteValEl = document.getElementById("freightVal");
-    const cepLimpo = cep.replace(/\D/g, "");
-    
-    // Se não temos dados do ViaCEP passados, podemos buscar rápido ou deduzir por faixa de Paranavaí/São João do Caiuá
-    // Paranavaí (87700-000 a 87739-999) | São João do Caiuá (87740-000 a 87749-999 aprox ou por nome da cidade)
     
     if(dadosViaCep && dadosViaCep.localidade){
         const cidade = dadosViaCep.localidade.toLowerCase();
         if(cidade.includes("paranavaí") || cidade.includes("paranavai")){
-            valorFreteAtual = 0.00;
-            freteValEl.innerHTML = "Grátis (Até 2 horas ⚡)";
+            valorFreteAtual = 10.00;
+            freteValEl.innerHTML = "R$ 10,00 (Até 2 horas ⚡)";
             renderTotals();
             return;
         } else if(cidade.includes("são joão do caiuá") || cidade.includes("sao joao do caiua")){
             valorFreteAtual = 20.00;
             
-            // Calcula dias até o próximo domingo
             const hoje = new Date();
-            const diaSemana = hoje.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+            const diaSemana = hoje.getDay(); 
             let diasAtéDomingo = (0 - diaSemana + 7) % 7;
-            if(diasAtéDomingo === 0) diasAtéDomingo = 7; // Se hoje já for domingo, calcula para o próximo
+            if(diasAtéDomingo === 0) diasAtéDomingo = 7;
             
             freteValEl.innerHTML = `R$ 20,00 (Entrega neste domingo - em ${diasAtéDomingo} dia${diasAtéDomingo > 1 ? 's' : ''})`;
             renderTotals();
@@ -1458,7 +1453,6 @@ function verificarFretePorCep(cep, dadosViaCep = null){
         }
     }
 
-    // Caso seja outra cidade
     valorFreteAtual = 15.00;
     freteValEl.textContent = formatarPreco(valorFreteAtual);
     renderTotals();

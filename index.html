@@ -1910,7 +1910,14 @@ carregarPerfilNaTela();
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import {
+    getFirestore,
+    collection,
+    onSnapshot,
+    doc,
+    setDoc,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
@@ -1943,7 +1950,72 @@ window.salvarClienteNoFirebase = async function(dadosCliente) {
         console.error("Erro ao salvar cliente:", erro);
     }
 };
+// =====================================================
+// SALVAR PEDIDO NO FIRESTORE
+// =====================================================
 
+window.salvarPedidoNoFirebase = async function(pedido){
+
+    try{
+
+        if(!pedido || !pedido.numeroPedido){
+            throw new Error("Número do pedido não informado.");
+        }
+
+        await setDoc(
+            doc(db, "pedidos", pedido.numeroPedido),
+            pedido
+        );
+
+        console.log(
+            "PEDIDO SALVO NO FIREBASE:",
+            pedido.numeroPedido
+        );
+
+    }catch(erro){
+
+        console.error(
+            "ERRO AO SALVAR PEDIDO:",
+            erro
+        );
+
+        throw erro;
+    }
+};
+
+
+// =====================================================
+// ATUALIZAR DADOS DO PAGAMENTO
+// =====================================================
+
+window.atualizarPedidoPagamento = async function(
+    numeroPedido,
+    dadosPagamento
+){
+
+    try{
+
+        await updateDoc(
+            doc(db, "pedidos", numeroPedido),
+            {
+                ...dadosPagamento,
+                atualizadoEm: new Date().toISOString()
+            }
+        );
+
+        console.log(
+            "PEDIDO ATUALIZADO:",
+            numeroPedido
+        );
+
+    }catch(erro){
+
+        console.error(
+            "ERRO AO ATUALIZAR PEDIDO:",
+            erro
+        );
+    }
+};
 function carregarProdutosDoFirebase(){
     const produtosRef = collection(db, "produtos");
     onSnapshot(produtosRef, snapshot => {

@@ -1216,7 +1216,7 @@ header{
 
 <section class="delivery-info" id="entregas">
     <h2 class="serif">Entregas</h2>
-    <p>Fazemos entrega em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega em até 1 dia útil. Para outras cidades e regiões, consulte digitando seu CEP na sacola.</p>
+    <p>Fazemos entrega em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega calculada para o próximo domingo. Para outras cidades e regiões, consulte digitando seu CEP na sacola.</p>
     <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Dúvidas sobre frete no WhatsApp</a>
 </section>
 
@@ -1327,7 +1327,7 @@ header{
         </div>
         <div class="totals">
             <div class="row"><span>Subtotal</span><span id="subtotalVal">R$ 0,00</span></div>
-            <div class="row"><span>Frete</span><span id="freightVal">R$ 10,00</span></div>
+            <div class="row"><span>Frete</span><span id="freightVal">R$ 0,00</span></div>
             <div class="row grand"><span>Total</span><span id="totalVal">R$ 0,00</span></div>
         </div>
         <button class="checkout-btn" id="checkoutBtn" onclick="finalizarPedidoSite()">Finalizar Pedido</button>
@@ -1340,6 +1340,7 @@ let carrinho = [];
 let categoriaAtual = "todos";
 let indicesFotoVitrine = {};
 let indiceFotoModal = 0;
+let valorFreteAtual = 0;
 
 let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
     nome: "", cpf: "", whatsapp: "", email: "", enderecos: []
@@ -1397,6 +1398,7 @@ function usarEndereco(index){
     document.getElementById("checkoutCep").value = end.cep || "";
     fecharModalPerfil();
     openCart();
+    verificarFretePorCep(end.cep);
 }
 
 function excluirEndereco(index){
@@ -1422,7 +1424,44 @@ async function buscarCep(){
             localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
             renderizarEnderecosSalvos();
         }
+
+        verificarFretePorCep(cepInput, dados);
     }catch(erro){ alert("Não foi possível consultar o CEP no momento."); }
+}
+
+function verificarFretePorCep(cep, dadosViaCep = null){
+    const freteValEl = document.getElementById("freightVal");
+    const cepLimpo = cep.replace(/\D/g, "");
+    
+    // Se não temos dados do ViaCEP passados, podemos buscar rápido ou deduzir por faixa de Paranavaí/São João do Caiuá
+    // Paranavaí (87700-000 a 87739-999) | São João do Caiuá (87740-000 a 87749-999 aprox ou por nome da cidade)
+    
+    if(dadosViaCep && dadosViaCep.localidade){
+        const cidade = dadosViaCep.localidade.toLowerCase();
+        if(cidade.includes("paranavaí") || cidade.includes("paranavai")){
+            valorFreteAtual = 0.00;
+            freteValEl.innerHTML = "Grátis (Até 2 horas ⚡)";
+            renderTotals();
+            return;
+        } else if(cidade.includes("são joão do caiuá") || cidade.includes("sao joao do caiua")){
+            valorFreteAtual = 20.00;
+            
+            // Calcula dias até o próximo domingo
+            const hoje = new Date();
+            const diaSemana = hoje.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+            let diasAtéDomingo = (0 - diaSemana + 7) % 7;
+            if(diasAtéDomingo === 0) diasAtéDomingo = 7; // Se hoje já for domingo, calcula para o próximo
+            
+            freteValEl.innerHTML = `R$ 20,00 (Entrega neste domingo - em ${diasAtéDomingo} dia${diasAtéDomingo > 1 ? 's' : ''})`;
+            renderTotals();
+            return;
+        }
+    }
+
+    // Caso seja outra cidade
+    valorFreteAtual = 15.00;
+    freteValEl.textContent = formatarPreco(valorFreteAtual);
+    renderTotals();
 }
 
 function abrirModalPerfil(){ fecharFiltro(); carregarPerfilNaTela(); document.getElementById("modalPerfil").classList.add("aberto"); }
@@ -1717,10 +1756,8 @@ function atualizarCarrinho(){
 function getSubtotal(){ return carrinho.reduce((s,i) => s + i.preco * i.qtd, 0); }
 function renderTotals(){
     const subtotal = getSubtotal();
-    const frete = 10.00;
     document.getElementById("subtotalVal").textContent = formatarPreco(subtotal);
-    document.getElementById("freightVal").textContent = formatarPreco(frete);
-    document.getElementById("totalVal").textContent = formatarPreco(subtotal + frete);
+    document.getElementById("totalVal").textContent = formatarPreco(subtotal + valorFreteAtual);
 }
 
 function openCart(){ document.getElementById("drawer").classList.add("open"); document.getElementById("overlay").classList.add("open"); }

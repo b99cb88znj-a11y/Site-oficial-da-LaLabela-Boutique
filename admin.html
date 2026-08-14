@@ -641,6 +641,14 @@ body{
     resize:vertical;
 }
 
+.form-group small{
+    display:block;
+    color:#888;
+    font-size:12px;
+    margin-top:6px;
+    line-height:1.4;
+}
+
 .grid{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -730,6 +738,20 @@ body{
 .btn-save:disabled{
     opacity:.6;
     cursor:not-allowed;
+}
+
+.btn-etiqueta{
+    border:1px solid #e52b79;
+    background:#fff;
+    color:#e52b79;
+    border-radius:8px;
+    padding:8px 14px;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.btn-etiqueta:hover{
+    background:#fff0f6;
 }
 
 @media(max-width:1100px){
@@ -1495,6 +1517,25 @@ Salvar produto
 </div>
 </div>
 
+<!-- MODAL DE CONFIGURAÇÕES (Frete) -->
+<div class="modal" id="modalConfiguracoes">
+<div class="modal-box" style="max-width: 480px;">
+<div class="modal-header">
+<h2>Configurações de Frete</h2>
+<button class="fechar" onclick="fecharModalConfiguracoes()">×</button>
+</div>
+<div class="form-group">
+<label>Valor fixo do frete</label>
+<input id="valorFretePadraoInput" type="number" step="0.01" min="0" placeholder="15.00">
+<small>Esse é o valor cobrado quando o CEP do cliente não é de Paranavaí (R$ 10,00, fixo) nem de São João do Caiuá (R$ 20,00, fixo). Alterar aqui atualiza o site na hora.</small>
+</div>
+<div class="modal-footer">
+<button class="btn-cancel" onclick="fecharModalConfiguracoes()">Cancelar</button>
+<button class="btn-save" id="btnSalvarFrete" onclick="salvarConfiguracaoFrete()">Salvar</button>
+</div>
+</div>
+</div>
+
 <script type="module">
 
 import {
@@ -1518,6 +1559,8 @@ addDoc,
 updateDoc,
 deleteDoc,
 doc,
+getDoc,
+setDoc,
 serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
@@ -1581,6 +1624,10 @@ let listenerPedidosIniciado = false;
 /* NOVO: ESTOQUE */
 let estoqueVariacoes = [];
 
+/* NOVO: controle de notificação de novas vendas */
+let idsPedidosConhecidos = new Set();
+let primeiraCargaPedidos = true;
+
 
 const telaLogin =
 document.getElementById("telaLogin");
@@ -1612,6 +1659,8 @@ painel.style.display =
 
 carregarProdutosFirebase();
 carregarPedidosFirebase();
+pedirPermissaoNotificacao();
+registrarServiceWorkerNotificacoes();
 
 }else{
 
@@ -1871,12 +1920,75 @@ pedidos = snapshot.docs.map(item => ({
 id: item.id,
 ...item.data()
 }));
+
+if(primeiraCargaPedidos){
+    // Na primeira carga só registramos os pedidos existentes,
+    // sem disparar notificação (para não notificar pedidos antigos).
+    pedidos.forEach(p => idsPedidosConhecidos.add(p.id));
+    primeiraCargaPedidos = false;
+} else {
+    pedidos.forEach(p => {
+        if(!idsPedidosConhecidos.has(p.id)){
+            idsPedidosConhecidos.add(p.id);
+            notificarNovaVenda(p);
+        }
+    });
+}
+
 atualizarCardsPedidos();
 },
 error => {
 console.error("Erro ao carregar pedidos:", error);
 }
 );
+}
+
+/* =====================================================
+   NOTIFICAÇÃO DE NOVA VENDA
+===================================================== */
+
+window.pedirPermissaoNotificacao = function(){
+    if(!("Notification" in window)) return;
+    if(Notification.permission === "default"){
+        Notification.requestPermission().catch(() => {});
+    }
+};
+
+window.registrarServiceWorkerNotificacoes = function(){
+    if(!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker.register("./painel-sw.js").catch(erro => {
+        console.error("Não foi possível registrar o service worker de notificações:", erro);
+    });
+};
+
+function notificarNovaVenda(pedido){
+    if(!("Notification" in window)) return;
+    if(Notification.permission !== "granted") return;
+
+    const numero = pedido.numeroPedido || ("#" + pedido.id);
+    const valor = "R$ " + Number(pedido.total || pedido.valor || 0).toFixed(2).replace(".", ",");
+    const cliente = pedido.nome || pedido.cliente || pedido.nomeCliente || "Cliente";
+    const titulo = "🛍️ Nova venda na LaLabela!";
+    const corpo = `Pedido ${numero} — ${valor}\nCliente: ${cliente}`;
+
+    const opcoes = {
+        body: corpo,
+        icon: "./LaLabela-icon-512-final.png",
+        badge: "./LaLabela-icon-512-final.png",
+        tag: "venda-" + pedido.id
+    };
+
+    if(navigator.serviceWorker && navigator.serviceWorker.ready){
+        navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification(titulo, opcoes).catch(() => {
+                try{ new Notification(titulo, opcoes); }catch(e){}
+            });
+        }).catch(() => {
+            try{ new Notification(titulo, opcoes); }catch(e){}
+        });
+    } else {
+        try{ new Notification(titulo, opcoes); }catch(e){}
+    }
 }
 
 window.atualizarCardsPedidos = function() {
@@ -1905,7 +2017,7 @@ countAbertos++;
 
 // Faturamento do dia
 if(p.criadoEm) {
-let dataPed = p.criadoEm.toDate ? p.criadoEm.toDate().toISOString().split('T')[0] : '';
+let dataPed = p.criadoEm.toDate ? p.criadoEm.toDate().toISOString().split('T')[0] : String(p.criadoEm).split('T')[0];
 if(dataPed === hojeStr) {
 faturamentoHoje += Number(p.total || p.valor || 0);
 }
@@ -1917,6 +2029,29 @@ document.getElementById("totalPedidosDespachados").textContent = countDespachado
 document.getElementById("totalPedidosNaoPagos").textContent = countNaoPagos;
 document.getElementById("totalPedidosFinalizados").textContent = countFinalizados;
 document.getElementById("totalFaturamento").textContent = "R$ " + faturamentoHoje.toFixed(2).replace(".",",");
+}
+
+/* =====================================================
+   AJUDANTES DE EXIBIÇÃO DO PEDIDO
+   (nome do cliente / endereço / número real do pedido)
+===================================================== */
+
+function obterNomeCliente(p){
+    return p.nome || p.cliente || p.nomeCliente || "Cliente";
+}
+
+function obterNumeroPedido(p){
+    return p.numeroPedido || p.id;
+}
+
+function montarEnderecoPedido(p){
+    const partes = [];
+    if(p.rua) partes.push(p.rua + (p.numero ? ", " + p.numero : ""));
+    if(p.bairro) partes.push(p.bairro);
+    if(p.complemento) partes.push(p.complemento);
+    if(p.cep) partes.push("CEP: " + p.cep);
+    if(partes.length) return partes.join(" — ");
+    return p.endereco || p.infoEntrega || "Endereço não informado";
 }
 
 window.abrirModalPedidos = function(filtro) {
@@ -1959,7 +2094,7 @@ filtrados.forEach(p => {
 let modelosHtml = "";
 if(p.itens && Array.isArray(p.itens)) {
 p.itens.forEach(item => {
-modelosHtml += `<div>• ${item.nome || 'Produto'} (Qtd: ${item.quantidade || 1}) - Cor: ${item.cor || '-'} / Tam: ${item.tamanho || '-'}</div>`;
+modelosHtml += `<div>• ${item.nome || 'Produto'} (Qtd: ${item.qtd || item.quantidade || 1}) - Cor: ${item.cor || '-'} / Tam: ${item.tamanho || '-'}</div>`;
 });
 } else {
 modelosHtml = `<div>${p.descricao || 'Pedido realizado na loja'}</div>`;
@@ -1968,19 +2103,21 @@ modelosHtml = `<div>${p.descricao || 'Pedido realizado na loja'}</div>`;
 lista.innerHTML += `
 <div style="border:1px solid #eee; border-radius:10px; padding:15px; background:#fafafa;">
 <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-<strong>Pedido #${p.id.slice(-6)}</strong>
+<strong>Pedido ${obterNumeroPedido(p)}</strong>
 <span style="color:#e52b79; font-weight:bold;">R$ ${Number(p.total || p.valor || 0).toFixed(2).replace('.',',')}</span>
 </div>
 <div style="font-size:13px; color:#555; display:flex; flex-direction:column; gap:5px; margin-bottom:12px;">
-<div><strong>Cliente:</strong> ${p.cliente || p.nomeCliente || 'Cliente'}</div>
+<div><strong>Cliente:</strong> ${obterNomeCliente(p)}</div>
+<div><strong>Telefone:</strong> ${p.telefone || p.whatsapp || '-'}</div>
 <div><strong>Modelos / Itens:</strong></div>
 <div style="padding-left:10px;">${modelosHtml}</div>
-<div><strong>Informações de Entrega:</strong> ${p.endereco || p.infoEntrega || 'Endereço não informado'}</div>
+<div><strong>Informações de Entrega:</strong> ${montarEnderecoPedido(p)}</div>
 <div><strong>Status de Pagamento:</strong> <span style="color: ${p.statusPagamento === 'Pago' ? 'green' : 'orange'};">${p.statusPagamento || 'Pendente'}</span></div>
 <div><strong>Status do Pedido:</strong> ${p.status || 'Aberto'}</div>
 </div>
-<div style="display:flex; gap:10px;">
+<div style="display:flex; gap:10px; flex-wrap:wrap;">
 <button class="btn-primary" style="padding:8px 14px; font-size:13px;" onclick="despacharPedido('${p.id}')">Despachar Pedido</button>
+<button class="btn-etiqueta" onclick="gerarEtiquetaPedido('${p.id}')">🏷️ Gerar Etiqueta</button>
 </div>
 </div>
 `;
@@ -2004,6 +2141,127 @@ console.error(e);
 alert("Erro ao despachar o pedido.");
 }
 }
+
+/* =====================================================
+   GERAR ETIQUETA DE ENVIO
+===================================================== */
+
+window.gerarEtiquetaPedido = function(idPedido){
+    const pedido = pedidos.find(p => p.id === idPedido);
+    if(!pedido){
+        alert("Pedido não encontrado.");
+        return;
+    }
+
+    const numero = obterNumeroPedido(pedido);
+    const nomeCliente = obterNomeCliente(pedido);
+    const telefone = pedido.telefone || pedido.whatsapp || "-";
+    const endereco = montarEnderecoPedido(pedido);
+
+    let itensHtml = "";
+    if(pedido.itens && Array.isArray(pedido.itens) && pedido.itens.length){
+        pedido.itens.forEach(item => {
+            itensHtml += `<div class="etiqueta-item">• ${item.nome || "Produto"} — Qtd: ${item.qtd || item.quantidade || 1} — Cor: ${item.cor || "-"} / Tam: ${item.tamanho || "-"}</div>`;
+        });
+    } else {
+        itensHtml = `<div class="etiqueta-item">${pedido.descricao || "Sem itens registrados."}</div>`;
+    }
+
+    const janela = window.open("", "_blank", "width=440,height=620");
+    if(!janela){
+        alert("Não foi possível abrir a janela da etiqueta. Verifique se o navegador está bloqueando pop-ups.");
+        return;
+    }
+
+    janela.document.write(`
+        <!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="UTF-8">
+            <title>Etiqueta — Pedido ${numero}</title>
+            <style>
+                body{ font-family: Arial, Helvetica, sans-serif; padding:22px; color:#171717; }
+                .etiqueta-marca{ color:#e52b79; font-size:22px; font-weight:bold; margin-bottom:2px; }
+                .etiqueta-sub{ color:#e52b79; letter-spacing:3px; font-size:11px; margin-bottom:18px; }
+                .etiqueta-campo{ margin:12px 0; font-size:14px; }
+                .etiqueta-campo strong{ display:block; font-size:11px; text-transform:uppercase; color:#888; margin-bottom:2px; }
+                .etiqueta-item{ font-size:13px; margin:4px 0; }
+                hr{ border:none; border-top:1px dashed #ccc; margin:16px 0; }
+                @media print{
+                    body{ padding:10px; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="etiqueta-marca">LaLabela Boutique</div>
+            <div class="etiqueta-sub">ETIQUETA DE ENVIO</div>
+            <div class="etiqueta-campo"><strong>Pedido</strong>${numero}</div>
+            <hr>
+            <div class="etiqueta-campo"><strong>Destinatário</strong>${nomeCliente}</div>
+            <div class="etiqueta-campo"><strong>Telefone</strong>${telefone}</div>
+            <div class="etiqueta-campo"><strong>Endereço</strong>${endereco}</div>
+            <hr>
+            <div class="etiqueta-campo"><strong>Itens do pedido</strong></div>
+            ${itensHtml}
+        </body>
+        </html>
+    `);
+    janela.document.close();
+    janela.focus();
+    setTimeout(() => { janela.print(); }, 400);
+};
+
+
+/* =====================================================
+   CONFIGURAÇÕES — FRETE PADRÃO
+===================================================== */
+
+window.abrirConfiguracoes = async function(){
+    const input = document.getElementById("valorFretePadraoInput");
+    input.value = "";
+    try{
+        const snap = await getDoc(doc(db, "configuracoes", "frete"));
+        const valorAtual = snap.exists() && !isNaN(Number(snap.data().valorPadrao)) ? Number(snap.data().valorPadrao) : 15.00;
+        input.value = valorAtual.toFixed(2);
+    }catch(erro){
+        console.error("Erro ao carregar configuração de frete:", erro);
+        input.value = "15.00";
+    }
+    document.getElementById("modalConfiguracoes").classList.add("aberto");
+};
+
+window.fecharModalConfiguracoes = function(){
+    document.getElementById("modalConfiguracoes").classList.remove("aberto");
+};
+
+window.salvarConfiguracaoFrete = async function(){
+    const btn = document.getElementById("btnSalvarFrete");
+    const valor = Number(document.getElementById("valorFretePadraoInput").value);
+
+    if(isNaN(valor) || valor < 0){
+        alert("Digite um valor de frete válido.");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Salvando...";
+
+    try{
+        await setDoc(doc(db, "configuracoes", "frete"), {
+            valorPadrao: valor,
+            atualizadoEm: serverTimestamp()
+        }, { merge: true });
+
+        alert("Valor do frete atualizado com sucesso!");
+        fecharModalConfiguracoes();
+    }catch(erro){
+        console.error("Erro ao salvar configuração de frete:", erro);
+        alert("Não foi possível salvar o valor do frete.");
+    }finally{
+        btn.disabled = false;
+        btn.textContent = "Salvar";
+    }
+};
 
 
 /* =====================================================
@@ -2270,6 +2528,18 @@ document
 .scrollIntoView({
 behavior:"smooth"
 });
+
+return;
+
+}
+
+
+if(nome === "Configurações"){
+
+tituloTopo.textContent =
+"Configurações";
+
+abrirConfiguracoes();
 
 return;
 

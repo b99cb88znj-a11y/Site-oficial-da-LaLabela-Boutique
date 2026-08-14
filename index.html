@@ -2076,7 +2076,13 @@ async function finalizarPedidoSite() {
             if(window.atualizarStatusPedidoFirebase){
                 window.atualizarStatusPedidoFirebase(numeroPedido, "Pagamento recusado");
             }
-            throw new Error(resultado.error || "Erro ao processar pagamento.");
+            let mensagemErro = resultado.error || "Erro ao processar pagamento.";
+            if (resultado.detalhes && resultado.detalhes.errors && resultado.detalhes.errors.length > 0) {
+                mensagemErro += "\n\nMotivo: " + resultado.detalhes.errors.map(e => e.description).join(" | ");
+            } else if (resultado.detalhes) {
+                mensagemErro += "\n\nDetalhes: " + JSON.stringify(resultado.detalhes);
+            }
+            throw new Error(mensagemErro);
         }
 
         perfilCliente.nome = nome;

@@ -1319,12 +1319,52 @@ header{
         </div>
         <div class="form-checkout-group">
             <label>Forma de Pagamento (Direto no Site)</label>
-            <select id="paymentSelect">
+            <select id="paymentSelect" onchange="mudarFormaPagamento()">
                 <option value="">Selecione o pagamento</option>
-                <option value="Pix">Pix (Aprovação imediata)</option>
-                <option value="Cartao">Cartão de Crédito</option>
+                <option value="PIX">Pix (Aprovação imediata)</option>
+                <option value="CREDIT_CARD">Cartão de Crédito</option>
             </select>
         </div>
+
+        <!-- Campos dinâmicos do Cartão de Crédito -->
+        <div class="form-checkout-group" id="cartaoCampos" style="display:none;">
+            <label>Número do Cartão</label>
+            <input type="text" id="ccNumero" placeholder="0000 0000 0000 0000" maxlength="19">
+            <label>Nome no Cartão</label>
+            <input type="text" id="ccNome" placeholder="Como impresso no cartão">
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;">
+                    <label>Validade (MM/AAAA)</label>
+                    <input type="text" id="ccValidade" placeholder="MM/AAAA" maxlength="7">
+                </div>
+                <div style="flex:1;">
+                    <label>CVV</label>
+                    <input type="text" id="ccCvv" placeholder="123" maxlength="4">
+                </div>
+            </div>
+            <label>Parcelamento</label>
+            <select id="ccParcelas">
+                <option value="1">1x à vista</option>
+                <option value="2">2x sem juros</option>
+                <option value="3">3x sem juros</option>
+                <option value="4">4x sem juros</option>
+                <option value="5">5x sem juros</option>
+                <option value="6">6x sem juros</option>
+            </select>
+        </div>
+
+        <!-- Área de Exibição do Pix (QR Code e Copia e Cola) -->
+        <div class="form-checkout-group" id="pixArea" style="display:none; text-align:center;">
+            <label style="color:#ed1760; font-weight:700;">Pagamento via Pix</label>
+            <p style="font-size:0.82rem; margin:5px 0;">Escaneie o QR Code abaixo com o aplicativo do seu banco ou copie o código Pix Copia e Cola:</p>
+            <div id="pixQrCodeContainer" style="margin:10px 0;">
+                <img id="pixQrCodeImg" src="" alt="QR Code Pix" style="max-width:180px; height:auto; border:1px solid #ddd; padding:5px; background:#fff;">
+            </div>
+            <label>Pix Copia e Cola</label>
+            <input type="text" id="pixCopiaCola" readonly style="font-size:0.75rem; background:#fff;" onclick="this.select()">
+            <button type="button" class="checkout-btn" style="margin-top:8px; padding:10px; font-size:0.8rem;" onclick="copiarPixCopiaCola()">Copiar Código Pix</button>
+        </div>
+
         <div class="totals">
             <div class="row"><span>Subtotal</span><span id="subtotalVal">R$ 0,00</span></div>
             <div class="row"><span>Frete</span><span id="freightVal">R$ 0,00</span></div>
@@ -1340,6 +1380,7 @@ let carrinho = [];
 let categoriaAtual = "todos";
 let indicesFotoVitrine = {};
 let indiceFotoModal = 0;
+let valFreteAtual = 0;
 let valorFreteAtual = 0;
 
 function verificarExpiracaoSessao() {
@@ -1367,6 +1408,8 @@ function mascaraCpf(input) {
         v = v.replace(/^(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
     } else if (v.length > 3) {
         v = v.replace(/^(\d{3})(\d{1,3})/, "$1.$2");
+    } else if (v.length > 0) {
+        v = v.replace(/^(\d{0,3})/, "$1");
     }
     input.value = v;
 }
@@ -1508,6 +1551,31 @@ function verificarFretePorCep(cep, dadosViaCep = null){
     valorFreteAtual = 15.00;
     freteValEl.textContent = formatarPreco(valorFreteAtual);
     renderTotals();
+}
+
+function mudarFormaPagamento(){
+    const metodo = document.getElementById("paymentSelect").value;
+    const cartaoCampos = document.getElementById("cartaoCampos");
+    const pixArea = document.getElementById("pixArea");
+
+    if(metodo === "CREDIT_CARD"){
+        cartaoCampos.style.display = "block";
+        pixArea.style.display = "none";
+    } else if(metodo === "PIX"){
+        cartaoCampos.style.display = "none";
+        pixArea.style.display = "none";
+    } else {
+        cartaoCampos.style.display = "none";
+        pixArea.style.display = "none";
+    }
+}
+
+function copiarPixCopiaCola(){
+    const input = document.getElementById("pixCopiaCola");
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value);
+    alert("Código Pix Copia e Cola copiado com sucesso!");
 }
 
 function abrirModalPerfil(){ fecharFiltro(); carregarPerfilNaTela(); document.getElementById("modalPerfil").classList.add("aberto"); }
@@ -1848,7 +1916,7 @@ async function finalizarPedidoSite(){
     const numero = document.getElementById("checkoutNumero")?.value.trim();
     const bairro = document.getElementById("checkoutBairro")?.value.trim();
     const complemento = document.getElementById("checkoutComplemento")?.value.trim();
-    const pagamento = document.getElementById("paymentSelect")?.value;
+    const billingType = document.getElementById("paymentSelect")?.value;
 
     if(!nome || !cpf || !email || !telefone){
         alert("Preencha nome, CPF, e-mail e WhatsApp (obrigatório).");
@@ -1860,7 +1928,7 @@ async function finalizarPedidoSite(){
         return;
     }
 
-    if(!pagamento){
+    if(!billingType){
         alert("Selecione uma forma de pagamento.");
         return;
     }
@@ -1868,6 +1936,36 @@ async function finalizarPedidoSite(){
     if(carrinho.length === 0){
         alert("Sua sacola está vazia.");
         return;
+    }
+
+    // Validação extra se for cartão de crédito
+    let dadosCartao = null;
+    if(billingType === "CREDIT_CARD"){
+        const ccNumero = document.getElementById("ccNumero").value.replace(/\D/g, "");
+        const ccNome = document.getElementById("ccNome").value.trim();
+        const ccValidade = document.getElementById("ccValidade").value.trim();
+        const ccCvv = document.getElementById("ccCvv").value.trim();
+        const ccParcelas = document.getElementById("ccParcelas").value;
+
+        if(!ccNumero || !ccNome || !ccValidade || !ccCvv){
+            alert("Preencha todos os dados do cartão de crédito.");
+            return;
+        }
+
+        const [mesValidade, anoValidade] = ccValidade.split("/");
+        if(!mesValidade || !anoValidade){
+            alert("Validade do cartão inválida. Use o formato MM/AAAA.");
+            return;
+        }
+
+        dadosCartao = {
+            holderName: ccNome,
+            number: ccNumero,
+            expiryMonth: mesValidade,
+            expiryYear: anoValidade,
+            ccVv: ccCvv,
+            installmentCount: Number(ccParcelas) || 1
+        };
     }
 
     const subtotal = getSubtotal();
@@ -1897,10 +1995,10 @@ async function finalizarPedidoSite(){
         await window.salvarPedidoNoFirebase(dadosPedido);
     }
 
-    // WORKER DE PAGAMENTO — ASAAS
+    // WORKER DE PAGAMENTO — CHECKPOINT TRANSPARENTE
     const WORKER_URL = "https://wispy-math-2575.zt9mchhnvj.workers.dev";
 
-    const dadosPagamento = {
+    const payloadPagamento = {
         numeroPedido: numeroPedido,
         nome: nome,
         email: email,
@@ -1912,7 +2010,9 @@ async function finalizarPedidoSite(){
         bairro: bairro,
         complemento: complemento,
         valor: total,
-        pedido: `Pedido ${numeroPedido} - LaLabela Boutique`
+        pedido: `Pedido ${numeroPedido} - LaLabela Boutique`,
+        billingType: billingType,
+        creditCard: dadosCartao
     };
 
     fetch(WORKER_URL, {
@@ -1920,7 +2020,7 @@ async function finalizarPedidoSite(){
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(dadosPagamento)
+        body: JSON.stringify(payloadPagamento)
     })
     .then(async resposta => {
         const resultado = await resposta.json();
@@ -1930,33 +2030,48 @@ async function finalizarPedidoSite(){
             if(window.atualizarStatusPedidoFirebase){
                 window.atualizarStatusPedidoFirebase(numeroPedido, "Pagamento recusado");
             }
-            let mensagem = resultado.error || "Não foi possível criar o pagamento.";
+            let mensagem = resultado.error || "Não foi possível processar o pagamento.";
             throw new Error(mensagem);
         }
         return resultado;
     })
     .then(resultado => {
-        if(resultado.checkoutUrl){
-            perfilCliente.nome = nome;
-            perfilCliente.cpf = cpf;
-            perfilCliente.email = email;
-            perfilCliente.whatsapp = telefone;
+        perfilCliente.nome = nome;
+        perfilCliente.cpf = cpf;
+        perfilCliente.email = email;
+        perfilCliente.whatsapp = telefone;
 
-            localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
-            localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
+        localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+        localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
 
-            if(typeof window.salvarClienteNoFirebase === "function"){
-                window.salvarClienteNoFirebase(perfilCliente);
+        if(typeof window.salvarClienteNoFirebase === "function"){
+            window.salvarClienteNoFirebase(perfilCliente);
+        }
+
+        if(billingType === "PIX"){
+            if(resultado.pixQrCodeUrl && resultado.pixCopiaCola){
+                document.getElementById("pixQrCodeImg").src = resultado.pixQrCodeUrl;
+                document.getElementById("pixCopiaCola").value = resultado.pixCopiaCola;
+                document.getElementById("pixArea").style.display = "block";
+                document.getElementById("checkoutBtn").style.display = "none";
+                alert("Cobrança Pix gerada com sucesso! Copie o código ou escaneie o QR Code abaixo.");
+            } else {
+                alert("Cobrança Pix gerada, mas os dados do QR Code não foram retornados.");
             }
-
-            window.location.href = resultado.checkoutUrl;
-        } else {
-            alert("Pagamento criado, mas o link de pagamento não foi recebido.");
+        } else if(billingType === "CREDIT_CARD"){
+            if(window.atualizarStatusPedidoFirebase){
+                window.atualizarStatusPedidoFirebase(numeroPedido, "Pago / Aguardando envio");
+            }
+            alert("Pagamento com cartão aprovado com sucesso! Seu pedido está sendo preparado.");
+            carrinho = [];
+            atualizarCarrinho();
+            closeCart();
+            window.location.reload();
         }
     })
     .catch(erro => {
-        console.error("Erro ao criar pagamento:", erro);
-        alert("Não foi possível iniciar o pagamento.\n\n" + erro.message);
+        console.error("Erro ao processar pagamento:", erro);
+        alert("Não foi possível processar o pagamento.\n\n" + erro.message);
     });
 }
 
@@ -2095,4 +2210,3 @@ carregarProdutosDoFirebase();
 
 </body>
 </html>
-p

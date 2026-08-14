@@ -1561,7 +1561,7 @@ function verificarFretePorCep(cep, dadosViaCep = null){
         }
     }
 
-    valorFreteAtual = 15.00;
+    valorFreteAtual = (typeof window.valorFretePadrao === "number" && !isNaN(window.valorFretePadrao)) ? window.valorFretePadrao : 15.00;
     freteValEl.textContent = formatarPreco(valorFreteAtual);
     renderTotals();
 }
@@ -2112,7 +2112,7 @@ async function finalizarPedidoSite() {
 
                 document.getElementById("pixArea").style.display = "block";
                 document.getElementById("checkoutBtn").style.display = "none";
-                alert("QR Code Pix gerado com sucesso!");
+                alert("QR Code Pix gerado com sucesso! Guarde o número do seu pedido para rastreio: " + numeroPedido);
             } else {
                 alert("Cobrança Pix criada, mas o QR Code não retornou.");
             }
@@ -2122,7 +2122,7 @@ async function finalizarPedidoSite() {
             if(window.atualizarStatusPedidoFirebase){
                 window.atualizarStatusPedidoFirebase(numeroPedido, "Pago / Aguardando envio");
             }
-            alert("Pagamento aprovado com sucesso! Pedido registrado.");
+            alert("Pagamento aprovado com sucesso! Pedido registrado. Guarde o número do seu pedido para rastreio: " + numeroPedido);
             carrinho = [];
             atualizarCarrinho();
             closeCart();
@@ -2243,19 +2243,44 @@ window.atualizarStatusPedidoFirebase = async function(numeroPedido, novoStatus){
     }
 };
 
-window.buscarPedidoNoFirebase = async function(termo){
+// Busca robusta: tenta o ID exato, variações comuns de formatação (com/sem #, com/sem LB-),
+// busca por e-mail e, por fim, busca pelo campo numeroPedido (caso não bata com o ID do documento).
+window.buscarPedidoNoFirebase = async function(termoOriginal){
     try{
-        const pedidoRef = doc(db, "pedidos", termo);
-        const docSnap = await getDoc(pedidoRef);
-        if(docSnap.exists()){
-            return docSnap.data();
+        const termo = String(termoOriginal || "").trim();
+        if(!termo) return null;
+
+        let snap = await getDoc(doc(db, "pedidos", termo));
+        if(snap.exists()) return snap.data();
+
+        const somenteNumeros = termo.replace(/\D/g, "");
+        const candidatos = new Set([
+            termo,
+            termo.toUpperCase(),
+            somenteNumeros ? "#" + somenteNumeros : null,
+            somenteNumeros ? "#LB-" + somenteNumeros : null,
+            somenteNumeros ? "LB-" + somenteNumeros : null,
+            somenteNumeros || null
+        ].filter(Boolean));
+
+        for(const candidato of candidatos){
+            if(candidato === termo) continue;
+            snap = await getDoc(doc(db, "pedidos", candidato));
+            if(snap.exists()) return snap.data();
         }
 
-        const q = query(collection(db, "pedidos"), where("email", "==", termo));
-        const querySnapshot = await getDocs(q);
-        if(!querySnapshot.empty){
-            return querySnapshot.docs[0].data();
+        if(termo.includes("@")){
+            const q = query(collection(db, "pedidos"), where("email", "==", termo));
+            const querySnapshot = await getDocs(q);
+            if(!querySnapshot.empty) return querySnapshot.docs[0].data();
         }
+
+        for(const candidato of [termo, ...candidatos]){
+            const q2 = query(collection(db, "pedidos"), where("numeroPedido", "==", candidato));
+            const querySnapshot2 = await getDocs(q2);
+            if(!querySnapshot2.empty) return querySnapshot2.docs[0].data();
+        }
+
         return null;
     }catch(err){
         console.error("Erro ao buscar pedido:", err);
@@ -2271,7 +2296,25 @@ function carregarProdutosDoFirebase(){
     }, erro => { console.error("Erro ao buscar produtos:", erro); });
 }
 
+// Lê o valor de frete padrão configurado no painel (configuracoes/frete)
+// e mantém atualizado em tempo real, sem alterar o layout da loja.
+function escutarFretePadrao(){
+    onSnapshot(doc(db, "configuracoes", "frete"), snap => {
+        if(snap.exists()){
+            const dados = snap.data();
+            const valor = Number(dados.valorPadrao);
+            window.valorFretePadrao = (!isNaN(valor) && valor >= 0) ? valor : 15.00;
+        } else {
+            window.valorFretePadrao = 15.00;
+        }
+    }, erro => {
+        console.error("Erro ao ler configuração de frete:", erro);
+        window.valorFretePadrao = 15.00;
+    });
+}
+
 carregarProdutosDoFirebase();
+escutarFretePadrao();
 </script>
 
 </body>

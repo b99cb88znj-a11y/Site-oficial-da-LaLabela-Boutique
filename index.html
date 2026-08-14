@@ -883,6 +883,11 @@ header{
     filter:brightness(.94);
 }
 
+.checkout-btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
 .modal-sistema{
     position:fixed;
     inset:0;
@@ -1915,6 +1920,8 @@ function openCart(){ document.getElementById("drawer").classList.add("open"); do
 function closeCart(){ document.getElementById("drawer").classList.remove("open"); document.getElementById("overlay").classList.remove("open"); }
 
 async function finalizarPedidoSite() {
+    const checkoutBtn = document.getElementById("checkoutBtn");
+
     // 1. Captura dos dados básicos do formulário
     const nome = document.getElementById("checkoutNome")?.value.trim();
     const email = document.getElementById("checkoutEmail")?.value.trim();
@@ -2036,13 +2043,25 @@ async function finalizarPedidoSite() {
         criadoEm: new Date().toISOString()
     };
 
-    if(window.salvarPedidoNoFirebase){
-        await window.salvarPedidoNoFirebase(dadosPedidoFirebase);
+    // Trava o botão e mostra que algo está acontecendo, pra não parecer que "travou"
+    if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.textContent = "Processando...";
     }
 
-    const WORKER_URL = "https://wispy-math-2575.zt9mchhnvj.workers.dev";
-
     try {
+        // A gravação no Firebase agora está DENTRO do try geral e não trava
+        // mais o pagamento caso falhe (ex: regra do Firestore, instabilidade de rede).
+        if (window.salvarPedidoNoFirebase) {
+            try {
+                await window.salvarPedidoNoFirebase(dadosPedidoFirebase);
+            } catch (erroFirebase) {
+                console.error("Falha ao salvar pedido no Firebase (seguindo com o pagamento):", erroFirebase);
+            }
+        }
+
+        const WORKER_URL = "https://wispy-math-2575.zt9mchhnvj.workers.dev";
+
         const resposta = await fetch(WORKER_URL, {
             method: "POST",
             headers: {
@@ -2107,6 +2126,12 @@ async function finalizarPedidoSite() {
     } catch (erro) {
         console.error("Erro no checkout:", erro);
         alert("Erro: " + erro.message);
+    } finally {
+        // Sempre reabilita o botão, mesmo se der erro, pra cliente poder tentar de novo
+        if (checkoutBtn && checkoutBtn.style.display !== "none") {
+            checkoutBtn.disabled = false;
+            checkoutBtn.textContent = "Finalizar Pedido";
+        }
     }
 }
 

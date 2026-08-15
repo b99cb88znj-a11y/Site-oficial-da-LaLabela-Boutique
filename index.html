@@ -1236,7 +1236,7 @@ header{
 
 <section class="delivery-info" id="entregas">
     <h2 class="serif">Entregas</h2>
-    <p>Fazemos entrega somente em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega calculada para o próximo domingo. Ainda não entregamos em outras cidades ou regiões.</p>
+    <p>Fazemos entrega somente em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega calculada para o próximo domingo. Ainda não entregamos em outras cidades ou regiões. Pedidos feitos a partir das 22h entram na entrega apenas no dia seguinte.</p>
     <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Dúvidas sobre frete no WhatsApp</a>
 </section>
 
@@ -1269,7 +1269,7 @@ header{
     <h2>Navegação</h2>
     <div class="lista-categorias">
         <button type="button" onclick="abrirModalPerfil()">👤 Meu Perfil e Endereços Salvos</button>
-        <button type="button" onclick="abrirModalRastreio()">📦 Rastrear Pedido & Entregas</button>
+        <button type="button" onclick="abrirModalRastreio()">📦 Meus Pedidos & Rastreio</button>
         <div class="menu-divisor">Categorias de Produtos</div>
         <button type="button" onclick="filtrarCategoria('todos')">Todos</button>
         <button type="button" onclick="filtrarCategoria('Blusas')">Blusas</button>
@@ -1299,8 +1299,8 @@ header{
 <div class="modal-sistema" id="modalRastreio">
     <div class="modal-sistema-box">
         <button class="fechar-modal-sistema" onclick="fecharModalRastreio()">&times;</button>
-        <h2>Rastreio de Pedidos</h2>
-        <div class="grupo-campo"><label>Digite o Número do Pedido ou E-mail</label><input type="text" id="inputBuscaRastreio" placeholder="Ex: #LB-12345 ou seu e-mail"></div>
+        <h2>Meus Pedidos & Rastreio</h2>
+        <div class="grupo-campo"><label>Número do Pedido ou E-mail (mostra todos os seus pedidos)</label><input type="text" id="inputBuscaRastreio" placeholder="Ex: #LB-12345 ou seu e-mail"></div>
         <button class="btn-acao-modal" onclick="consultarRastreio()">Consultar Status</button>
         <div id="resultadoRastreio" style="margin-top:20px;"></div>
     </div>
@@ -1335,8 +1335,9 @@ header{
             <input type="text" id="checkoutNumero" placeholder="Ex: 123">
             <label>Bairro (Obrigatório)</label>
             <input type="text" id="checkoutBairro" placeholder="Bairro">
-            <label>Complemento</label>
-            <input type="text" id="checkoutComplemento" placeholder="Apto, Bloco, Casa (Opcional)">
+            <label>Complemento e horário disponível para receber</label>
+            <input type="text" id="checkoutComplemento" placeholder="Ex: Apto 12, Bloco B — disponível após 18h (Opcional)">
+            <div style="font-size:0.72rem; color:#888; margin-top:-4px;">Se puder, avise um horário em que alguém estará em casa — isso ajuda na entrega e vai junto na etiqueta.</div>
         </div>
         <div class="form-checkout-group">
             <label>Forma de Pagamento (Direto no Site)</label>
@@ -1367,7 +1368,6 @@ header{
             <select id="ccParcelas">
                 <option value="1">1x à vista</option>
                 <option value="2">2x sem juros</option>
-                <option value="3">3x sem juros</option>
             </select>
         </div>
 
@@ -1554,6 +1554,12 @@ async function buscarCep(){
 
 // Só atendemos Paranavaí/PR e São João do Caiuá/PR. Qualquer outro CEP é
 // bloqueado: mostramos aviso, zeramos o frete e travamos o botão de finalizar.
+// Pedido feito às 22h ou depois só entra na entrega do dia seguinte —
+// não dá mais tempo de despachar no mesmo dia.
+function pedidoDepoisDoCorte(){
+    return new Date().getHours() >= 22;
+}
+
 function verificarFretePorCep(cep, dadosViaCep = null){
     const freteValEl = document.getElementById("freightVal");
     const avisoEl = document.getElementById("avisoCepBloqueado");
@@ -1566,7 +1572,11 @@ function verificarFretePorCep(cep, dadosViaCep = null){
             entregaBloqueada = false;
             if(avisoEl) avisoEl.style.display = "none";
             valorFreteAtual = config.paranavai;
-            freteValEl.innerHTML = `${formatarPreco(valorFreteAtual)} (Até 2 horas ⚡)`;
+            if(pedidoDepoisDoCorte()){
+                freteValEl.innerHTML = `${formatarPreco(valorFreteAtual)} (Pedido após 22h — entrega no próximo dia)`;
+            } else {
+                freteValEl.innerHTML = `${formatarPreco(valorFreteAtual)} (Até 2 horas ⚡)`;
+            }
             atualizarEstadoCheckout();
             renderTotals();
             return;
@@ -1577,15 +1587,20 @@ function verificarFretePorCep(cep, dadosViaCep = null){
             if(avisoEl) avisoEl.style.display = "none";
             valorFreteAtual = config.saoJoao;
 
-            const hoje = new Date();
-            const diaSemana = hoje.getDay();
+            // Se o pedido cai depois das 22h, contamos o prazo a partir do
+            // dia seguinte (assim, um pedido de sábado à noite não tenta
+            // entrar no domingo já sem tempo de preparo).
+            const referencia = new Date();
+            if(pedidoDepoisDoCorte()) referencia.setDate(referencia.getDate() + 1);
+
+            const diaSemana = referencia.getDay();
             let diasAteDomingo = (0 - diaSemana + 7) % 7;
             if(diasAteDomingo === 0) {
                 diasAteDomingo = 7;
             }
 
-            const dataDomingo = new Date(hoje);
-            dataDomingo.setDate(hoje.getDate() + diasAteDomingo);
+            const dataDomingo = new Date(referencia);
+            dataDomingo.setDate(referencia.getDate() + diasAteDomingo);
             const dataFormatada = dataDomingo.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
             freteValEl.innerHTML = `${formatarPreco(valorFreteAtual)} (Entrega em ${dataFormatada})`;
@@ -1644,27 +1659,135 @@ function fecharModalPerfil(){ document.getElementById("modalPerfil").classList.r
 function abrirModalRastreio(){
     fecharFiltro();
     document.getElementById("modalRastreio").classList.add("aberto");
-    // Rastreio ainda não está disponível — mostra aviso direto ao abrir.
-    document.getElementById("resultadoRastreio").innerHTML = mensagemRastreioIndisponivel();
+    document.getElementById("resultadoRastreio").innerHTML = `<p style="text-align:center; color:#888; font-size:0.88rem;">Digite o número do pedido (ex: #LB-123456) ou o e-mail usado na compra. Buscando por e-mail, mostramos todos os seus pedidos.</p>`;
 }
 function fecharModalRastreio(){ document.getElementById("modalRastreio").classList.remove("aberto"); }
 
-function mensagemRastreioIndisponivel(){
-    return `
-        <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0; color:#c21250;">
-            <p style="margin:0 0 8px;"><strong>Rastreio ainda não está disponível.</strong></p>
-            <p style="margin:0; font-size:0.88rem;">Em breve você vai poder acompanhar seu pedido por aqui. Por enquanto, qualquer dúvida sobre o status do seu pedido, fale com a gente pelo WhatsApp.</p>
-        </div>
-    `;
-}
-
+// Rastreio funciona de duas formas: por código de pedido (mostra o status
+// detalhado daquele pedido) ou por e-mail (mostra a lista de todos os
+// pedidos feitos com aquele e-mail — funciona como "Meus Pedidos").
 function consultarRastreio(){
-    // Funcionalidade de rastreio ainda não está disponível para as clientes.
-    document.getElementById("resultadoRastreio").innerHTML = mensagemRastreioIndisponivel();
+    const termo = document.getElementById("inputBuscaRastreio").value.trim();
+    const resultadoDiv = document.getElementById("resultadoRastreio");
+    if(!termo){ alert("Digite o código do pedido ou e-mail para rastrear."); return; }
+
+    resultadoDiv.innerHTML = `<p style="text-align:center; color:#888;">Buscando...</p>`;
+
+    if(termo.includes("@")){
+        if(!window.buscarPedidosPorEmailFirebase){
+            resultadoDiv.innerHTML = `<p style="color:red; text-align:center;">Não foi possível buscar agora. Tente novamente em instantes.</p>`;
+            return;
+        }
+        window.buscarPedidosPorEmailFirebase(termo).then(lista => {
+            if(!lista || lista.length === 0){
+                resultadoDiv.innerHTML = `<div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0; color:#c21250;"><p>Nenhum pedido encontrado para o e-mail: <strong>${escaparHTML(termo)}</strong></p></div>`;
+                return;
+            }
+            lista.forEach(pedido => {
+                if(pedido.numeroPedido){
+                    if(window.pedirPermissaoNotificacaoCliente) window.pedirPermissaoNotificacaoCliente();
+                    if(window.acompanharPedidoParaNotificacao) window.acompanharPedidoParaNotificacao(pedido.numeroPedido);
+                }
+            });
+            resultadoDiv.innerHTML =
+                `<div style="margin-bottom:10px; font-size:0.82rem; color:#888;">${lista.length} pedido(s) encontrado(s):</div>` +
+                lista.map(p => montarRastreioHTML(p)).join('<div style="height:12px;"></div>');
+        }).catch(() => {
+            resultadoDiv.innerHTML = `<p style="color:red; text-align:center;">Erro ao buscar pedidos.</p>`;
+        });
+        return;
+    }
+
+    if(window.buscarPedidoNoFirebase){
+        window.buscarPedidoNoFirebase(termo).then(pedido => {
+            if(!pedido){
+                resultadoDiv.innerHTML = `<div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0; color:#c21250;"><p>Nenhum pedido encontrado para: <strong>${escaparHTML(termo)}</strong></p></div>`;
+                return;
+            }
+            if(pedido.numeroPedido){
+                if(window.pedirPermissaoNotificacaoCliente) window.pedirPermissaoNotificacaoCliente();
+                if(window.acompanharPedidoParaNotificacao) window.acompanharPedidoParaNotificacao(pedido.numeroPedido);
+            }
+            resultadoDiv.innerHTML = montarRastreioHTML(pedido);
+        }).catch(() => {
+            resultadoDiv.innerHTML = `<p style="color:red; text-align:center;">Erro ao buscar pedido.</p>`;
+        });
+    } else {
+        resultadoDiv.innerHTML = `<p style="color:red; text-align:center;">Não foi possível buscar agora. Tente novamente em instantes.</p>`;
+    }
 }
 
 function escaparHTML(valor){ if(valor === null || valor === undefined) return ""; return String(valor).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
 function formatarPreco(valor){ return (Number(valor) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
+
+// Monta a esteira de status (Aguardando pagamento > Pagamento aprovado > Aguardando despacho > Saiu para entrega)
+// a partir do campo "status" salvo no pedido, e mostra o botão de confirmação de recebimento quando cabível.
+// Todos os campos vindos do pedido são escapados antes de entrar no HTML (dado sensível de cliente).
+function montarRastreioHTML(pedido){
+    const status = pedido.status || "Aguardando pagamento";
+    const numero = escaparHTML(pedido.numeroPedido || "");
+
+    if(status === "Pagamento recusado"){
+        return `
+            <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
+                <p style="margin:0 0 6px;"><strong>Pedido:</strong> ${numero}</p>
+                <p style="color:#c21250; font-weight:600; margin:0;">Pagamento recusado. Por favor, entre em contato pelo WhatsApp para regularizar o seu pedido.</p>
+            </div>
+        `;
+    }
+
+    const etapas = [
+        "Aguardando pagamento",
+        "Pagamento aprovado",
+        "Aguardando despacho",
+        "Saiu para entrega"
+    ];
+
+    let etapaAtual = 0;
+    if(status === "Aguardando pagamento") etapaAtual = 0;
+    else if(status === "Pago - Aguardando despacho") etapaAtual = 2;
+    else if(status === "Despachado") etapaAtual = 3;
+    else if(status === "Finalizado") etapaAtual = 4;
+
+    const etapasHtml = etapas.map((label, index) => {
+        const concluida = index < etapaAtual || status === "Finalizado";
+        const atual = index === etapaAtual && status !== "Finalizado";
+        const cor = (concluida || atual) ? "#ed1760" : "#ccc";
+        const peso = atual ? "700" : "500";
+        return `
+            <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
+                <span style="width:20px; height:20px; min-width:20px; border-radius:50%; background:${cor}; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; flex:none;">${concluida ? "✓" : (index + 1)}</span>
+                <span style="color:${cor}; font-weight:${peso}; font-size:0.88rem;">${label}</span>
+            </div>
+        `;
+    }).join("");
+
+    const mensagemFinal = status === "Finalizado"
+        ? `<p style="color:#25D366; font-weight:600; margin-top:12px;">✓ Entrega confirmada. Obrigada por comprar na LaLabela!</p>`
+        : "";
+
+    const botaoConfirmar = status === "Despachado"
+        ? `<button class="btn-acao-modal" style="background:#25D366; margin-top:12px;" onclick="confirmarEntregaRecebida('${numero}')">Recebi minha encomenda ✓</button>`
+        : "";
+
+    return `
+        <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
+            <p style="margin:0 0 4px;"><strong>Pedido:</strong> ${numero}</p>
+            <p style="margin:0 0 14px;"><strong>Cliente:</strong> ${escaparHTML(pedido.nome || "")}</p>
+            ${etapasHtml}
+            ${mensagemFinal}
+            ${botaoConfirmar}
+        </div>
+    `;
+}
+
+function confirmarEntregaRecebida(numPedido){
+    if(window.atualizarStatusPedidoFirebase){
+        window.atualizarStatusPedidoFirebase(numPedido, "Finalizado");
+    }
+    alert("Obrigada! Confirmação de recebimento registrada com sucesso.");
+    fecharModalRastreio();
+}
 
 function normalizarProduto(doc){
     const dados = doc.data ? doc.data() : doc;
@@ -2068,6 +2191,8 @@ async function finalizarPedidoSite() {
         subtotal,
         frete: valorFreteAtual,
         total: valorTotal,
+        formaPagamento: billingType,
+        parcelas: payload.parcelas,
         status: "Aguardando pagamento",
         criadoEm: new Date().toISOString()
     };
@@ -2206,6 +2331,43 @@ function filtrarCategoria(cat){ categoriaAtual = cat; aplicarFiltros(); fecharFi
 document.getElementById("fundoCategorias").addEventListener("click", fecharFiltro);
 document.getElementById("deliveryWhatsapp").href = `https://wa.me/5544997720350?text=${encodeURIComponent("Olá! Gostaria de tirar dúvidas sobre o frete.")}`;
 carregarPerfilNaTela();
+
+// Assim que a cliente termina de digitar o e-mail no checkout, buscamos no
+// Firebase se ela já comprou antes e preenchemos nome/CPF/WhatsApp/endereços
+// salvos automaticamente (sem sobrescrever o que ela já tiver preenchido).
+let ultimoEmailBuscado = "";
+document.getElementById("checkoutEmail").addEventListener("blur", async function(){
+    const email = this.value.trim();
+    if(!email || !email.includes("@")) return;
+    if(email === ultimoEmailBuscado) return;
+    if(!window.buscarClientePorEmailFirebase) return;
+
+    ultimoEmailBuscado = email;
+    const cliente = await window.buscarClientePorEmailFirebase(email);
+    if(!cliente) return;
+
+    const campoNome = document.getElementById("checkoutNome");
+    const campoCpf = document.getElementById("checkoutCpf");
+    const campoWhatsapp = document.getElementById("checkoutWhatsapp");
+
+    if(campoNome && !campoNome.value.trim()) campoNome.value = cliente.nome || "";
+    if(campoCpf && !campoCpf.value.trim()) campoCpf.value = cliente.cpf || "";
+    if(campoWhatsapp && !campoWhatsapp.value.trim()) campoWhatsapp.value = cliente.whatsapp || "";
+
+    if(Array.isArray(cliente.enderecos) && cliente.enderecos.length){
+        cliente.enderecos.forEach(end => {
+            if(end && end.cep && !perfilCliente.enderecos.some(e => e.cep === end.cep)){
+                perfilCliente.enderecos.push(end);
+            }
+        });
+        localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+        renderizarEnderecosSalvos();
+    }
+
+    if((campoNome && campoNome.value) || (Array.isArray(cliente.enderecos) && cliente.enderecos.length)){
+        alert("Encontramos seus dados de compras anteriores e preenchemos o formulário para você. Confira antes de finalizar.");
+    }
+});
 </script>
 
 <script type="module">
@@ -2327,6 +2489,49 @@ window.buscarPedidoNoFirebase = async function(termoOriginal){
     }
 };
 
+// Busca TODOS os pedidos de um e-mail (usado no rastreio por e-mail e na
+// área "Meus Pedidos"), do mais recente para o mais antigo.
+window.buscarPedidosPorEmailFirebase = async function(email){
+    try{
+        const termo = String(email || "").trim();
+        if(!termo) return [];
+        const q = query(collection(db, "pedidos"), where("email", "==", termo));
+        const snap = await getDocs(q);
+        const lista = snap.docs.map(d => d.data());
+        lista.sort((a, b) => {
+            const dataA = a.criadoEm ? new Date(a.criadoEm).getTime() : 0;
+            const dataB = b.criadoEm ? new Date(b.criadoEm).getTime() : 0;
+            return dataB - dataA;
+        });
+        return lista;
+    }catch(err){
+        console.error("Erro ao buscar pedidos por e-mail:", err);
+        return [];
+    }
+};
+
+// Busca os dados salvos de uma cliente pelo e-mail (nome, CPF, WhatsApp e
+// endereços), usado para preencher o checkout automaticamente quando ela
+// já comprou antes — mesmo em outro aparelho, já que fica salvo no Firebase.
+window.buscarClientePorEmailFirebase = async function(email){
+    try{
+        const termo = String(email || "").trim();
+        if(!termo) return null;
+
+        let snap = await getDoc(doc(db, "clientes", termo));
+        if(snap.exists()) return snap.data();
+
+        const q = query(collection(db, "clientes"), where("email", "==", termo));
+        const querySnapshot = await getDocs(q);
+        if(!querySnapshot.empty) return querySnapshot.docs[0].data();
+
+        return null;
+    }catch(err){
+        console.error("Erro ao buscar cliente por e-mail:", err);
+        return null;
+    }
+};
+
 function carregarProdutosDoFirebase(){
     const produtosRef = collection(db, "produtos");
     onSnapshot(produtosRef, snapshot => {
@@ -2381,9 +2586,40 @@ function pedirPermissaoNotificacaoCliente(){
     }
 }
 
-function notificarClienteStatus(numeroPedido, status){
+// IMPORTANTE: "navigator.serviceWorker.ready" só resolve quando existe um
+// service worker registrado e ativo. Se o arquivo do service worker não
+// existir (ou falhar o registro), essa promise fica pendurada PARA SEMPRE —
+// e a notificação nunca aparece, mesmo com a permissão concedida. Por isso
+// usamos uma corrida com tempo limite: se o service worker não responder
+// rápido, caímos direto no jeito simples (new Notification), que funciona
+// com a página aberta mesmo sem service worker.
+function exibirNotificacao(titulo, opcoes){
     if(!("Notification" in window)) return;
     if(Notification.permission !== "granted") return;
+
+    if(!navigator.serviceWorker){
+        try{ new Notification(titulo, opcoes); }catch(e){}
+        return;
+    }
+
+    let jaMostrou = false;
+    const mostrarFallback = () => {
+        if(jaMostrou) return;
+        jaMostrou = true;
+        try{ new Notification(titulo, opcoes); }catch(e){}
+    };
+
+    const tempoLimite = new Promise(resolve => setTimeout(resolve, 1500, null));
+
+    Promise.race([navigator.serviceWorker.ready, tempoLimite]).then(registration => {
+        if(jaMostrou) return;
+        if(!registration){ mostrarFallback(); return; }
+        jaMostrou = true;
+        registration.showNotification(titulo, opcoes).catch(mostrarFallback);
+    }).catch(mostrarFallback);
+}
+
+function notificarClienteStatus(numeroPedido, status){
     const mensagem = MENSAGENS_STATUS_PEDIDO[status];
     if(!mensagem) return;
 
@@ -2395,17 +2631,7 @@ function notificarClienteStatus(numeroPedido, status){
         tag: "pedido-" + numeroPedido
     };
 
-    if(navigator.serviceWorker && navigator.serviceWorker.ready){
-        navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification(titulo, opcoes).catch(() => {
-                try{ new Notification(titulo, opcoes); }catch(e){}
-            });
-        }).catch(() => {
-            try{ new Notification(titulo, opcoes); }catch(e){}
-        });
-    } else {
-        try{ new Notification(titulo, opcoes); }catch(e){}
-    }
+    exibirNotificacao(titulo, opcoes);
 }
 
 // Passa a acompanhar um pedido: guarda no localStorage (para retomar o

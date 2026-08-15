@@ -1194,7 +1194,7 @@ id="totalPedidosFinalizados">
 </div>
 
 <div class="card-info">
-Entregues com sucesso
+Entregues (some em 24h)
 </div>
 
 </div>
@@ -1533,6 +1533,7 @@ Salvar produto
 <h2>Configurações de Frete</h2>
 <button class="fechar" onclick="fecharModalConfiguracoes()">×</button>
 </div>
+<p style="font-size:13px; color:#888; margin-top:-10px; margin-bottom:20px; line-height:1.5;">A loja entrega somente nestas duas cidades. Qualquer outro CEP é bloqueado automaticamente no site.</p>
 <div class="form-group">
 <label>Frete fixo — Paranavaí/PR</label>
 <input id="freteParanavaiInput" type="number" step="0.01" min="0" placeholder="10.00">
@@ -1542,11 +1543,6 @@ Salvar produto
 <label>Frete fixo — São João do Caiuá/PR</label>
 <input id="freteSaoJoaoInput" type="number" step="0.01" min="0" placeholder="20.00">
 <small>Entrega no próximo domingo.</small>
-</div>
-<div class="form-group">
-<label>Frete padrão — demais regiões</label>
-<input id="valorFretePadraoInput" type="number" step="0.01" min="0" placeholder="15.00">
-<small>Valor cobrado para qualquer CEP fora dessas duas cidades. As cidades atendidas continuam as mesmas — isso aqui só muda os valores cobrados.</small>
 </div>
 <div class="modal-footer">
 <button class="btn-cancel" onclick="fecharModalConfiguracoes()">Cancelar</button>
@@ -1647,6 +1643,9 @@ let estoqueVariacoes = [];
 let idsPedidosConhecidos = new Set();
 let primeiraCargaPedidos = true;
 
+/* NOVO: controle do temporizador que zera pedidos finalizados após 24h */
+let intervaloLimpezaPedidos = null;
+
 
 const telaLogin =
 document.getElementById("telaLogin");
@@ -1662,6 +1661,21 @@ document.getElementById("carregandoLogin");
 
 const btnLogin =
 document.getElementById("btnLogin");
+
+
+// Escapa texto antes de colocar em innerHTML. Os dados de pedidos vêm do
+// formulário de checkout preenchido pela cliente no site — sem isso, um
+// nome ou endereço com HTML/script viraria uma falha de segurança (XSS)
+// aqui no painel. Importante por lidarmos com dados sensíveis de clientes.
+function escaparHTML(valor){
+    if(valor === null || valor === undefined) return "";
+    return String(valor)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
 
 
 onAuthStateChanged(
@@ -1680,6 +1694,7 @@ carregarProdutosFirebase();
 carregarPedidosFirebase();
 pedirPermissaoNotificacao();
 registrarServiceWorkerNotificacoes();
+iniciarLimpezaAutomaticaPedidos();
 
 }else{
 
@@ -1688,6 +1703,8 @@ telaLogin.style.display =
 
 painel.style.display =
 "none";
+
+pararLimpezaAutomaticaPedidos();
 
 }
 
@@ -1955,11 +1972,58 @@ if(primeiraCargaPedidos){
 }
 
 atualizarCardsPedidos();
+limparPedidosFinalizadosAntigos();
 },
 error => {
 console.error("Erro ao carregar pedidos:", error);
 }
 );
+}
+
+/* =====================================================
+   ZERAR PEDIDOS FINALIZADOS APÓS 24H
+   Por segurança e para não guardar dados sensíveis de clientes
+   além do necessário, todo pedido com status "Finalizado" é
+   apagado do Firestore 24h depois de ter sido finalizado.
+   Isso roda enquanto o painel estiver aberto (checagem a cada
+   novo carregamento de pedidos e a cada 10 minutos).
+===================================================== */
+
+function obterDataFinalizacao(p){
+    const bruto = p.finalizadoEm || p.atualizadoEm;
+    if(!bruto) return null;
+    const data = bruto.toDate ? bruto.toDate() : new Date(bruto);
+    return isNaN(data.getTime()) ? null : data;
+}
+
+async function limparPedidosFinalizadosAntigos(){
+    const agora = Date.now();
+    const VINTE_QUATRO_HORAS_MS = 24 * 60 * 60 * 1000;
+
+    const candidatos = pedidos.filter(p => (p.status || "") === "Finalizado");
+
+    for(const pedido of candidatos){
+        const dataFinalizacao = obterDataFinalizacao(pedido);
+        if(!dataFinalizacao) continue;
+        if(agora - dataFinalizacao.getTime() < VINTE_QUATRO_HORAS_MS) continue;
+
+        try{
+            await deleteDoc(doc(db, "pedidos", pedido.id));
+        }catch(erro){
+            console.error("Erro ao zerar pedido finalizado antigo:", pedido.id, erro);
+        }
+    }
+}
+
+function iniciarLimpezaAutomaticaPedidos(){
+    if(intervaloLimpezaPedidos) return;
+    intervaloLimpezaPedidos = setInterval(limparPedidosFinalizadosAntigos, 10 * 60 * 1000);
+}
+
+function pararLimpezaAutomaticaPedidos(){
+    if(!intervaloLimpezaPedidos) return;
+    clearInterval(intervaloLimpezaPedidos);
+    intervaloLimpezaPedidos = null;
 }
 
 /* =====================================================
@@ -2142,7 +2206,7 @@ const st = p.status || "Aguardando pagamento";
 return st === "Aguardando pagamento" || st === "Pagamento recusado";
 });
 } else if(filtro === 'finalizado') {
-titulo.textContent = "Pedidos Finalizados";
+titulo.textContent = "Pedidos Finalizados (somem do painel 24h após finalizados)";
 filtrados = pedidos.filter(p => (p.status || "Aguardando pagamento") === "Finalizado");
 } else {
 titulo.textContent = "Todos os Pedidos";
@@ -2157,10 +2221,10 @@ filtrados.forEach(p => {
 let modelosHtml = "";
 if(p.itens && Array.isArray(p.itens)) {
 p.itens.forEach(item => {
-modelosHtml += `<div>• ${item.nome || 'Produto'} (Qtd: ${item.qtd || item.quantidade || 1}) - Cor: ${item.cor || '-'} / Tam: ${item.tamanho || '-'}</div>`;
+modelosHtml += `<div>• ${escaparHTML(item.nome || 'Produto')} (Qtd: ${escaparHTML(item.qtd || item.quantidade || 1)}) - Cor: ${escaparHTML(item.cor || '-')} / Tam: ${escaparHTML(item.tamanho || '-')}</div>`;
 });
 } else {
-modelosHtml = `<div>${p.descricao || 'Pedido realizado na loja'}</div>`;
+modelosHtml = `<div>${escaparHTML(p.descricao || 'Pedido realizado na loja')}</div>`;
 }
 
 const statusAtual = p.status || "Aguardando pagamento";
@@ -2184,15 +2248,15 @@ botoesHtml += `<button class="btn-etiqueta" onclick="gerarEtiquetaPedido('${p.id
 lista.innerHTML += `
 <div style="border:1px solid #eee; border-radius:10px; padding:15px; background:#fafafa;">
 <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-<strong>Pedido ${obterNumeroPedido(p)}</strong>
+<strong>Pedido ${escaparHTML(obterNumeroPedido(p))}</strong>
 <span style="color:#e52b79; font-weight:bold;">R$ ${Number(p.total || p.valor || 0).toFixed(2).replace('.',',')}</span>
 </div>
 <div style="font-size:13px; color:#555; display:flex; flex-direction:column; gap:5px; margin-bottom:12px;">
-<div><strong>Cliente:</strong> ${obterNomeCliente(p)}</div>
-<div><strong>Telefone:</strong> ${p.telefone || p.whatsapp || '-'}</div>
+<div><strong>Cliente:</strong> ${escaparHTML(obterNomeCliente(p))}</div>
+<div><strong>Telefone:</strong> ${escaparHTML(p.telefone || p.whatsapp || '-')}</div>
 <div><strong>Modelos / Itens:</strong></div>
 <div style="padding-left:10px;">${modelosHtml}</div>
-<div><strong>Informações de Entrega:</strong> ${montarEnderecoPedido(p)}</div>
+<div><strong>Informações de Entrega:</strong> ${escaparHTML(montarEnderecoPedido(p))}</div>
 <div><strong>Status de Pagamento:</strong> <span style="color: ${statusPagamento.cor};">${statusPagamento.texto}</span></div>
 <div><strong>Status do Pedido:</strong> ${obterStatusPedidoLabel(statusAtual)}</div>
 </div>
@@ -2252,14 +2316,16 @@ alert("Erro ao despachar o pedido.");
 }
 
 // Finalização manual: usada quando a cliente recebe o pedido mas esquece de
-// tocar em "Recebi minha encomenda" no rastreio do site.
+// tocar em "Recebi minha encomenda" no rastreio do site. Grava também
+// finalizadoEm, usado depois para zerar o pedido do painel após 24h.
 window.finalizarPedidoAdmin = async function(idPedido) {
 if(!confirm("Confirma que este pedido já foi entregue e pode ser finalizado?")) return;
 try {
 await updateDoc(doc(db, "pedidos", idPedido), {
-status: "Finalizado"
+status: "Finalizado",
+finalizadoEm: new Date().toISOString()
 });
-alert("Pedido finalizado com sucesso!");
+alert("Pedido finalizado com sucesso! Ele será removido automaticamente do painel em 24h.");
 fecharModalPedidos();
 } catch(e) {
 console.error(e);
@@ -2278,21 +2344,21 @@ window.gerarEtiquetaPedido = function(idPedido){
         return;
     }
 
-    const numero = obterNumeroPedido(pedido);
-    const nomeCliente = obterNomeCliente(pedido);
-    const telefone = pedido.telefone || pedido.whatsapp || "-";
-    const endereco = montarEnderecoPedido(pedido);
+    const numero = escaparHTML(obterNumeroPedido(pedido));
+    const nomeCliente = escaparHTML(obterNomeCliente(pedido));
+    const telefone = escaparHTML(pedido.telefone || pedido.whatsapp || "-");
+    const endereco = escaparHTML(montarEnderecoPedido(pedido));
 
     let itensHtml = "";
     if(pedido.itens && Array.isArray(pedido.itens) && pedido.itens.length){
         pedido.itens.forEach(item => {
-            itensHtml += `<div class="etiqueta-item">• ${item.nome || "Produto"} — Qtd: ${item.qtd || item.quantidade || 1} — Cor: ${item.cor || "-"} / Tam: ${item.tamanho || "-"}</div>`;
+            itensHtml += `<div class="etiqueta-item">• ${escaparHTML(item.nome || "Produto")} — Qtd: ${escaparHTML(item.qtd || item.quantidade || 1)} — Cor: ${escaparHTML(item.cor || "-")} / Tam: ${escaparHTML(item.tamanho || "-")}</div>`;
         });
     } else {
-        itensHtml = `<div class="etiqueta-item">${pedido.descricao || "Sem itens registrados."}</div>`;
+        itensHtml = `<div class="etiqueta-item">${escaparHTML(pedido.descricao || "Sem itens registrados.")}</div>`;
     }
 
-    const janela = window.open("", "_blank", "width=440,height=620");
+    const janela = window.open("", "_blank", "width=440,height=680");
     if(!janela){
         alert("Não foi possível abrir a janela da etiqueta. Verifique se o navegador está bloqueando pop-ups.");
         return;
@@ -2306,7 +2372,7 @@ window.gerarEtiquetaPedido = function(idPedido){
             <title>Etiqueta — Pedido ${numero}</title>
             <style>
                 @page{
-                    size: 110mm 160mm;
+                    size: 110mm 190mm;
                     margin: 5mm;
                 }
                 *{ box-sizing:border-box; }
@@ -2348,15 +2414,16 @@ window.gerarEtiquetaPedido = function(idPedido){
                 .etiqueta{
                     width:100mm;
                     max-width:100mm;
-                    padding:14px 16px;
+                    min-height:170mm;
+                    padding:20px 20px;
                     border:1px solid #eee;
                 }
-                .etiqueta-marca{ color:#e52b79; font-size:19px; font-weight:bold; margin-bottom:2px; }
-                .etiqueta-sub{ color:#e52b79; letter-spacing:2px; font-size:10px; margin-bottom:12px; }
-                .etiqueta-campo{ margin:9px 0; font-size:14px; line-height:1.35; }
-                .etiqueta-campo strong{ display:block; font-size:10px; text-transform:uppercase; color:#888; margin-bottom:2px; }
-                .etiqueta-item{ font-size:13px; margin:3px 0; line-height:1.35; }
-                hr{ border:none; border-top:1px dashed #ccc; margin:10px 0; }
+                .etiqueta-marca{ color:#e52b79; font-size:20px; font-weight:bold; margin-bottom:2px; }
+                .etiqueta-sub{ color:#e52b79; letter-spacing:2px; font-size:10px; margin-bottom:16px; }
+                .etiqueta-campo{ margin:13px 0; font-size:15px; line-height:1.45; }
+                .etiqueta-campo strong{ display:block; font-size:10px; text-transform:uppercase; color:#888; margin-bottom:3px; }
+                .etiqueta-item{ font-size:14px; margin:5px 0; line-height:1.45; }
+                hr{ border:none; border-top:1px dashed #ccc; margin:14px 0; }
                 @media print{
                     body{ padding:0; }
                     .barra-tela, .instrucao-tela{ display:none; }
@@ -2398,19 +2465,17 @@ window.gerarEtiquetaPedido = function(idPedido){
 
 /* =====================================================
    CONFIGURAÇÕES — VALORES DE FRETE
-   (Paranavaí, São João do Caiuá e o padrão das demais regiões.
-   A lógica de quais cidades são atendidas continua a mesma —
-   aqui só se edita o valor cobrado em cada caso.)
+   (Só existem Paranavaí e São João do Caiuá — as únicas
+   cidades atendidas pela loja. Qualquer outro CEP é
+   bloqueado direto no site.)
 ===================================================== */
 
 window.abrirConfiguracoes = async function(){
     const inputParanavai = document.getElementById("freteParanavaiInput");
     const inputSaoJoao = document.getElementById("freteSaoJoaoInput");
-    const inputPadrao = document.getElementById("valorFretePadraoInput");
 
     inputParanavai.value = "";
     inputSaoJoao.value = "";
-    inputPadrao.value = "";
 
     try{
         const snap = await getDoc(doc(db, "configuracoes", "frete"));
@@ -2418,16 +2483,13 @@ window.abrirConfiguracoes = async function(){
 
         const paranavai = !isNaN(Number(dados.paranavai)) ? Number(dados.paranavai) : 10.00;
         const saoJoao = !isNaN(Number(dados.saoJoao)) ? Number(dados.saoJoao) : 20.00;
-        const padrao = !isNaN(Number(dados.valorPadrao)) ? Number(dados.valorPadrao) : 15.00;
 
         inputParanavai.value = paranavai.toFixed(2);
         inputSaoJoao.value = saoJoao.toFixed(2);
-        inputPadrao.value = padrao.toFixed(2);
     }catch(erro){
         console.error("Erro ao carregar configuração de frete:", erro);
         inputParanavai.value = "10.00";
         inputSaoJoao.value = "20.00";
-        inputPadrao.value = "15.00";
     }
     document.getElementById("modalConfiguracoes").classList.add("aberto");
 };
@@ -2440,10 +2502,9 @@ window.salvarConfiguracaoFrete = async function(){
     const btn = document.getElementById("btnSalvarFrete");
     const paranavai = Number(document.getElementById("freteParanavaiInput").value);
     const saoJoao = Number(document.getElementById("freteSaoJoaoInput").value);
-    const padrao = Number(document.getElementById("valorFretePadraoInput").value);
 
-    if(isNaN(paranavai) || paranavai < 0 || isNaN(saoJoao) || saoJoao < 0 || isNaN(padrao) || padrao < 0){
-        alert("Digite valores de frete válidos nos três campos.");
+    if(isNaN(paranavai) || paranavai < 0 || isNaN(saoJoao) || saoJoao < 0){
+        alert("Digite valores de frete válidos nos dois campos.");
         return;
     }
 
@@ -2454,7 +2515,6 @@ window.salvarConfiguracaoFrete = async function(){
         await setDoc(doc(db, "configuracoes", "frete"), {
             paranavai: paranavai,
             saoJoao: saoJoao,
-            valorPadrao: padrao,
             atualizadoEm: serverTimestamp()
         }, { merge: true });
 
@@ -2567,8 +2627,8 @@ ${
 foto
 ?
 `<img
-src="${foto}"
-alt="${produto.nome || ""}"
+src="${escaparHTML(foto)}"
+alt="${escaparHTML(produto.nome || "")}"
 >`
 :
 `<div style="
@@ -2585,7 +2645,7 @@ justify-content:center;">
 
 <div class="product-name">
 
-${produto.nome || "Sem nome"}
+${escaparHTML(produto.nome || "Sem nome")}
 
 </div>
 
@@ -2594,7 +2654,7 @@ ${produto.nome || "Sem nome"}
 
 <div>
 
-${produto.categoria || "-"}
+${escaparHTML(produto.categoria || "-")}
 
 </div>
 
@@ -2660,21 +2720,6 @@ Excluir
 
 }
 
-
-document
-.getElementById("totalProdutos")
-.textContent =
-produtos.length;
-
-
-document
-.getElementById("totalPromocoes")
-.textContent =
-produtos.filter(
-produto =>
-produto.tag &&
-produto.tag.trim() !== ""
-).length;
 
 };
 
@@ -3168,7 +3213,7 @@ lista.innerHTML += `
 
 <input
 type="text"
-value="${String(item.cor).replace(/"/g,"&quot;")}"
+value="${escaparHTML(item.cor)}"
 placeholder="Cor"
 onchange="
 alterarEstoqueCampo(
@@ -3180,7 +3225,7 @@ this.value
 
 <input
 type="text"
-value="${String(item.tamanho).replace(/"/g,"&quot;")}"
+value="${escaparHTML(item.tamanho)}"
 placeholder="Tamanho"
 onchange="
 alterarEstoqueCampo(
@@ -3338,7 +3383,7 @@ container.innerHTML += `
 <div class="foto-item">
 
 <img
-src="${preview}"
+src="${escaparHTML(preview)}"
 alt="Foto ${index + 1}"
 >
 

@@ -10,6 +10,13 @@ content="width=device-width, initial-scale=1.0">
 
 <title>LaLabela Boutique — Painel</title>
 
+<link rel="manifest" href="./painel-manifest.json">
+<link rel="apple-touch-icon" href="./LaLabela-icon-192-final.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LaLabela Painel">
+<meta name="theme-color" content="#e52b79">
+
 <style>
 
 *{
@@ -1092,9 +1099,11 @@ onclick="abrirNovoProduto()">
 
 </div>
 
+<div id="avisoNotificacao" style="display:none; background:#fff8fb; border:1px solid #f8bbd0; color:#c2185b; border-radius:10px; padding:14px 18px; font-size:13px; line-height:1.5; margin-bottom:25px;"></div>
+
 <div class="cards">
 
-<div class="card" onclick="abrirModalPedidos('todos')">
+<div class="card" onclick="abrirModalPedidos('aberto')">
 
 <div class="card-top">
 
@@ -1525,9 +1534,19 @@ Salvar produto
 <button class="fechar" onclick="fecharModalConfiguracoes()">×</button>
 </div>
 <div class="form-group">
-<label>Valor fixo do frete</label>
+<label>Frete fixo — Paranavaí/PR</label>
+<input id="freteParanavaiInput" type="number" step="0.01" min="0" placeholder="10.00">
+<small>Entrega em até 2 horas.</small>
+</div>
+<div class="form-group">
+<label>Frete fixo — São João do Caiuá/PR</label>
+<input id="freteSaoJoaoInput" type="number" step="0.01" min="0" placeholder="20.00">
+<small>Entrega no próximo domingo.</small>
+</div>
+<div class="form-group">
+<label>Frete padrão — demais regiões</label>
 <input id="valorFretePadraoInput" type="number" step="0.01" min="0" placeholder="15.00">
-<small>Esse é o valor cobrado quando o CEP do cliente não é de Paranavaí (R$ 10,00, fixo) nem de São João do Caiuá (R$ 20,00, fixo). Alterar aqui atualiza o site na hora.</small>
+<small>Valor cobrado para qualquer CEP fora dessas duas cidades. As cidades atendidas continuam as mesmas — isso aqui só muda os valores cobrados.</small>
 </div>
 <div class="modal-footer">
 <button class="btn-cancel" onclick="fecharModalConfiguracoes()">Cancelar</button>
@@ -1947,10 +1966,53 @@ console.error("Erro ao carregar pedidos:", error);
    NOTIFICAÇÃO DE NOVA VENDA
 ===================================================== */
 
+// No iPhone, o Safari só permite notificações se o site estiver instalado
+// na Tela de Início (é uma regra da Apple, não depende do nosso código).
+// Por isso mostramos um aviso explicando o que falta, em vez de falhar em silêncio.
+function ehIOS(){
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+}
+
+function rodandoComoAppInstalado(){
+    return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+}
+
+function atualizarAvisoNotificacao(){
+    const aviso = document.getElementById("avisoNotificacao");
+    if(!aviso) return;
+
+    if(!("Notification" in window)){
+        aviso.style.display = "block";
+        aviso.innerHTML = "⚠️ Este navegador não é compatível com notificações.";
+        return;
+    }
+
+    if(ehIOS() && !rodandoComoAppInstalado()){
+        aviso.style.display = "block";
+        aviso.innerHTML = "🔔 Para receber notificação de nova venda no iPhone: toque no botão <strong>Compartilhar</strong> do Safari → <strong>Adicionar à Tela de Início</strong> → e depois abra o painel sempre pelo ícone criado (não pelo Safari). Essa exigência é da Apple, não é possível pular essa etapa.";
+        return;
+    }
+
+    if(Notification.permission === "denied"){
+        aviso.style.display = "block";
+        aviso.innerHTML = "🔕 As notificações estão bloqueadas para este site. Vá nas configurações de notificação do navegador e permita para este endereço.";
+        return;
+    }
+
+    if(Notification.permission === "granted"){
+        aviso.style.display = "none";
+        return;
+    }
+
+    aviso.style.display = "block";
+    aviso.innerHTML = "🔔 Toque em \"Permitir\" quando o navegador pedir para ativar as notificações de novas vendas.";
+}
+
 window.pedirPermissaoNotificacao = function(){
+    atualizarAvisoNotificacao();
     if(!("Notification" in window)) return;
     if(Notification.permission === "default"){
-        Notification.requestPermission().catch(() => {});
+        Notification.requestPermission().then(() => atualizarAvisoNotificacao()).catch(() => {});
     }
 };
 
@@ -1991,6 +2053,9 @@ function notificarNovaVenda(pedido){
     }
 }
 
+// Pipeline único de status, usado tanto pelo painel quanto pelo rastreio do site:
+// "Aguardando pagamento" -> "Pago - Aguardando despacho" -> "Despachado" -> "Finalizado"
+// (com "Pagamento recusado" como variação de "Aguardando pagamento")
 window.atualizarCardsPedidos = function() {
 let countAbertos = 0;
 let countDespachados = 0;
@@ -2001,22 +2066,20 @@ let faturamentoHoje = 0;
 const hojeStr = new Date().toISOString().split('T')[0];
 
 pedidos.forEach(p => {
-const st = (p.status || "").toLowerCase();
-const pag = (p.statusPagamento || "").toLowerCase();
-const ehNaoPago = pag.includes('nao') || pag.includes('não') || pag.includes('pendente') || pag.includes('aguardando');
+const st = p.status || "Aguardando pagamento";
 
-if(st === 'despachado' || st === 'enviado') {
+if(st === "Despachado") {
 countDespachados++;
-} else if(ehNaoPago) {
+} else if(st === "Aguardando pagamento" || st === "Pagamento recusado") {
 countNaoPagos++;
-} else if(st === 'finalizado' || st === 'entregue') {
+} else if(st === "Finalizado") {
 countFinalizados++;
-} else {
+} else if(st === "Pago - Aguardando despacho") {
 countAbertos++;
 }
 
-// Faturamento do dia
-if(p.criadoEm) {
+// Faturamento do dia (só conta pedidos já pagos)
+if(p.criadoEm && st !== "Aguardando pagamento" && st !== "Pagamento recusado") {
 let dataPed = p.criadoEm.toDate ? p.criadoEm.toDate().toISOString().split('T')[0] : String(p.criadoEm).split('T')[0];
 if(dataPed === hojeStr) {
 faturamentoHoje += Number(p.total || p.valor || 0);
@@ -2024,7 +2087,7 @@ faturamentoHoje += Number(p.total || p.valor || 0);
 }
 });
 
-document.getElementById("totalPedidosAbertos").textContent = pedidos.length;
+document.getElementById("totalPedidosAbertos").textContent = countAbertos;
 document.getElementById("totalPedidosDespachados").textContent = countDespachados;
 document.getElementById("totalPedidosNaoPagos").textContent = countNaoPagos;
 document.getElementById("totalPedidosFinalizados").textContent = countFinalizados;
@@ -2063,24 +2126,21 @@ modal.classList.add("aberto");
 lista.innerHTML = "";
 
 let filtrados = pedidos;
-if(filtro === 'despachado') {
+if(filtro === 'aberto') {
+titulo.textContent = "Pedidos — Aguardando Despacho";
+filtrados = pedidos.filter(p => (p.status || "Aguardando pagamento") === "Pago - Aguardando despacho");
+} else if(filtro === 'despachado') {
 titulo.textContent = "Pedidos Despachados";
-filtrados = pedidos.filter(p => {
-const st = (p.status || "").toLowerCase();
-return st === 'despachado' || st === 'enviado';
-});
+filtrados = pedidos.filter(p => (p.status || "Aguardando pagamento") === "Despachado");
 } else if(filtro === 'nao_pago') {
 titulo.textContent = "Pedidos Não Pagos";
 filtrados = pedidos.filter(p => {
-const pag = (p.statusPagamento || "").toLowerCase();
-return pag.includes('nao') || pag.includes('não') || pag.includes('pendente') || pag.includes('aguardando');
+const st = p.status || "Aguardando pagamento";
+return st === "Aguardando pagamento" || st === "Pagamento recusado";
 });
 } else if(filtro === 'finalizado') {
 titulo.textContent = "Pedidos Finalizados";
-filtrados = pedidos.filter(p => {
-const st = (p.status || "").toLowerCase();
-return st === 'finalizado' || st === 'entregue';
-});
+filtrados = pedidos.filter(p => (p.status || "Aguardando pagamento") === "Finalizado");
 } else {
 titulo.textContent = "Todos os Pedidos";
 }
@@ -2100,6 +2160,24 @@ modelosHtml += `<div>• ${item.nome || 'Produto'} (Qtd: ${item.qtd || item.quan
 modelosHtml = `<div>${p.descricao || 'Pedido realizado na loja'}</div>`;
 }
 
+const statusAtual = p.status || "Aguardando pagamento";
+const statusPagamento = obterStatusPagamentoLabel(statusAtual);
+
+// Cartão já entra pago automaticamente. Pix, enquanto o webhook do Asaas não
+// estiver configurado, precisa dessa confirmação manual (você confere o
+// pagamento no Asaas/banco e confirma aqui).
+let botoesHtml = "";
+if(statusAtual === "Aguardando pagamento" || statusAtual === "Pagamento recusado"){
+    botoesHtml += `<button class="btn-primary" style="padding:8px 14px; font-size:13px; background:#29934a;" onclick="marcarPedidoComoPago('${p.id}')">Confirmar Pagamento</button>`;
+}
+if(statusAtual === "Pago - Aguardando despacho"){
+    botoesHtml += `<button class="btn-primary" style="padding:8px 14px; font-size:13px;" onclick="despacharPedido('${p.id}')">Despachar Pedido</button>`;
+}
+if(statusAtual === "Despachado"){
+    botoesHtml += `<button class="btn-primary" style="padding:8px 14px; font-size:13px; background:#29934a;" onclick="finalizarPedidoAdmin('${p.id}')">Finalizar Pedido</button>`;
+}
+botoesHtml += `<button class="btn-etiqueta" onclick="gerarEtiquetaPedido('${p.id}')">🏷️ Gerar Etiqueta</button>`;
+
 lista.innerHTML += `
 <div style="border:1px solid #eee; border-radius:10px; padding:15px; background:#fafafa;">
 <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
@@ -2112,20 +2190,49 @@ lista.innerHTML += `
 <div><strong>Modelos / Itens:</strong></div>
 <div style="padding-left:10px;">${modelosHtml}</div>
 <div><strong>Informações de Entrega:</strong> ${montarEnderecoPedido(p)}</div>
-<div><strong>Status de Pagamento:</strong> <span style="color: ${p.statusPagamento === 'Pago' ? 'green' : 'orange'};">${p.statusPagamento || 'Pendente'}</span></div>
-<div><strong>Status do Pedido:</strong> ${p.status || 'Aberto'}</div>
+<div><strong>Status de Pagamento:</strong> <span style="color: ${statusPagamento.cor};">${statusPagamento.texto}</span></div>
+<div><strong>Status do Pedido:</strong> ${obterStatusPedidoLabel(statusAtual)}</div>
 </div>
 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-<button class="btn-primary" style="padding:8px 14px; font-size:13px;" onclick="despacharPedido('${p.id}')">Despachar Pedido</button>
-<button class="btn-etiqueta" onclick="gerarEtiquetaPedido('${p.id}')">🏷️ Gerar Etiqueta</button>
+${botoesHtml}
 </div>
 </div>
 `;
 });
 }
 
+function obterStatusPagamentoLabel(status){
+    if(status === "Aguardando pagamento") return { texto: "Pendente", cor: "orange" };
+    if(status === "Pagamento recusado") return { texto: "Recusado", cor: "red" };
+    return { texto: "Pago", cor: "green" };
+}
+
+function obterStatusPedidoLabel(status){
+    if(status === "Aguardando pagamento") return "Aguardando pagamento";
+    if(status === "Pagamento recusado") return "Pagamento recusado";
+    if(status === "Pago - Aguardando despacho") return "Aguardando despacho";
+    if(status === "Despachado") return "Despachado";
+    if(status === "Finalizado") return "Finalizado";
+    return status || "Aberto";
+}
+
 window.fecharModalPedidos = function() {
 document.getElementById("modalPedidos").classList.remove("aberto");
+}
+
+// Confirmação manual de pagamento (principalmente para Pix, enquanto não há
+// webhook automático do Asaas). Depois disso o pedido libera o botão "Despachar".
+window.marcarPedidoComoPago = async function(idPedido) {
+try {
+await updateDoc(doc(db, "pedidos", idPedido), {
+status: "Pago - Aguardando despacho"
+});
+alert("Pagamento confirmado! Pedido movido para aguardando despacho.");
+fecharModalPedidos();
+} catch(e) {
+console.error(e);
+alert("Erro ao confirmar o pagamento.");
+}
 }
 
 window.despacharPedido = async function(idPedido) {
@@ -2135,10 +2242,25 @@ status: "Despachado"
 });
 alert("Pedido despachado com sucesso!");
 fecharModalPedidos();
-carregarPedidosFirebase();
 } catch(e) {
 console.error(e);
 alert("Erro ao despachar o pedido.");
+}
+}
+
+// Finalização manual: usada quando a cliente recebe o pedido mas esquece de
+// tocar em "Recebi minha encomenda" no rastreio do site.
+window.finalizarPedidoAdmin = async function(idPedido) {
+if(!confirm("Confirma que este pedido já foi entregue e pode ser finalizado?")) return;
+try {
+await updateDoc(doc(db, "pedidos", idPedido), {
+status: "Finalizado"
+});
+alert("Pedido finalizado com sucesso!");
+fecharModalPedidos();
+} catch(e) {
+console.error(e);
+alert("Erro ao finalizar o pedido.");
 }
 }
 
@@ -2180,29 +2302,56 @@ window.gerarEtiquetaPedido = function(idPedido){
             <meta charset="UTF-8">
             <title>Etiqueta — Pedido ${numero}</title>
             <style>
-                body{ font-family: Arial, Helvetica, sans-serif; padding:22px; color:#171717; }
-                .etiqueta-marca{ color:#e52b79; font-size:22px; font-weight:bold; margin-bottom:2px; }
-                .etiqueta-sub{ color:#e52b79; letter-spacing:3px; font-size:11px; margin-bottom:18px; }
-                .etiqueta-campo{ margin:12px 0; font-size:14px; }
-                .etiqueta-campo strong{ display:block; font-size:11px; text-transform:uppercase; color:#888; margin-bottom:2px; }
-                .etiqueta-item{ font-size:13px; margin:4px 0; }
-                hr{ border:none; border-top:1px dashed #ccc; margin:16px 0; }
+                @page{
+                    size: 99mm 139mm;
+                    margin: 4mm;
+                }
+                *{ box-sizing:border-box; }
+                body{ font-family: Arial, Helvetica, sans-serif; padding:0; margin:0; color:#171717; }
+                .instrucao-tela{
+                    background:#fff8fb;
+                    border:1px dashed #e52b79;
+                    color:#e52b79;
+                    font-size:12px;
+                    padding:8px 10px;
+                    margin-bottom:12px;
+                    border-radius:6px;
+                }
+                .etiqueta{
+                    width:100%;
+                    max-width:95mm;
+                    padding:10px 12px;
+                    border:1px solid #eee;
+                }
+                .etiqueta-marca{ color:#e52b79; font-size:15px; font-weight:bold; margin-bottom:1px; }
+                .etiqueta-sub{ color:#e52b79; letter-spacing:2px; font-size:8px; margin-bottom:8px; }
+                .etiqueta-campo{ margin:6px 0; font-size:11px; line-height:1.3; }
+                .etiqueta-campo strong{ display:block; font-size:8px; text-transform:uppercase; color:#888; margin-bottom:1px; }
+                .etiqueta-item{ font-size:10px; margin:2px 0; line-height:1.3; }
+                hr{ border:none; border-top:1px dashed #ccc; margin:8px 0; }
                 @media print{
-                    body{ padding:10px; }
+                    .instrucao-tela{ display:none; }
+                    .etiqueta{ border:none; max-width:100%; }
                 }
             </style>
         </head>
         <body>
-            <div class="etiqueta-marca">LaLabela Boutique</div>
-            <div class="etiqueta-sub">ETIQUETA DE ENVIO</div>
-            <div class="etiqueta-campo"><strong>Pedido</strong>${numero}</div>
-            <hr>
-            <div class="etiqueta-campo"><strong>Destinatário</strong>${nomeCliente}</div>
-            <div class="etiqueta-campo"><strong>Telefone</strong>${telefone}</div>
-            <div class="etiqueta-campo"><strong>Endereço</strong>${endereco}</div>
-            <hr>
-            <div class="etiqueta-campo"><strong>Itens do pedido</strong></div>
-            ${itensHtml}
+            <div class="instrucao-tela">
+                Dica: no diálogo de impressão, ative a opção "Páginas por folha: 4"
+                (ou "Layout &gt; 4-up") para imprimir até 4 etiquetas na mesma folha A4.
+            </div>
+            <div class="etiqueta">
+                <div class="etiqueta-marca">LaLabela Boutique</div>
+                <div class="etiqueta-sub">ETIQUETA DE ENVIO</div>
+                <div class="etiqueta-campo"><strong>Pedido</strong>${numero}</div>
+                <hr>
+                <div class="etiqueta-campo"><strong>Destinatário</strong>${nomeCliente}</div>
+                <div class="etiqueta-campo"><strong>Telefone</strong>${telefone}</div>
+                <div class="etiqueta-campo"><strong>Endereço</strong>${endereco}</div>
+                <hr>
+                <div class="etiqueta-campo"><strong>Itens do pedido</strong></div>
+                ${itensHtml}
+            </div>
         </body>
         </html>
     `);
@@ -2213,19 +2362,37 @@ window.gerarEtiquetaPedido = function(idPedido){
 
 
 /* =====================================================
-   CONFIGURAÇÕES — FRETE PADRÃO
+   CONFIGURAÇÕES — VALORES DE FRETE
+   (Paranavaí, São João do Caiuá e o padrão das demais regiões.
+   A lógica de quais cidades são atendidas continua a mesma —
+   aqui só se edita o valor cobrado em cada caso.)
 ===================================================== */
 
 window.abrirConfiguracoes = async function(){
-    const input = document.getElementById("valorFretePadraoInput");
-    input.value = "";
+    const inputParanavai = document.getElementById("freteParanavaiInput");
+    const inputSaoJoao = document.getElementById("freteSaoJoaoInput");
+    const inputPadrao = document.getElementById("valorFretePadraoInput");
+
+    inputParanavai.value = "";
+    inputSaoJoao.value = "";
+    inputPadrao.value = "";
+
     try{
         const snap = await getDoc(doc(db, "configuracoes", "frete"));
-        const valorAtual = snap.exists() && !isNaN(Number(snap.data().valorPadrao)) ? Number(snap.data().valorPadrao) : 15.00;
-        input.value = valorAtual.toFixed(2);
+        const dados = snap.exists() ? snap.data() : {};
+
+        const paranavai = !isNaN(Number(dados.paranavai)) ? Number(dados.paranavai) : 10.00;
+        const saoJoao = !isNaN(Number(dados.saoJoao)) ? Number(dados.saoJoao) : 20.00;
+        const padrao = !isNaN(Number(dados.valorPadrao)) ? Number(dados.valorPadrao) : 15.00;
+
+        inputParanavai.value = paranavai.toFixed(2);
+        inputSaoJoao.value = saoJoao.toFixed(2);
+        inputPadrao.value = padrao.toFixed(2);
     }catch(erro){
         console.error("Erro ao carregar configuração de frete:", erro);
-        input.value = "15.00";
+        inputParanavai.value = "10.00";
+        inputSaoJoao.value = "20.00";
+        inputPadrao.value = "15.00";
     }
     document.getElementById("modalConfiguracoes").classList.add("aberto");
 };
@@ -2236,10 +2403,12 @@ window.fecharModalConfiguracoes = function(){
 
 window.salvarConfiguracaoFrete = async function(){
     const btn = document.getElementById("btnSalvarFrete");
-    const valor = Number(document.getElementById("valorFretePadraoInput").value);
+    const paranavai = Number(document.getElementById("freteParanavaiInput").value);
+    const saoJoao = Number(document.getElementById("freteSaoJoaoInput").value);
+    const padrao = Number(document.getElementById("valorFretePadraoInput").value);
 
-    if(isNaN(valor) || valor < 0){
-        alert("Digite um valor de frete válido.");
+    if(isNaN(paranavai) || paranavai < 0 || isNaN(saoJoao) || saoJoao < 0 || isNaN(padrao) || padrao < 0){
+        alert("Digite valores de frete válidos nos três campos.");
         return;
     }
 
@@ -2248,7 +2417,9 @@ window.salvarConfiguracaoFrete = async function(){
 
     try{
         await setDoc(doc(db, "configuracoes", "frete"), {
-            valorPadrao: valor,
+            paranavai: paranavai,
+            saoJoao: saoJoao,
+            valorPadrao: padrao,
             atualizadoEm: serverTimestamp()
         }, { merge: true });
 

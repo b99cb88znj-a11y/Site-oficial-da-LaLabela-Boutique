@@ -893,6 +893,16 @@ header{
     cursor:not-allowed;
 }
 
+.aviso-bloqueio{
+    background:#fdf2f5;
+    border:1px solid #f8bbd0;
+    color:#c21250;
+    font-size:.82rem;
+    line-height:1.5;
+    padding:10px 12px;
+    margin-top:2px;
+}
+
 .modal-sistema{
     position:fixed;
     inset:0;
@@ -1226,7 +1236,7 @@ header{
 
 <section class="delivery-info" id="entregas">
     <h2 class="serif">Entregas</h2>
-    <p>Fazemos entrega em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega calculada para o próximo domingo. Para outras cidades e regiões, consulte digitando seu CEP na sacola.</p>
+    <p>Fazemos entrega somente em <strong>Paranavaí/PR</strong>, com prazo de até 2 horas, e em <strong>São João do Caiuá/PR</strong>, com entrega calculada para o próximo domingo. Ainda não entregamos em outras cidades ou regiões.</p>
     <a class="whatsapp-link" id="deliveryWhatsapp" href="#" target="_blank">Dúvidas sobre frete no WhatsApp</a>
 </section>
 
@@ -1318,6 +1328,7 @@ header{
                 <input type="text" id="checkoutCep" placeholder="00000-000" maxlength="9">
                 <button type="button" onclick="buscarCep()">Buscar</button>
             </div>
+            <div id="avisoCepBloqueado" class="aviso-bloqueio" style="display:none;"></div>
             <label>Rua (Obrigatório)</label>
             <input type="text" id="checkoutRua" placeholder="Nome da rua / avenida">
             <label>Número (Obrigatório)</label>
@@ -1389,6 +1400,7 @@ let categoriaAtual = "todos";
 let indicesFotoVitrine = {};
 let indiceFotoModal = 0;
 let valorFreteAtual = 0;
+let entregaBloqueada = false;
 
 function verificarExpiracaoSessao() {
     const ultimoAcesso = localStorage.getItem("lalabela_ultimo_acesso");
@@ -1487,7 +1499,7 @@ function renderizarEnderecosSalvos(){
     }
     container.innerHTML = perfilCliente.enderecos.map((end, index) => `
         <div class="cartao-salvo">
-            <div><strong>${end.rua}, ${end.numero}</strong><br><small>${end.bairro} - CEP: ${end.cep}</small></div>
+            <div><strong>${escaparHTML(end.rua)}, ${escaparHTML(end.numero)}</strong><br><small>${escaparHTML(end.bairro)} - CEP: ${escaparHTML(end.cep)}</small></div>
             <div class="acoes-cartao">
                 <button type="button" onclick="usarEndereco(${index})">Usar</button>
                 <button type="button" onclick="excluirEndereco(${index})">Excluir</button>
@@ -1526,51 +1538,80 @@ async function buscarCep(){
         document.getElementById("checkoutBairro").value = dados.bairro || "";
         document.getElementById("checkoutNumero").focus();
 
-        const novoEnd = { cep: cepInput, rua: dados.logradouro || "", bairro: dados.bairro || "", numero: "", complemento: "" };
-        if(!perfilCliente.enderecos.some(e => e.cep === cepInput)){
-            perfilCliente.enderecos.push(novoEnd);
-            localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
-            renderizarEnderecosSalvos();
-        }
-
         verificarFretePorCep(cepInput, dados);
+
+        // Só guardamos o endereço como salvo se a região for atendida.
+        if(!entregaBloqueada){
+            const novoEnd = { cep: cepInput, rua: dados.logradouro || "", bairro: dados.bairro || "", numero: "", complemento: "" };
+            if(!perfilCliente.enderecos.some(e => e.cep === cepInput)){
+                perfilCliente.enderecos.push(novoEnd);
+                localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+                renderizarEnderecosSalvos();
+            }
+        }
     }catch(erro){ alert("Não foi possível consultar o CEP no momento."); }
 }
 
+// Só atendemos Paranavaí/PR e São João do Caiuá/PR. Qualquer outro CEP é
+// bloqueado: mostramos aviso, zeramos o frete e travamos o botão de finalizar.
 function verificarFretePorCep(cep, dadosViaCep = null){
     const freteValEl = document.getElementById("freightVal");
-    const config = window.freteConfig || { paranavai: 10.00, saoJoao: 20.00, padrao: 15.00 };
+    const avisoEl = document.getElementById("avisoCepBloqueado");
+    const config = window.freteConfig || { paranavai: 10.00, saoJoao: 20.00 };
 
     if(dadosViaCep && dadosViaCep.localidade){
         const cidade = dadosViaCep.localidade.toLowerCase();
+
         if(cidade.includes("paranavaí") || cidade.includes("paranavai")){
+            entregaBloqueada = false;
+            if(avisoEl) avisoEl.style.display = "none";
             valorFreteAtual = config.paranavai;
             freteValEl.innerHTML = `${formatarPreco(valorFreteAtual)} (Até 2 horas ⚡)`;
+            atualizarEstadoCheckout();
             renderTotals();
             return;
-        } else if(cidade.includes("são joão do caiuá") || cidade.includes("sao joao do caiua")){
+        }
+
+        if(cidade.includes("são joão do caiuá") || cidade.includes("sao joao do caiua")){
+            entregaBloqueada = false;
+            if(avisoEl) avisoEl.style.display = "none";
             valorFreteAtual = config.saoJoao;
-            
+
             const hoje = new Date();
-            const diaSemana = hoje.getDay(); 
+            const diaSemana = hoje.getDay();
             let diasAteDomingo = (0 - diaSemana + 7) % 7;
             if(diasAteDomingo === 0) {
-                diasAteDomingo = 7; 
+                diasAteDomingo = 7;
             }
-            
+
             const dataDomingo = new Date(hoje);
             dataDomingo.setDate(hoje.getDate() + diasAteDomingo);
             const dataFormatada = dataDomingo.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-            
+
             freteValEl.innerHTML = `${formatarPreco(valorFreteAtual)} (Entrega em ${dataFormatada})`;
+            atualizarEstadoCheckout();
             renderTotals();
             return;
         }
     }
 
-    valorFreteAtual = config.padrao;
-    freteValEl.textContent = formatarPreco(valorFreteAtual);
+    // Qualquer outra cidade/CEP: bloqueia a compra.
+    entregaBloqueada = true;
+    valorFreteAtual = 0;
+    freteValEl.textContent = "—";
+    if(avisoEl){
+        avisoEl.style.display = "block";
+        avisoEl.textContent = "Ainda não fazemos entrega nessa região. Por enquanto atendemos somente Paranavaí/PR e São João do Caiuá/PR.";
+    }
+    atualizarEstadoCheckout();
     renderTotals();
+}
+
+function atualizarEstadoCheckout(){
+    const btn = document.getElementById("checkoutBtn");
+    if(!btn) return;
+    if(btn.style.display === "none") return;
+    btn.disabled = entregaBloqueada;
 }
 
 function mudarFormaPagamento(){
@@ -1600,106 +1641,26 @@ function copiarPixCopiaCola(){
 
 function abrirModalPerfil(){ fecharFiltro(); carregarPerfilNaTela(); document.getElementById("modalPerfil").classList.add("aberto"); }
 function fecharModalPerfil(){ document.getElementById("modalPerfil").classList.remove("aberto"); }
-function abrirModalRastreio(){ fecharFiltro(); document.getElementById("modalRastreio").classList.add("aberto"); }
+function abrirModalRastreio(){
+    fecharFiltro();
+    document.getElementById("modalRastreio").classList.add("aberto");
+    // Rastreio ainda não está disponível — mostra aviso direto ao abrir.
+    document.getElementById("resultadoRastreio").innerHTML = mensagemRastreioIndisponivel();
+}
 function fecharModalRastreio(){ document.getElementById("modalRastreio").classList.remove("aberto"); }
 
-function consultarRastreio(){
-    const termo = document.getElementById("inputBuscaRastreio").value.trim();
-    const resultadoDiv = document.getElementById("resultadoRastreio");
-    if(!termo){ alert("Digite o código do pedido ou e-mail para rastrear."); return; }
-    
-    resultadoDiv.innerHTML = `<p style="text-align:center; color:#888;">Buscando pedido...</p>`;
-
-    if(window.buscarPedidoNoFirebase){
-        window.buscarPedidoNoFirebase(termo).then(pedido => {
-            if(!pedido){
-                resultadoDiv.innerHTML = `<div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0; color:#c21250;"><p>Nenhum pedido encontrado para: <strong>${termo}</strong></p></div>`;
-                return;
-            }
-            if(pedido.numeroPedido){
-                if(window.pedirPermissaoNotificacaoCliente) window.pedirPermissaoNotificacaoCliente();
-                if(window.acompanharPedidoParaNotificacao) window.acompanharPedidoParaNotificacao(pedido.numeroPedido);
-            }
-            resultadoDiv.innerHTML = montarRastreioHTML(pedido);
-        }).catch(err => {
-            resultadoDiv.innerHTML = `<p style="color:red;">Erro ao buscar pedido.</p>`;
-        });
-    } else {
-        resultadoDiv.innerHTML = `
-            <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
-                <p><strong>Pedido encontrado:</strong> #${termo}</p>
-                <p><strong>Status atual:</strong> <span style="color:#ed1760; font-weight:600;">Aguardando pagamento</span></p>
-            </div>
-        `;
-    }
-}
-
-// Monta a esteira de status (Aguardando pagamento > Pagamento aprovado > Aguardando despacho > Saiu para entrega)
-// a partir do campo "status" salvo no pedido, e mostra o botão de confirmação de recebimento quando cabível.
-function montarRastreioHTML(pedido){
-    const status = pedido.status || "Aguardando pagamento";
-    const numero = pedido.numeroPedido || "";
-
-    if(status === "Pagamento recusado"){
-        return `
-            <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
-                <p style="margin:0 0 6px;"><strong>Pedido:</strong> ${numero}</p>
-                <p style="color:#c21250; font-weight:600; margin:0;">Pagamento recusado. Por favor, entre em contato pelo WhatsApp para regularizar o seu pedido.</p>
-            </div>
-        `;
-    }
-
-    const etapas = [
-        "Aguardando pagamento",
-        "Pagamento aprovado",
-        "Aguardando despacho",
-        "Saiu para entrega"
-    ];
-
-    let etapaAtual = 0;
-    if(status === "Aguardando pagamento") etapaAtual = 0;
-    else if(status === "Pago - Aguardando despacho") etapaAtual = 2;
-    else if(status === "Despachado") etapaAtual = 3;
-    else if(status === "Finalizado") etapaAtual = 4;
-
-    const etapasHtml = etapas.map((label, index) => {
-        const concluida = index < etapaAtual || status === "Finalizado";
-        const atual = index === etapaAtual && status !== "Finalizado";
-        const cor = (concluida || atual) ? "#ed1760" : "#ccc";
-        const peso = atual ? "700" : "500";
-        return `
-            <div style="display:flex; align-items:center; gap:10px; padding:6px 0;">
-                <span style="width:20px; height:20px; min-width:20px; border-radius:50%; background:${cor}; color:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; flex:none;">${concluida ? "✓" : (index + 1)}</span>
-                <span style="color:${cor}; font-weight:${peso}; font-size:0.88rem;">${label}</span>
-            </div>
-        `;
-    }).join("");
-
-    const mensagemFinal = status === "Finalizado"
-        ? `<p style="color:#25D366; font-weight:600; margin-top:12px;">✓ Entrega confirmada. Obrigada por comprar na LaLabela!</p>`
-        : "";
-
-    const botaoConfirmar = status === "Despachado"
-        ? `<button class="btn-acao-modal" style="background:#25D366; margin-top:12px;" onclick="confirmarEntregaRecebida('${numero}')">Recebi minha encomenda ✓</button>`
-        : "";
-
+function mensagemRastreioIndisponivel(){
     return `
-        <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0;">
-            <p style="margin:0 0 4px;"><strong>Pedido:</strong> ${numero}</p>
-            <p style="margin:0 0 14px;"><strong>Cliente:</strong> ${pedido.nome || ""}</p>
-            ${etapasHtml}
-            ${mensagemFinal}
-            ${botaoConfirmar}
+        <div style="background:#fdf2f5; padding:15px; border:1px solid #f8bbd0; color:#c21250;">
+            <p style="margin:0 0 8px;"><strong>Rastreio ainda não está disponível.</strong></p>
+            <p style="margin:0; font-size:0.88rem;">Em breve você vai poder acompanhar seu pedido por aqui. Por enquanto, qualquer dúvida sobre o status do seu pedido, fale com a gente pelo WhatsApp.</p>
         </div>
     `;
 }
 
-function confirmarEntregaRecebida(numPedido){ 
-    if(window.atualizarStatusPedidoFirebase){
-        window.atualizarStatusPedidoFirebase(numPedido, "Finalizado");
-    }
-    alert("Obrigada! Confirmação de recebimento registrada com sucesso."); 
-    fecharModalRastreio(); 
+function consultarRastreio(){
+    // Funcionalidade de rastreio ainda não está disponível para as clientes.
+    document.getElementById("resultadoRastreio").innerHTML = mensagemRastreioIndisponivel();
 }
 
 function escaparHTML(valor){ if(valor === null || valor === undefined) return ""; return String(valor).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
@@ -1985,6 +1946,11 @@ function closeCart(){ document.getElementById("drawer").classList.remove("open")
 async function finalizarPedidoSite() {
     const checkoutBtn = document.getElementById("checkoutBtn");
 
+    if (entregaBloqueada) {
+        alert("Ainda não fazemos entrega para o CEP informado. Por enquanto atendemos somente Paranavaí/PR e São João do Caiuá/PR.");
+        return;
+    }
+
     // 1. Captura dos dados básicos do formulário
     const nome = document.getElementById("checkoutNome")?.value.trim();
     const email = document.getElementById("checkoutEmail")?.value.trim();
@@ -2202,7 +2168,7 @@ async function finalizarPedidoSite() {
     } finally {
         // Sempre reabilita o botão, mesmo se der erro, pra cliente poder tentar de novo
         if (checkoutBtn && checkoutBtn.style.display !== "none") {
-            checkoutBtn.disabled = false;
+            checkoutBtn.disabled = entregaBloqueada;
             checkoutBtn.textContent = "Finalizar Pedido";
         }
     }
@@ -2301,10 +2267,16 @@ window.salvarPedidoNoFirebase = async function(pedido){
 
 window.atualizarStatusPedidoFirebase = async function(numeroPedido, novoStatus){
     try{
-        await updateDoc(doc(db, "pedidos", numeroPedido), {
+        const atualizacao = {
             status: novoStatus,
             atualizadoEm: new Date().toISOString()
-        });
+        };
+        // Guarda o momento exato em que o pedido virou "Finalizado" — é a partir
+        // dele que o painel conta as 24h para zerar o pedido automaticamente.
+        if(novoStatus === "Finalizado"){
+            atualizacao.finalizadoEm = new Date().toISOString();
+        }
+        await updateDoc(doc(db, "pedidos", numeroPedido), atualizacao);
     }catch(erro){
         console.error("Erro ao atualizar status do pedido:", erro);
     }
@@ -2363,23 +2335,21 @@ function carregarProdutosDoFirebase(){
     }, erro => { console.error("Erro ao buscar produtos:", erro); });
 }
 
-// Lê os valores de frete configurados no painel (configuracoes/frete)
-// e mantém atualizados em tempo real. A lógica de quais cidades são
-// atendidas continua a mesma — só os valores em R$ vêm do Firestore agora.
+// Lê os valores de frete configurados no painel (configuracoes/frete) e
+// mantém atualizados em tempo real. Só existem valores para Paranavaí e
+// São João do Caiuá — são as únicas cidades atendidas.
 function escutarConfigFrete(){
     onSnapshot(doc(db, "configuracoes", "frete"), snap => {
         const dados = snap.exists() ? snap.data() : {};
         const paranavai = Number(dados.paranavai);
         const saoJoao = Number(dados.saoJoao);
-        const padrao = Number(dados.valorPadrao);
         window.freteConfig = {
             paranavai: (!isNaN(paranavai) && paranavai >= 0) ? paranavai : 10.00,
-            saoJoao: (!isNaN(saoJoao) && saoJoao >= 0) ? saoJoao : 20.00,
-            padrao: (!isNaN(padrao) && padrao >= 0) ? padrao : 15.00
+            saoJoao: (!isNaN(saoJoao) && saoJoao >= 0) ? saoJoao : 20.00
         };
     }, erro => {
         console.error("Erro ao ler configuração de frete:", erro);
-        window.freteConfig = { paranavai: 10.00, saoJoao: 20.00, padrao: 15.00 };
+        window.freteConfig = { paranavai: 10.00, saoJoao: 20.00 };
     });
 }
 

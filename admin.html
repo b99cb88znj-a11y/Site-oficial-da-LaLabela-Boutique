@@ -1024,7 +1024,7 @@ Cupons
 
 <button
 onclick="menuNavegar('Configurações',this)">
-Configurações
+Configurações de Frete
 </button>
 
 <button
@@ -2090,10 +2090,41 @@ window.registrarServiceWorkerNotificacoes = function(){
     });
 };
 
-function notificarNovaVenda(pedido){
+// IMPORTANTE: "navigator.serviceWorker.ready" só resolve quando existe um
+// service worker registrado e ativo. Se o arquivo do service worker não
+// existir (ou o registro falhar), essa promise fica pendurada PARA SEMPRE —
+// e a notificação nunca aparece, mesmo com a permissão concedida (era
+// exatamente esse o motivo de a notificação não chegar). Por isso usamos
+// uma corrida com tempo limite: se o service worker não responder rápido,
+// caímos no jeito simples (new Notification), que funciona com o painel
+// aberto mesmo sem service worker.
+function exibirNotificacao(titulo, opcoes){
     if(!("Notification" in window)) return;
     if(Notification.permission !== "granted") return;
 
+    if(!navigator.serviceWorker){
+        try{ new Notification(titulo, opcoes); }catch(e){}
+        return;
+    }
+
+    let jaMostrou = false;
+    const mostrarFallback = () => {
+        if(jaMostrou) return;
+        jaMostrou = true;
+        try{ new Notification(titulo, opcoes); }catch(e){}
+    };
+
+    const tempoLimite = new Promise(resolve => setTimeout(resolve, 1500, null));
+
+    Promise.race([navigator.serviceWorker.ready, tempoLimite]).then(registration => {
+        if(jaMostrou) return;
+        if(!registration){ mostrarFallback(); return; }
+        jaMostrou = true;
+        registration.showNotification(titulo, opcoes).catch(mostrarFallback);
+    }).catch(mostrarFallback);
+}
+
+function notificarNovaVenda(pedido){
     const numero = pedido.numeroPedido || ("#" + pedido.id);
     const valor = "R$ " + Number(pedido.total || pedido.valor || 0).toFixed(2).replace(".", ",");
     const cliente = pedido.nome || pedido.cliente || pedido.nomeCliente || "Cliente";
@@ -2107,17 +2138,7 @@ function notificarNovaVenda(pedido){
         tag: "venda-" + pedido.id
     };
 
-    if(navigator.serviceWorker && navigator.serviceWorker.ready){
-        navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification(titulo, opcoes).catch(() => {
-                try{ new Notification(titulo, opcoes); }catch(e){}
-            });
-        }).catch(() => {
-            try{ new Notification(titulo, opcoes); }catch(e){}
-        });
-    } else {
-        try{ new Notification(titulo, opcoes); }catch(e){}
-    }
+    exibirNotificacao(titulo, opcoes);
 }
 
 // Pipeline único de status, usado tanto pelo painel quanto pelo rastreio do site:
@@ -2178,10 +2199,25 @@ function montarEnderecoPedido(p){
     const partes = [];
     if(p.rua) partes.push(p.rua + (p.numero ? ", " + p.numero : ""));
     if(p.bairro) partes.push(p.bairro);
-    if(p.complemento) partes.push(p.complemento);
     if(p.cep) partes.push("CEP: " + p.cep);
     if(partes.length) return partes.join(" — ");
     return p.endereco || p.infoEntrega || "Endereço não informado";
+}
+
+// O campo "complemento" agora também carrega o horário em que a cliente
+// avisou que vai estar disponível para receber — por isso mostramos
+// separado do endereço, com destaque, tanto no painel quanto na etiqueta.
+function obterObservacaoPedido(p){
+    return p.complemento || "";
+}
+
+function obterFormaPagamentoLabel(p){
+    if(p.formaPagamento === "PIX") return "Pix";
+    if(p.formaPagamento === "CREDIT_CARD"){
+        const parcelas = Number(p.parcelas) || 1;
+        return parcelas > 1 ? `Cartão de Crédito (${parcelas}x sem juros)` : "Cartão de Crédito (à vista)";
+    }
+    return "Não informado";
 }
 
 window.abrirModalPedidos = function(filtro) {
@@ -2257,6 +2293,8 @@ lista.innerHTML += `
 <div><strong>Modelos / Itens:</strong></div>
 <div style="padding-left:10px;">${modelosHtml}</div>
 <div><strong>Informações de Entrega:</strong> ${escaparHTML(montarEnderecoPedido(p))}</div>
+${obterObservacaoPedido(p) ? `<div><strong>Observação / Horário disponível:</strong> ${escaparHTML(obterObservacaoPedido(p))}</div>` : ""}
+<div><strong>Forma de Pagamento:</strong> ${escaparHTML(obterFormaPagamentoLabel(p))}</div>
 <div><strong>Status de Pagamento:</strong> <span style="color: ${statusPagamento.cor};">${statusPagamento.texto}</span></div>
 <div><strong>Status do Pedido:</strong> ${obterStatusPedidoLabel(statusAtual)}</div>
 </div>
@@ -2348,6 +2386,7 @@ window.gerarEtiquetaPedido = function(idPedido){
     const nomeCliente = escaparHTML(obterNomeCliente(pedido));
     const telefone = escaparHTML(pedido.telefone || pedido.whatsapp || "-");
     const endereco = escaparHTML(montarEnderecoPedido(pedido));
+    const observacao = escaparHTML(obterObservacaoPedido(pedido));
 
     let itensHtml = "";
     if(pedido.itens && Array.isArray(pedido.itens) && pedido.itens.length){
@@ -2423,6 +2462,7 @@ window.gerarEtiquetaPedido = function(idPedido){
                 .etiqueta-campo{ margin:13px 0; font-size:15px; line-height:1.45; }
                 .etiqueta-campo strong{ display:block; font-size:10px; text-transform:uppercase; color:#888; margin-bottom:3px; }
                 .etiqueta-item{ font-size:14px; margin:5px 0; line-height:1.45; }
+                .etiqueta-observacao{ background:#fff8fb; border:1px dashed #e52b79; padding:8px 10px; border-radius:6px; }
                 hr{ border:none; border-top:1px dashed #ccc; margin:14px 0; }
                 @media print{
                     body{ padding:0; }
@@ -2450,6 +2490,7 @@ window.gerarEtiquetaPedido = function(idPedido){
                 <div class="etiqueta-campo"><strong>Destinatário</strong>${nomeCliente}</div>
                 <div class="etiqueta-campo"><strong>Telefone</strong>${telefone}</div>
                 <div class="etiqueta-campo"><strong>Endereço</strong>${endereco}</div>
+                ${observacao ? `<div class="etiqueta-campo etiqueta-observacao"><strong>Observação / Horário disponível</strong>${observacao}</div>` : ""}
                 <hr>
                 <div class="etiqueta-campo"><strong>Itens do pedido</strong></div>
                 ${itensHtml}

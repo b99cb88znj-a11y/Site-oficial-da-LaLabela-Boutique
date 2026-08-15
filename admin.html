@@ -1981,15 +1981,18 @@ function atualizarAvisoNotificacao(){
     const aviso = document.getElementById("avisoNotificacao");
     if(!aviso) return;
 
-    if(!("Notification" in window)){
-        aviso.style.display = "block";
-        aviso.innerHTML = "⚠️ Este navegador não é compatível com notificações.";
-        return;
-    }
-
+    // No Safari do iPhone (fora de um app instalado na Tela de Início), o
+    // "Notification" nem existe no navegador — por isso essa checagem vem
+    // primeiro, para mostrar a instrução certa em vez de "não compatível".
     if(ehIOS() && !rodandoComoAppInstalado()){
         aviso.style.display = "block";
         aviso.innerHTML = "🔔 Para receber notificação de nova venda no iPhone: toque no botão <strong>Compartilhar</strong> do Safari → <strong>Adicionar à Tela de Início</strong> → e depois abra o painel sempre pelo ícone criado (não pelo Safari). Essa exigência é da Apple, não é possível pular essa etapa.";
+        return;
+    }
+
+    if(!("Notification" in window)){
+        aviso.style.display = "block";
+        aviso.innerHTML = "⚠️ Este navegador não é compatível com notificações.";
         return;
     }
 

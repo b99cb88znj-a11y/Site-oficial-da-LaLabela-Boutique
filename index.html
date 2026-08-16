@@ -2070,34 +2070,70 @@ async function finalizarPedidoSite() {
     const checkoutBtn = document.getElementById("checkoutBtn");
 
     if (entregaBloqueada) {
-        alert("Ainda não fazemos entrega para o CEP informado. Por enquanto atendemos somente Paranavaí/PR e São João do Caiuá/PR.");
+        alert(
+            "Ainda não fazemos entrega para o CEP informado. " +
+            "Por enquanto atendemos somente Paranavaí/PR e São João do Caiuá/PR."
+        );
         return;
     }
 
-    // 1. Captura dos dados básicos do formulário
-    const nome = document.getElementById("checkoutNome")?.value.trim();
-    const email = document.getElementById("checkoutEmail")?.value.trim();
-    const cpfCnpj = document.getElementById("checkoutCpf")?.value.replace(/\D/g, "");
-    const telefone = document.getElementById("checkoutWhatsapp")?.value.replace(/\D/g, "");
-    
-    // Dados de endereço
-    const cep = document.getElementById("checkoutCep")?.value.replace(/\D/g, "");
-    const rua = document.getElementById("checkoutRua")?.value.trim();
-    const numero = document.getElementById("checkoutNumero")?.value.trim();
-    const bairro = document.getElementById("checkoutBairro")?.value.trim();
-    const complemento = document.getElementById("checkoutComplemento")?.value.trim() || "";
-    
-    // Forma de pagamento selecionada ("PIX" ou "CREDIT_CARD")
-    const billingType = document.getElementById("paymentSelect")?.value;
+    // =========================================================
+    // 1. CAPTURA DOS DADOS
+    // =========================================================
 
-    // Validações básicas
+    const nome =
+        document.getElementById("checkoutNome")?.value.trim();
+
+    const email =
+        document.getElementById("checkoutEmail")?.value.trim();
+
+    const cpfCnpj =
+        document
+            .getElementById("checkoutCpf")
+            ?.value.replace(/\D/g, "");
+
+    const telefone =
+        document
+            .getElementById("checkoutWhatsapp")
+            ?.value.replace(/\D/g, "");
+
+    const cep =
+        document
+            .getElementById("checkoutCep")
+            ?.value.replace(/\D/g, "");
+
+    const rua =
+        document.getElementById("checkoutRua")?.value.trim();
+
+    const numero =
+        document.getElementById("checkoutNumero")?.value.trim();
+
+    const bairro =
+        document.getElementById("checkoutBairro")?.value.trim();
+
+    const complemento =
+        document
+            .getElementById("checkoutComplemento")
+            ?.value.trim() || "";
+
+    const billingType =
+        document.getElementById("paymentSelect")?.value;
+
+    // =========================================================
+    // 2. VALIDAÇÕES
+    // =========================================================
+
     if (!nome || !email || !cpfCnpj || !telefone) {
-        alert("Por favor, preencha nome, e-mail, CPF/CNPJ e telefone.");
+        alert(
+            "Por favor, preencha nome, e-mail, CPF/CNPJ e telefone."
+        );
         return;
     }
 
     if (!cep || !rua || !numero || !bairro) {
-        alert("Preencha o CEP e o endereço completo (Rua, Número e Bairro).");
+        alert(
+            "Preencha o CEP e o endereço completo (Rua, Número e Bairro)."
+        );
         return;
     }
 
@@ -2106,199 +2142,617 @@ async function finalizarPedidoSite() {
         return;
     }
 
-    if (carrinho.length === 0) {
+    if (!carrinho || carrinho.length === 0) {
         alert("Sua sacola está vazia.");
         return;
     }
 
-    const subtotal = getSubtotal();
-    const valorTotal = subtotal + valorFreteAtual;
-    const numeroPedido = "#LB-" + Math.floor(100000 + Math.random() * 900000);
+    // =========================================================
+    // 3. CALCULA O VALOR
+    // =========================================================
 
-    // 2. Montagem do payload base que o Worker exige
+    const subtotal = Number(getSubtotal()) || 0;
+    const frete = Number(valorFreteAtual) || 0;
+    const valorTotal = Number((subtotal + frete).toFixed(2));
+
+    if (valorTotal <= 0) {
+        alert("O valor do pedido é inválido.");
+        return;
+    }
+
+    // =========================================================
+    // 4. GERA NÚMERO DO PEDIDO
+    // =========================================================
+
+    const numeroPedido =
+        "#LB-" +
+        Math.floor(100000 + Math.random() * 900000);
+
+    // =========================================================
+    // 5. MONTA PAYLOAD DO WORKER
+    // =========================================================
+
     const payload = {
         numeroPedido: numeroPedido,
         nome: nome,
         email: email,
         cpfCnpj: cpfCnpj,
         telefone: telefone,
+
         cep: cep,
         endereco: rua,
         numero: numero,
         bairro: bairro,
         complemento: complemento,
+
         valor: valorTotal,
-        pedido: `Pedido ${numeroPedido} - LaLabela Boutique`,
+
+        pedido:
+            "Pedido " +
+            numeroPedido +
+            " - LaLabela Boutique",
+
         billingType: billingType,
+
         parcelas: 1
     };
 
-    // 3. Se o pagamento for via Cartão de Crédito, adiciona os objetos exigidos pelo Worker
+    // =========================================================
+    // 6. CARTÃO DE CRÉDITO
+    // =========================================================
+
     if (billingType === "CREDIT_CARD") {
-        const ccNumero = document.getElementById("ccNumero")?.value.replace(/\D/g, "") || "";
-        const ccNome = document.getElementById("ccNome")?.value.trim() || "";
-        const ccValidade = document.getElementById("ccValidade")?.value.trim() || "";
-        const ccCvv = document.getElementById("ccCvv")?.value.replace(/\D/g, "") || "";
-        const parcelasSelecionadas = Number(document.getElementById("ccParcelas")?.value || 1);
+
+        const ccNumero =
+            document
+                .getElementById("ccNumero")
+                ?.value.replace(/\D/g, "") || "";
+
+        const ccNome =
+            document
+                .getElementById("ccNome")
+                ?.value.trim() || "";
+
+        const ccValidade =
+            document
+                .getElementById("ccValidade")
+                ?.value.trim() || "";
+
+        const ccCvv =
+            document
+                .getElementById("ccCvv")
+                ?.value.replace(/\D/g, "") || "";
+
+        const parcelasSelecionadas =
+            Number(
+                document.getElementById("ccParcelas")?.value || 1
+            );
 
         if (!ccNumero || !ccNome || !ccValidade || !ccCvv) {
-            alert("Preencha todos os dados do cartão de crédito.");
+            alert(
+                "Preencha todos os dados do cartão de crédito."
+            );
             return;
         }
 
-        const [expiryMonth, expiryYear] = ccValidade.split("/");
-        if (!expiryMonth || !expiryYear) {
-            alert("Validade do cartão inválida. Use o formato MM/AAAA.");
+        const partesValidade =
+            ccValidade.split("/");
+
+        if (
+            partesValidade.length !== 2 ||
+            !partesValidade[0] ||
+            !partesValidade[1]
+        ) {
+            alert(
+                "Validade do cartão inválida. Use o formato MM/AAAA."
+            );
             return;
         }
 
-        payload.parcelas = parcelasSelecionadas;
+        const expiryMonth =
+            partesValidade[0].trim();
 
-        // Estrutura exata do cartão exigida pelo Worker
+        const expiryYear =
+            partesValidade[1].trim();
+
+        if (
+            expiryMonth.length !== 2 ||
+            expiryYear.length !== 4
+        ) {
+            alert(
+                "Validade do cartão inválida. Use o formato MM/AAAA."
+            );
+            return;
+        }
+
+        payload.parcelas =
+            parcelasSelecionadas;
+
         payload.creditCard = {
             holderName: ccNome,
+
             number: ccNumero,
-            expiryMonth: expiryMonth.padStart(2, "0"),
-            expiryYear: expiryYear.trim(),
+
+            expiryMonth:
+                expiryMonth.padStart(2, "0"),
+
+            expiryYear:
+                expiryYear,
+
             ccv: ccCvv
         };
 
-        // Estrutura exata do portador exigida pelo Worker
         payload.creditCardHolderInfo = {
             name: nome,
+
             email: email,
+
             cpfCnpj: cpfCnpj,
+
             postalCode: cep,
+
             addressNumber: numero,
+
             addressComplement: complemento,
+
             phone: telefone,
+
             mobilePhone: telefone
         };
     }
 
+    // =========================================================
+    // 7. DADOS DO PEDIDO NO FIRESTORE
+    // =========================================================
+
     const dadosPedidoFirebase = {
-        numeroPedido,
-        nome,
-        email,
+        numeroPedido: numeroPedido,
+
+        nome: nome,
+
+        email: email,
+
         cpf: cpfCnpj,
-        telefone,
-        cep,
-        rua,
-        numero,
-        bairro,
-        complemento,
+
+        telefone: telefone,
+
+        cep: cep,
+
+        rua: rua,
+
+        numero: numero,
+
+        bairro: bairro,
+
+        complemento: complemento,
+
         itens: carrinho,
-        subtotal,
-        frete: valorFreteAtual,
+
+        subtotal: subtotal,
+
+        frete: frete,
+
         total: valorTotal,
+
         formaPagamento: billingType,
+
         parcelas: payload.parcelas,
+
         status: "Aguardando pagamento",
-        criadoEm: new Date().toISOString()
+
+        criadoEm:
+            new Date().toISOString(),
+
+        atualizadoEm:
+            new Date().toISOString(),
+
+        notificacaoEnviada: false
     };
 
-    // Trava o botão e mostra que algo está acontecendo, pra não parecer que "travou"
+    // =========================================================
+    // 8. BLOQUEIA BOTÃO
+    // =========================================================
+
     if (checkoutBtn) {
         checkoutBtn.disabled = true;
-        checkoutBtn.textContent = "Processando...";
+        checkoutBtn.textContent =
+            "Salvando pedido...";
     }
 
     try {
-        // A gravação no Firebase agora está DENTRO do try geral e não trava
-        // mais o pagamento caso falhe (ex: regra do Firestore, instabilidade de rede).
-        if (window.salvarPedidoNoFirebase) {
-            try {
-                await window.salvarPedidoNoFirebase(dadosPedidoFirebase);
-            } catch (erroFirebase) {
-                console.error("Falha ao salvar pedido no Firebase (seguindo com o pagamento):", erroFirebase);
-            }
+
+        // =====================================================
+        // 9. SALVA PEDIDO NO FIRESTORE
+        // =====================================================
+
+        if (
+            typeof window.salvarPedidoNoFirebase !==
+            "function"
+        ) {
+            throw new Error(
+                "Sistema de pedidos do Firebase não está disponível."
+            );
         }
 
-        const WORKER_URL = "https://wispy-math-2575.zt9mchhnvj.workers.dev";
+        const resultadoSalvar =
+            await window.salvarPedidoNoFirebase(
+                dadosPedidoFirebase
+            );
 
-        const resposta = await fetch(WORKER_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
+        console.log(
+            "[LaLabela] Pedido salvo localmente:",
+            numeroPedido,
+            resultadoSalvar
+        );
+
+        // =====================================================
+        // 10. ESPERA A FILA DO FIRESTORE SINCRONIZAR
+        // =====================================================
+
+        if (
+            typeof window.esperarSincronizacaoFirestore ===
+            "function"
+        ) {
+            if (checkoutBtn) {
+                checkoutBtn.textContent =
+                    "Sincronizando pedido...";
+            }
+
+            await window.esperarSincronizacaoFirestore();
+        }
+
+        // Pequena margem para a gravação terminar
+        await new Promise(function(resolve) {
+            setTimeout(resolve, 500);
         });
 
-        const resultado = await resposta.json();
+        // =====================================================
+        // 11. CHAMA O WORKER
+        // =====================================================
 
-        if (!resposta.ok || !resultado.sucesso) {
-            if(window.atualizarStatusPedidoFirebase){
-                window.atualizarStatusPedidoFirebase(numeroPedido, "Pagamento recusado");
+        if (checkoutBtn) {
+            checkoutBtn.textContent =
+                "Processando pagamento...";
+        }
+
+        const WORKER_URL =
+            "https://wispy-math-2575.zt9mchhnvj.workers.dev";
+
+        let resposta;
+
+        try {
+
+            resposta =
+                await fetch(
+                    WORKER_URL,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(payload)
+                    }
+                );
+
+        } catch (erroFetch) {
+
+            console.error(
+                "[LaLabela] Falha de comunicação com o Worker:",
+                erroFetch
+            );
+
+            throw new Error(
+                "Não foi possível conectar ao servidor de pagamento. " +
+                "Verifique sua internet e tente novamente."
+            );
+        }
+
+        // =====================================================
+        // 12. LÊ RESPOSTA DO WORKER
+        // =====================================================
+
+        let resultado;
+
+        try {
+
+            resultado =
+                await resposta.json();
+
+        } catch (erroJSON) {
+
+            console.error(
+                "[LaLabela] Resposta inválida do Worker:",
+                erroJSON
+            );
+
+            throw new Error(
+                "O servidor de pagamento retornou uma resposta inválida."
+            );
+        }
+
+        console.log(
+            "[LaLabela] Resposta do Worker:",
+            resultado
+        );
+
+        // =====================================================
+        // 13. ERRO DO PAGAMENTO
+        // =====================================================
+
+        if (
+            !resposta.ok ||
+            !resultado ||
+            resultado.sucesso !== true
+        ) {
+
+            let mensagemErro =
+                resultado?.error ||
+                "Erro ao processar pagamento.";
+
+            if (
+                resultado?.detalhes?.errors &&
+                resultado.detalhes.errors.length > 0
+            ) {
+
+                mensagemErro +=
+                    "\n\nMotivo: " +
+                    resultado.detalhes.errors
+                        .map(function(e) {
+                            return e.description;
+                        })
+                        .join(" | ");
             }
-            let mensagemErro = resultado.error || "Erro ao processar pagamento.";
-            if (resultado.detalhes && resultado.detalhes.errors && resultado.detalhes.errors.length > 0) {
-                mensagemErro += "\n\nMotivo: " + resultado.detalhes.errors.map(e => e.description).join(" | ");
-            } else if (resultado.detalhes) {
-                mensagemErro += "\n\nDetalhes: " + JSON.stringify(resultado.detalhes);
+
+            // Não altera o pedido para recusado
+            // se simplesmente houve falha de comunicação.
+            if (
+                typeof window.atualizarStatusPedidoFirebase ===
+                "function"
+            ) {
+
+                try {
+
+                    await window.atualizarStatusPedidoFirebase(
+                        numeroPedido,
+                        "Pagamento recusado"
+                    );
+
+                } catch (erroStatus) {
+
+                    console.error(
+                        "[LaLabela] Não foi possível atualizar status:",
+                        erroStatus
+                    );
+                }
             }
+
             throw new Error(mensagemErro);
         }
 
-        perfilCliente.nome = nome;
-        perfilCliente.cpf = cpfCnpj;
-        perfilCliente.email = email;
-        perfilCliente.whatsapp = telefone;
+        // =====================================================
+        // 14. SALVA PERFIL DO CLIENTE
+        // =====================================================
 
-        localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
-        localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
+        perfilCliente.nome =
+            nome;
 
-        if(typeof window.salvarClienteNoFirebase === "function"){
-            window.salvarClienteNoFirebase(perfilCliente);
+        perfilCliente.cpf =
+            cpfCnpj;
+
+        perfilCliente.email =
+            email;
+
+        perfilCliente.whatsapp =
+            telefone;
+
+        localStorage.setItem(
+            "lalabela_perfil",
+            JSON.stringify(perfilCliente)
+        );
+
+        localStorage.setItem(
+            "lalabela_ultimo_acesso",
+            new Date().getTime()
+        );
+
+        if (
+            typeof window.salvarClienteNoFirebase ===
+            "function"
+        ) {
+
+            try {
+
+                await window.salvarClienteNoFirebase(
+                    perfilCliente
+                );
+
+            } catch (erroCliente) {
+
+                console.error(
+                    "[LaLabela] Falha ao salvar cliente:",
+                    erroCliente
+                );
+
+            }
         }
 
-        // 4. Tratamento do Pix baseado nas chaves retornadas pelo Worker (`encodedImage` e `payload`)
+        // =====================================================
+        // 15. PIX
+        // =====================================================
+
         if (billingType === "PIX") {
-            if (resultado.encodedImage && resultado.payload) {
-                const imgElement = document.getElementById("pixQrCodeImg");
+
+            if (
+                resultado.encodedImage &&
+                resultado.payload
+            ) {
+
+                const imgElement =
+                    document.getElementById(
+                        "pixQrCodeImg"
+                    );
+
                 if (imgElement) {
-                    imgElement.src = "data:image/png;base64," + resultado.encodedImage;
-                }
-                
-                const inputCopiaCola = document.getElementById("pixCopiaCola");
-                if (inputCopiaCola) {
-                    inputCopiaCola.value = resultado.payload;
+
+                    imgElement.src =
+                        "data:image/png;base64," +
+                        resultado.encodedImage;
                 }
 
-                document.getElementById("pixArea").style.display = "block";
-                document.getElementById("checkoutBtn").style.display = "none";
-                if(window.pedirPermissaoNotificacaoCliente) window.pedirPermissaoNotificacaoCliente();
-                if(window.acompanharPedidoParaNotificacao) window.acompanharPedidoParaNotificacao(numeroPedido);
-                alert("QR Code Pix gerado com sucesso! Guarde o número do seu pedido para rastreio: " + numeroPedido);
+                const inputCopiaCola =
+                    document.getElementById(
+                        "pixCopiaCola"
+                    );
+
+                if (inputCopiaCola) {
+
+                    inputCopiaCola.value =
+                        resultado.payload;
+                }
+
+                const pixArea =
+                    document.getElementById(
+                        "pixArea"
+                    );
+
+                if (pixArea) {
+                    pixArea.style.display =
+                        "block";
+                }
+
+                if (checkoutBtn) {
+                    checkoutBtn.style.display =
+                        "none";
+                }
+
+                if (
+                    typeof window.pedirPermissaoNotificacaoCliente ===
+                    "function"
+                ) {
+
+                    window.pedirPermissaoNotificacaoCliente();
+                }
+
+                if (
+                    typeof window.acompanharPedidoParaNotificacao ===
+                    "function"
+                ) {
+
+                    window.acompanharPedidoParaNotificacao(
+                        numeroPedido
+                    );
+                }
+
+                alert(
+                    "QR Code Pix gerado com sucesso!\n\n" +
+                    "Número do pedido: " +
+                    numeroPedido +
+                    "\n\nGuarde esse número para acompanhar seu pedido."
+                );
+
             } else {
-                alert("Cobrança Pix criada, mas o QR Code não retornou.");
+
+                throw new Error(
+                    "A cobrança Pix foi criada, mas o QR Code não retornou."
+                );
             }
-        } 
-        // 5. Tratamento de Cartão Aprovado
-        else if (billingType === "CREDIT_CARD") {
-            if(window.atualizarStatusPedidoFirebase){
-                window.atualizarStatusPedidoFirebase(numeroPedido, "Pago - Aguardando despacho");
+
+        }
+
+        // =====================================================
+        // 16. CARTÃO
+        // =====================================================
+
+        else if (
+            billingType === "CREDIT_CARD"
+        ) {
+
+            if (
+                typeof window.atualizarStatusPedidoFirebase ===
+                "function"
+            ) {
+
+                try {
+
+                    await window.atualizarStatusPedidoFirebase(
+                        numeroPedido,
+                        "Pago - Aguardando despacho"
+                    );
+
+                } catch (erroStatus) {
+
+                    console.error(
+                        "[LaLabela] Erro ao atualizar status do cartão:",
+                        erroStatus
+                    );
+                }
             }
-            if(window.pedirPermissaoNotificacaoCliente) window.pedirPermissaoNotificacaoCliente();
-            if(window.acompanharPedidoParaNotificacao) window.acompanharPedidoParaNotificacao(numeroPedido);
-            alert("Pagamento aprovado com sucesso! Pedido registrado. Guarde o número do seu pedido para rastreio: " + numeroPedido);
+
+            if (
+                typeof window.pedirPermissaoNotificacaoCliente ===
+                "function"
+            ) {
+
+                window.pedirPermissaoNotificacaoCliente();
+            }
+
+            if (
+                typeof window.acompanharPedidoParaNotificacao ===
+                "function"
+            ) {
+
+                window.acompanharPedidoParaNotificacao(
+                    numeroPedido
+                );
+            }
+
+            alert(
+                "Pagamento aprovado com sucesso!\n\n" +
+                "Pedido: " +
+                numeroPedido +
+                "\n\nGuarde esse número para rastrear seu pedido."
+            );
+
             carrinho = [];
+
             atualizarCarrinho();
+
             closeCart();
+
             window.location.reload();
         }
 
     } catch (erro) {
-        console.error("Erro no checkout:", erro);
-        alert("Erro: " + erro.message);
+
+        console.error(
+            "[LaLabela] Erro no checkout:",
+            erro
+        );
+
+        alert(
+            "Não foi possível finalizar o pagamento.\n\n" +
+            erro.message
+        );
+
     } finally {
-        // Sempre reabilita o botão, mesmo se der erro, pra cliente poder tentar de novo
-        if (checkoutBtn && checkoutBtn.style.display !== "none") {
-            checkoutBtn.disabled = entregaBloqueada;
-            checkoutBtn.textContent = "Finalizar Pedido";
+
+        if (
+            checkoutBtn &&
+            checkoutBtn.style.display !== "none"
+        ) {
+
+            checkoutBtn.disabled =
+                entregaBloqueada;
+
+            checkoutBtn.textContent =
+                "Finalizar Pedido";
         }
     }
 }
-
 function pesquisarProdutos(){ aplicarFiltros(); }
 
 function aplicarFiltros(){
@@ -2415,18 +2869,44 @@ window.salvarClienteNoFirebase = async function(dadosCliente) {
     }
 };
 
-window.salvarPedidoNoFirebase = async function(pedido){
-    try{
-        if(!pedido || !pedido.numeroPedido){
+window.salvarPedidoNoFirebase = async function(pedido) {
+    try {
+        if (!pedido || !pedido.numeroPedido) {
             throw new Error("Número do pedido não informado.");
         }
-        await setDoc(doc(db, "pedidos", pedido.numeroPedido), pedido);
-    }catch(erro){
-        console.error("ERRO AO SALVAR PEDIDO:", erro);
+
+        // Salva o pedido usando exatamente o número do pedido
+        // como ID do documento.
+        await setDoc(
+            doc(db, "pedidos", pedido.numeroPedido),
+            pedido
+        );
+
+        // IMPORTANTE:
+        // Aguarda o Firestore confirmar a sincronização
+        // da gravação com o servidor.
+        await waitForPendingWrites(db);
+
+        console.log(
+            "[LaLabela] Pedido confirmado no Firestore:",
+            pedido.numeroPedido
+        );
+
+        return {
+            sucesso: true,
+            numeroPedido: pedido.numeroPedido
+        };
+
+    } catch (erro) {
+        console.error(
+            "[LaLabela] ERRO AO SALVAR/SINCRONIZAR PEDIDO:",
+            erro
+        );
+
         throw erro;
     }
 };
-
+    
 window.atualizarStatusPedidoFirebase = async function(numeroPedido, novoStatus){
     try{
         const atualizacao = {

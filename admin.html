@@ -1580,6 +1580,12 @@ serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+import {
+getMessaging,
+getToken
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging.js";
+
 
 const firebaseConfig = {
 
@@ -1603,6 +1609,11 @@ appId:
 
 };
 
+
+// Chave pública (não é segredo) gerada em Firebase Console > Configurações
+// do projeto > Cloud Messaging > Certificados push da Web.
+const VAPID_KEY =
+"BHyE0QHo93fzZ51xUqJwrf6vv2LGC7H3oHQMU4Mre32q666mI-O7cxUcFT5T_wY4cqtwZ412QdYDncrYZXTG2DQ";
 
 const CLOUDINARY_CLOUD_NAME =
 "ddhdmddq";
@@ -2075,11 +2086,44 @@ function atualizarAvisoNotificacao(){
     aviso.innerHTML = "🔔 Toque em \"Permitir\" quando o navegador pedir para ativar as notificações de novas vendas.";
 }
 
+// CAMADA 2: pega o token deste dispositivo/navegador junto ao FCM e salva
+// no Firestore (coleção admin_fcm_tokens), para o Worker conseguir enviar
+// push mesmo com o painel fechado. Só funciona depois que o Service Worker
+// (painel-sw.js) está registrado e a permissão foi concedida.
+async function registrarTokenPushAdmin(){
+    try{
+        if(!("serviceWorker" in navigator) || !("Notification" in window)) return;
+        if(Notification.permission !== "granted") return;
+
+        const registration = await navigator.serviceWorker.ready;
+        const messaging = getMessaging(app);
+        const token = await getToken(messaging, {
+            vapidKey: VAPID_KEY,
+            serviceWorkerRegistration: registration
+        });
+
+        if(token){
+            await setDoc(doc(db, "admin_fcm_tokens", token), {
+                token: token,
+                atualizadoEm: serverTimestamp()
+            });
+            console.log("[LaLabela] Token de push registrado para notificações em segundo plano.");
+        }
+    }catch(erro){
+        console.error("[LaLabela] Falha ao obter/registrar token de push:", erro);
+    }
+}
+
 window.pedirPermissaoNotificacao = function(){
     atualizarAvisoNotificacao();
     if(!("Notification" in window)) return;
     if(Notification.permission === "default"){
-        Notification.requestPermission().then(() => atualizarAvisoNotificacao()).catch(() => {});
+        Notification.requestPermission().then(() => {
+            atualizarAvisoNotificacao();
+            registrarTokenPushAdmin();
+        }).catch(() => {});
+    } else if(Notification.permission === "granted"){
+        registrarTokenPushAdmin();
     }
 };
 

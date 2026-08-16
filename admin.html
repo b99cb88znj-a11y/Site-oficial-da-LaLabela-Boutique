@@ -2090,38 +2090,39 @@ window.registrarServiceWorkerNotificacoes = function(){
     });
 };
 
-// IMPORTANTE: "navigator.serviceWorker.ready" só resolve quando existe um
-// service worker registrado e ativo. Se o arquivo do service worker não
-// existir (ou o registro falhar), essa promise fica pendurada PARA SEMPRE —
-// e a notificação nunca aparece, mesmo com a permissão concedida (era
-// exatamente esse o motivo de a notificação não chegar). Por isso usamos
-// uma corrida com tempo limite: se o service worker não responder rápido,
-// caímos no jeito simples (new Notification), que funciona com o painel
-// aberto mesmo sem service worker.
+// IMPORTANTE: em Chrome/navegadores mobile (Android), chamar "new
+// Notification(...)" direto da página lança "Illegal constructor" — só
+// funciona via registration.showNotification(). O código antigo tentava
+// esse atalho como "fallback" e engolia o erro em silêncio (catch vazio),
+// por isso parecia que "nada acontecia". Agora usamos só
+// registration.showNotification() e logamos qualquer falha real.
 function exibirNotificacao(titulo, opcoes){
-    if(!("Notification" in window)) return;
-    if(Notification.permission !== "granted") return;
-
-    if(!navigator.serviceWorker){
-        try{ new Notification(titulo, opcoes); }catch(e){}
+    if(!("Notification" in window)){
+        console.warn("[LaLabela] Este navegador não suporta Notification.");
         return;
     }
 
-    let jaMostrou = false;
-    const mostrarFallback = () => {
-        if(jaMostrou) return;
-        jaMostrou = true;
-        try{ new Notification(titulo, opcoes); }catch(e){}
-    };
+    if(Notification.permission !== "granted"){
+        console.warn("[LaLabela] Permissão de notificação não concedida:", Notification.permission);
+        return;
+    }
 
-    const tempoLimite = new Promise(resolve => setTimeout(resolve, 1500, null));
+    if(!("serviceWorker" in navigator)){
+        console.warn("[LaLabela] Navegador sem suporte a Service Worker — não é possível notificar com segurança neste navegador.");
+        return;
+    }
 
-    Promise.race([navigator.serviceWorker.ready, tempoLimite]).then(registration => {
-        if(jaMostrou) return;
-        if(!registration){ mostrarFallback(); return; }
-        jaMostrou = true;
-        registration.showNotification(titulo, opcoes).catch(mostrarFallback);
-    }).catch(mostrarFallback);
+    navigator.serviceWorker.ready
+        .then(registration => {
+            console.log("[LaLabela] Service Worker pronto, exibindo notificação:", titulo);
+            return registration.showNotification(titulo, opcoes);
+        })
+        .then(() => {
+            console.log("[LaLabela] Notificação exibida com sucesso.");
+        })
+        .catch(erro => {
+            console.error("[LaLabela] Falha ao exibir notificação:", erro);
+        });
 }
 
 function notificarNovaVenda(pedido){

@@ -2164,9 +2164,18 @@ async function finalizarPedidoSite() {
     // 4. GERA NÚMERO DO PEDIDO
     // =========================================================
 
-    const numeroPedido =
-        "#LB-" +
-        Math.floor(100000 + Math.random() * 900000);
+        function gerarNumeroPedidoSeguro() {
+        const bytes = new Uint8Array(9);
+        crypto.getRandomValues(bytes);
+        const sufixo = Array.from(bytes, b => b.toString(36).padStart(2, "0"))
+            .join("")
+            .toUpperCase()
+            .slice(0, 12);
+        return "#LB-" + sufixo;
+    }
+
+    const numeroPedido = gerarNumeroPedidoSeguro();
+
 
     // =========================================================
     // 5. MONTA PAYLOAD DO WORKER
@@ -2926,48 +2935,27 @@ window.atualizarStatusPedidoFirebase = async function(numeroPedido, novoStatus){
 
 // Busca robusta: tenta o ID exato, variações comuns de formatação (com/sem #, com/sem LB-),
 // busca por e-mail e, por fim, busca pelo campo numeroPedido (caso não bata com o ID do documento).
-window.buscarPedidoNoFirebase = async function(termoOriginal){
+window.buscarPedidosPorEmailFirebase = async function(email){
     try{
-        const termo = String(termoOriginal || "").trim();
-        if(!termo) return null;
+        const termo = String(email || "").trim();
+        if(!termo) return [];
 
-        let snap = await getDoc(doc(db, "pedidos", termo));
-        if(snap.exists()) return snap.data();
+        const resposta = await fetch("https://wispy-math-2575.pvai.workers.dev/rastrear-pedido", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: termo })
+        });
 
-        const somenteNumeros = termo.replace(/\D/g, "");
-        const candidatos = new Set([
-            termo,
-            termo.toUpperCase(),
-            somenteNumeros ? "#" + somenteNumeros : null,
-            somenteNumeros ? "#LB-" + somenteNumeros : null,
-            somenteNumeros ? "LB-" + somenteNumeros : null,
-            somenteNumeros || null
-        ].filter(Boolean));
+        const resultado = await resposta.json();
+        if(!resposta.ok || !resultado || resultado.sucesso !== true) return [];
 
-        for(const candidato of candidatos){
-            if(candidato === termo) continue;
-            snap = await getDoc(doc(db, "pedidos", candidato));
-            if(snap.exists()) return snap.data();
-        }
-
-        if(termo.includes("@")){
-            const q = query(collection(db, "pedidos"), where("email", "==", termo));
-            const querySnapshot = await getDocs(q);
-            if(!querySnapshot.empty) return querySnapshot.docs[0].data();
-        }
-
-        for(const candidato of [termo, ...candidatos]){
-            const q2 = query(collection(db, "pedidos"), where("numeroPedido", "==", candidato));
-            const querySnapshot2 = await getDocs(q2);
-            if(!querySnapshot2.empty) return querySnapshot2.docs[0].data();
-        }
-
-        return null;
+        return resultado.pedidos || [];
     }catch(err){
-        console.error("Erro ao buscar pedido:", err);
-        return null;
+        console.error("Erro ao buscar pedidos por e-mail:", err);
+        return [];
     }
 };
+
 
 // Busca TODOS os pedidos de um e-mail (usado no rastreio por e-mail e na
 // área "Meus Pedidos"), do mais recente para o mais antigo.

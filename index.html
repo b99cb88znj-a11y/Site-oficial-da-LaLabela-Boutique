@@ -2957,27 +2957,6 @@ window.buscarPedidosPorEmailFirebase = async function(email){
 };
 
 
-// Busca TODOS os pedidos de um e-mail (usado no rastreio por e-mail e na
-// área "Meus Pedidos"), do mais recente para o mais antigo.
-window.buscarPedidosPorEmailFirebase = async function(email){
-    try{
-        const termo = String(email || "").trim();
-        if(!termo) return [];
-        const q = query(collection(db, "pedidos"), where("email", "==", termo));
-        const snap = await getDocs(q);
-        const lista = snap.docs.map(d => d.data());
-        lista.sort((a, b) => {
-            const dataA = a.criadoEm ? new Date(a.criadoEm).getTime() : 0;
-            const dataB = b.criadoEm ? new Date(b.criadoEm).getTime() : 0;
-            return dataB - dataA;
-        });
-        return lista;
-    }catch(err){
-        console.error("Erro ao buscar pedidos por e-mail:", err);
-        return [];
-    }
-};
-
 // Busca os dados salvos de uma cliente pelo e-mail (nome, CPF, WhatsApp e
 // endereços), usado para preencher o checkout automaticamente quando ela
 // já comprou antes — mesmo em outro aparelho, já que fica salvo no Firebase.
@@ -2996,6 +2975,36 @@ window.buscarClientePorEmailFirebase = async function(email){
         return null;
     }catch(err){
         console.error("Erro ao buscar cliente por e-mail:", err);
+        return null;
+    }
+};
+    
+// Busca um pedido específico pelo número (ex: "#LB-ABC123DEF456"). O
+// numeroPedido é o próprio ID do documento, então isso é um "get" simples
+// (permitido pelas rules), nunca uma listagem da coleção inteira.
+// Tenta algumas variações de formatação (com/sem #, maiúsculas) porque a
+// cliente pode digitar o número de jeitos diferentes.
+window.buscarPedidoNoFirebase = async function(numero){
+    try{
+        const termoOriginal = String(numero || "").trim();
+        if(!termoOriginal) return null;
+
+        const semHash = termoOriginal.replace(/^#/, "").toUpperCase();
+        const candidatos = [
+            termoOriginal,
+            termoOriginal.toUpperCase(),
+            "#" + semHash,
+            semHash
+        ];
+
+        for(const candidato of candidatos){
+            const snap = await getDoc(doc(db, "pedidos", candidato));
+            if(snap.exists()) return snap.data();
+        }
+
+        return null;
+    }catch(err){
+        console.error("Erro ao buscar pedido por número:", err);
         return null;
     }
 };

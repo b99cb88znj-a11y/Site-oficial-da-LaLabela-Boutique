@@ -1193,133 +1193,97 @@ header{
         opacity: var(--opacity);
     }
 }
-   /* ==========================================
-   BORBOLETAS DE LINHA — WELCOME SCREEN
-   ========================================== */
-
-#welcome-screen {
-    position: relative;
+  #telaBoasVindas {
+    position: fixed;
+    inset: 0;
     overflow: hidden;
 }
 
 #butterflies-container {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     pointer-events: none;
-    z-index: 5;
+    z-index: 10;
 }
 
 .butterfly {
     position: absolute;
     bottom: -80px;
-    left: 0;
-
-    width: var(--size);
-    height: var(--size);
+    width: 45px;
+    height: 45px;
 
     opacity: 0;
 
-    animation:
-        butterfly-flight var(--duration) linear infinite;
-
-    animation-delay: var(--delay);
-
-    will-change: transform, opacity;
+    animation-name: voarBorboleta;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
-/* Desenho da borboleta */
 .butterfly svg {
     width: 100%;
     height: 100%;
-    overflow: visible;
 }
 
-/* Traços brancos */
-.butterfly path,
-.butterfly ellipse,
-.butterfly line {
+.butterfly path {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.95);
+    stroke: white;
     stroke-width: 2;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
-/* Voo da parte inferior até o topo */
-@keyframes butterfly-flight {
+@keyframes voarBorboleta {
 
     0% {
         transform:
-            translate3d(
-                var(--x1),
-                0,
-                0
-            )
-            rotate(var(--r1))
-            scale(var(--scale));
+            translate(0, 0)
+            rotate(-10deg)
+            scale(0.7);
 
         opacity: 0;
     }
 
     10% {
-        opacity: var(--opacity);
+        opacity: 0.9;
     }
 
-    25% {
+    30% {
         transform:
-            translate3d(
-                var(--x2),
-                -25vh,
-                0
-            )
-            rotate(var(--r2))
-            scale(var(--scale));
+            translate(80px, -30vh)
+            rotate(15deg)
+            scale(0.9);
     }
 
     50% {
         transform:
-            translate3d(
-                var(--x3),
-                -55vh,
-                0
-            )
-            rotate(var(--r3))
-            scale(var(--scale));
+            translate(-70px, -55vh)
+            rotate(-15deg)
+            scale(1);
     }
 
-    75% {
+    70% {
         transform:
-            translate3d(
-                var(--x4),
-                -85vh,
-                0
-            )
-            rotate(var(--r4))
-            scale(var(--scale));
+            translate(100px, -80vh)
+            rotate(12deg)
+            scale(0.8);
+    }
+
+    90% {
+        opacity: 0.7;
     }
 
     100% {
         transform:
-            translate3d(
-                var(--x5),
-                -125vh,
-                0
-            )
-            rotate(var(--r5))
-            scale(var(--scale));
+            translate(-80px, -120vh)
+            rotate(-10deg)
+            scale(0.6);
 
         opacity: 0;
     }
 }
-
-/* Respeita quem prefere menos animações */
-@media (prefers-reduced-motion: reduce) {
-
-    #butterflies-container {
-        display: none;
-    }
-} 
 </style>
 </head>
 
@@ -3296,193 +3260,108 @@ escutarConfigFrete();
 registrarServiceWorkerCliente();
 retomarAcompanhamentoPedidos();
 </script>
+    
 <script>
-<script>
-/* ==========================================
-   BORBOLETAS BRANCAS — LA LABELA
-   ========================================== */
+document.addEventListener("DOMContentLoaded", function () {
 
-(function () {
+    const container = document.getElementById(
+        "butterflies-container"
+    );
 
-    const container =
-        document.getElementById(
-            "butterflies-container"
+    if (!container) {
+        console.error(
+            "Container das borboletas não encontrado."
         );
-
-    if (!container) return;
-
-    const quantidade = 18;
-
-    function random(min, max) {
-        return Math.random() * (max - min) + min;
+        return;
     }
 
-    function criarBorboleta() {
+    const quantidade = 20;
 
-        const butterfly =
+    for (let i = 0; i < quantidade; i++) {
+
+        const borboleta =
             document.createElement("div");
 
-        butterfly.className = "butterfly";
+        borboleta.className = "butterfly";
 
-        /* Tamanho diferente para cada uma */
-        const size =
-            random(18, 48);
+        borboleta.innerHTML = `
+            <svg viewBox="0 0 100 100">
 
-        /* Posição inicial */
-        const x =
-            random(0, 100);
-
-        /* SVG somente com linhas */
-        butterfly.innerHTML = `
-            <svg
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-
-                <!-- Asa esquerda superior -->
                 <path d="
                     M50 48
-                    C38 18 8 12 12 38
-                    C15 55 35 58 50 48
-                "/>
+                    C38 15 5 12 12 40
+                    C16 56 35 58 50 48
+                " />
 
-                <!-- Asa direita superior -->
                 <path d="
                     M50 48
-                    C62 18 92 12 88 38
-                    C85 55 65 58 50 48
-                "/>
-
-                <!-- Asa esquerda inferior -->
-                <path d="
-                    M50 50
-                    C34 48 15 58 23 78
-                    C29 90 45 72 50 50
-                "/>
-
-                <!-- Asa direita inferior -->
-                <path d="
-                    M50 50
-                    C66 48 85 58 77 78
-                    C71 90 55 72 50 50
-                "/>
-
-                <!-- Corpo -->
-                <ellipse
-                    cx="50"
-                    cy="50"
-                    rx="2.5"
-                    ry="17"
-                />
-
-                <!-- Antenas -->
-                <path d="
-                    M49 35
-                    C43 25 36 24 32 27
-                "/>
+                    C62 15 95 12 88 40
+                    C84 56 65 58 50 48
+                " />
 
                 <path d="
-                    M51 35
-                    C57 25 64 24 68 27
-                "/>
+                    M50 51
+                    C35 48 17 60 25 78
+                    C31 90 45 72 50 51
+                " />
+
+                <path d="
+                    M50 51
+                    C65 48 83 60 75 78
+                    C69 90 55 72 50 51
+                " />
+
+                <path d="
+                    M49 34
+                    C42 24 35 23 30 27
+                " />
+
+                <path d="
+                    M51 34
+                    C58 24 65 23 70 27
+                " />
+
+                <path d="
+                    M50 34
+                    L50 70
+                " />
 
             </svg>
         `;
 
-        butterfly.style.setProperty(
-            "--size",
-            size + "px"
-        );
+        const tamanho =
+            20 + Math.random() * 35;
 
-        butterfly.style.left =
-            x + "%";
+        const posicao =
+            Math.random() * 100;
 
-        butterfly.style.setProperty(
-            "--duration",
-            random(9, 17) + "s"
-        );
+        const duracao =
+            8 + Math.random() * 10;
 
-        butterfly.style.setProperty(
-            "--delay",
-            random(-15, 5) + "s"
-        );
+        const atraso =
+            Math.random() * -15;
 
-        butterfly.style.setProperty(
-            "--opacity",
-            random(0.45, 0.95)
-        );
+        borboleta.style.width =
+            tamanho + "px";
 
-        butterfly.style.setProperty(
-            "--scale",
-            random(0.7, 1.25)
-        );
+        borboleta.style.height =
+            tamanho + "px";
 
-        /* Trajetória sinuosa */
-        butterfly.style.setProperty(
-            "--x1",
-            random(-30, 30) + "px"
-        );
+        borboleta.style.left =
+            posicao + "%";
 
-        butterfly.style.setProperty(
-            "--x2",
-            random(-130, 130) + "px"
-        );
+        borboleta.style.animationDuration =
+            duracao + "s";
 
-        butterfly.style.setProperty(
-            "--x3",
-            random(-180, 180) + "px"
-        );
-
-        butterfly.style.setProperty(
-            "--x4",
-            random(-120, 120) + "px"
-        );
-
-        butterfly.style.setProperty(
-            "--x5",
-            random(-200, 200) + "px"
-        );
-
-        /* Pequenas rotações */
-        butterfly.style.setProperty(
-            "--r1",
-            random(-20, 20) + "deg"
-        );
-
-        butterfly.style.setProperty(
-            "--r2",
-            random(-35, 35) + "deg"
-        );
-
-        butterfly.style.setProperty(
-            "--r3",
-            random(-25, 25) + "deg"
-        );
-
-        butterfly.style.setProperty(
-            "--r4",
-            random(-40, 40) + "deg"
-        );
-
-        butterfly.style.setProperty(
-            "--r5",
-            random(-25, 25) + "deg"
-        );
+        borboleta.style.animationDelay =
+            atraso + "s";
 
         container.appendChild(
-            butterfly
+            borboleta
         );
     }
 
-    for (
-        let i = 0;
-        i < quantidade;
-        i++
-    ) {
-        criarBorboleta();
-    }
-
-})();
+});
 </script>
 </body>
 </html>

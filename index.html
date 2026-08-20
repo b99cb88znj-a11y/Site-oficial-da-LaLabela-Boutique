@@ -1179,66 +1179,7 @@ header{
         gap:8px;
     }
 }
-    /* ==========================================
-   BORBOLETAS — TELA DE BOAS-VINDAS
-   ========================================== */
-
-#butterflies-container {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 2;
-}
-
-.butterfly {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    opacity: 0;
-    pointer-events: none;
-    animation:
-        butterflyFly var(--duration) linear infinite,
-        butterflyFade var(--fade-duration) ease-in-out infinite;
-}
-
-@keyframes butterflyFly {
-
-    0% {
-        transform:
-            translate(var(--start-x), 110vh)
-            rotate(var(--rotate-start))
-            scale(var(--scale));
-    }
-
-    25% {
-        transform:
-            translate(var(--mid-x), 75vh)
-            rotate(var(--rotate-mid))
-            scale(var(--scale));
-    }
-
-    50% {
-        transform:
-            translate(var(--end-x), 45vh)
-            rotate(var(--rotate-end))
-            scale(var(--scale));
-    }
-
-    75% {
-        transform:
-            translate(var(--mid2-x), 20vh)
-            rotate(var(--rotate-mid2))
-            scale(var(--scale));
-    }
-
-    100% {
-        transform:
-            translate(var(--final-x), -15vh)
-            rotate(var(--rotate-final))
-            scale(var(--scale));
-    }
-}
+   
 
 @keyframes butterflyFade {
 
@@ -1252,6 +1193,133 @@ header{
         opacity: var(--opacity);
     }
 }
+   /* ==========================================
+   BORBOLETAS DE LINHA — WELCOME SCREEN
+   ========================================== */
+
+#welcome-screen {
+    position: relative;
+    overflow: hidden;
+}
+
+#butterflies-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.butterfly {
+    position: absolute;
+    bottom: -80px;
+    left: 0;
+
+    width: var(--size);
+    height: var(--size);
+
+    opacity: 0;
+
+    animation:
+        butterfly-flight var(--duration) linear infinite;
+
+    animation-delay: var(--delay);
+
+    will-change: transform, opacity;
+}
+
+/* Desenho da borboleta */
+.butterfly svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Traços brancos */
+.butterfly path,
+.butterfly ellipse,
+.butterfly line {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.95);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Voo da parte inferior até o topo */
+@keyframes butterfly-flight {
+
+    0% {
+        transform:
+            translate3d(
+                var(--x1),
+                0,
+                0
+            )
+            rotate(var(--r1))
+            scale(var(--scale));
+
+        opacity: 0;
+    }
+
+    10% {
+        opacity: var(--opacity);
+    }
+
+    25% {
+        transform:
+            translate3d(
+                var(--x2),
+                -25vh,
+                0
+            )
+            rotate(var(--r2))
+            scale(var(--scale));
+    }
+
+    50% {
+        transform:
+            translate3d(
+                var(--x3),
+                -55vh,
+                0
+            )
+            rotate(var(--r3))
+            scale(var(--scale));
+    }
+
+    75% {
+        transform:
+            translate3d(
+                var(--x4),
+                -85vh,
+                0
+            )
+            rotate(var(--r4))
+            scale(var(--scale));
+    }
+
+    100% {
+        transform:
+            translate3d(
+                var(--x5),
+                -125vh,
+                0
+            )
+            rotate(var(--r5))
+            scale(var(--scale));
+
+        opacity: 0;
+    }
+}
+
+/* Respeita quem prefere menos animações */
+@media (prefers-reduced-motion: reduce) {
+
+    #butterflies-container {
+        display: none;
+    }
+} 
 </style>
 </head>
 
@@ -3229,8 +3297,9 @@ registrarServiceWorkerCliente();
 retomarAcompanhamentoPedidos();
 </script>
 <script>
+<script>
 /* ==========================================
-   BORBOLETAS DA TELA DE BOAS-VINDAS
+   BORBOLETAS BRANCAS — LA LABELA
    ========================================== */
 
 (function () {
@@ -3242,121 +3311,175 @@ retomarAcompanhamentoPedidos();
 
     if (!container) return;
 
-    const butterflyImage =
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23e8b6d9'%3E%3Cellipse cx='35' cy='35' rx='25' ry='32' transform='rotate(-25 35 35)'/%3E%3Cellipse cx='65' cy='35' rx='25' ry='32' transform='rotate(25 65 35)'/%3E%3Cellipse cx='35' cy='68' rx='18' ry='25' transform='rotate(20 35 68)'/%3E%3Cellipse cx='65' cy='68' rx='18' ry='25' transform='rotate(-20 65 68)'/%3E%3C/g%3E%3Crect x='47' y='28' width='6' height='48' rx='3' fill='%23b8899f'/%3E%3C/svg%3E";
+    const quantidade = 18;
 
-    const quantidade = 12;
+    function random(min, max) {
+        return Math.random() * (max - min) + min;
+    }
 
-    for (let i = 0; i < quantidade; i++) {
+    function criarBorboleta() {
 
         const butterfly =
-            document.createElement("img");
+            document.createElement("div");
 
         butterfly.className = "butterfly";
 
-        butterfly.src = butterflyImage;
+        /* Tamanho diferente para cada uma */
+        const size =
+            random(18, 48);
 
-        const startX =
-            Math.random() * 100;
+        /* Posição inicial */
+        const x =
+            random(0, 100);
 
-        const midX =
-            Math.random() * 100;
+        /* SVG somente com linhas */
+        butterfly.innerHTML = `
+            <svg
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+            >
 
-        const endX =
-            Math.random() * 100;
+                <!-- Asa esquerda superior -->
+                <path d="
+                    M50 48
+                    C38 18 8 12 12 38
+                    C15 55 35 58 50 48
+                "/>
 
-        const mid2X =
-            Math.random() * 100;
+                <!-- Asa direita superior -->
+                <path d="
+                    M50 48
+                    C62 18 92 12 88 38
+                    C85 55 65 58 50 48
+                "/>
 
-        const finalX =
-            Math.random() * 100;
+                <!-- Asa esquerda inferior -->
+                <path d="
+                    M50 50
+                    C34 48 15 58 23 78
+                    C29 90 45 72 50 50
+                "/>
 
-        const scale =
-            0.45 + Math.random() * 0.8;
+                <!-- Asa direita inferior -->
+                <path d="
+                    M50 50
+                    C66 48 85 58 77 78
+                    C71 90 55 72 50 50
+                "/>
 
-        const duration =
-            10 + Math.random() * 12;
+                <!-- Corpo -->
+                <ellipse
+                    cx="50"
+                    cy="50"
+                    rx="2.5"
+                    ry="17"
+                />
 
-        const fadeDuration =
-            3 + Math.random() * 2;
+                <!-- Antenas -->
+                <path d="
+                    M49 35
+                    C43 25 36 24 32 27
+                "/>
 
-        const opacity =
-            0.35 + Math.random() * 0.45;
+                <path d="
+                    M51 35
+                    C57 25 64 24 68 27
+                "/>
+
+            </svg>
+        `;
 
         butterfly.style.setProperty(
-            "--start-x",
-            startX + "vw"
+            "--size",
+            size + "px"
         );
 
-        butterfly.style.setProperty(
-            "--mid-x",
-            midX + "vw"
-        );
-
-        butterfly.style.setProperty(
-            "--end-x",
-            endX + "vw"
-        );
-
-        butterfly.style.setProperty(
-            "--mid2-x",
-            mid2X + "vw"
-        );
-
-        butterfly.style.setProperty(
-            "--final-x",
-            finalX + "vw"
-        );
-
-        butterfly.style.setProperty(
-            "--scale",
-            scale
-        );
+        butterfly.style.left =
+            x + "%";
 
         butterfly.style.setProperty(
             "--duration",
-            duration + "s"
+            random(9, 17) + "s"
         );
 
         butterfly.style.setProperty(
-            "--fade-duration",
-            fadeDuration + "s"
+            "--delay",
+            random(-15, 5) + "s"
         );
 
         butterfly.style.setProperty(
             "--opacity",
-            opacity
+            random(0.45, 0.95)
         );
 
         butterfly.style.setProperty(
-            "--rotate-start",
-            (-30 + Math.random() * 60) + "deg"
+            "--scale",
+            random(0.7, 1.25)
+        );
+
+        /* Trajetória sinuosa */
+        butterfly.style.setProperty(
+            "--x1",
+            random(-30, 30) + "px"
         );
 
         butterfly.style.setProperty(
-            "--rotate-mid",
-            (-45 + Math.random() * 90) + "deg"
+            "--x2",
+            random(-130, 130) + "px"
         );
 
         butterfly.style.setProperty(
-            "--rotate-end",
-            (-35 + Math.random() * 70) + "deg"
+            "--x3",
+            random(-180, 180) + "px"
         );
 
         butterfly.style.setProperty(
-            "--rotate-mid2",
-            (-50 + Math.random() * 100) + "deg"
+            "--x4",
+            random(-120, 120) + "px"
         );
 
         butterfly.style.setProperty(
-            "--rotate-final",
-            (-30 + Math.random() * 60) + "deg"
+            "--x5",
+            random(-200, 200) + "px"
         );
 
-        butterfly.style.animationDelay =
-            (-Math.random() * duration) + "s";
+        /* Pequenas rotações */
+        butterfly.style.setProperty(
+            "--r1",
+            random(-20, 20) + "deg"
+        );
 
-        container.appendChild(butterfly);
+        butterfly.style.setProperty(
+            "--r2",
+            random(-35, 35) + "deg"
+        );
+
+        butterfly.style.setProperty(
+            "--r3",
+            random(-25, 25) + "deg"
+        );
+
+        butterfly.style.setProperty(
+            "--r4",
+            random(-40, 40) + "deg"
+        );
+
+        butterfly.style.setProperty(
+            "--r5",
+            random(-25, 25) + "deg"
+        );
+
+        container.appendChild(
+            butterfly
+        );
+    }
+
+    for (
+        let i = 0;
+        i < quantidade;
+        i++
+    ) {
+        criarBorboleta();
     }
 
 })();

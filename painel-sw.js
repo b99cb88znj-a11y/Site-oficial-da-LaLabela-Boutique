@@ -1,16 +1,18 @@
-// Service worker de notificações — LaLabela Boutique (painel administrativo)
-//
-// Esse arquivo precisa existir na RAIZ do painel, no mesmo nível do
-// admin.html, com exatamente este nome: painel-sw.js
+/*
+ * Service Worker do PAINEL da LaLabela Boutique.
+ *
+ * Duas funções:
+ * 1) Permite usar registration.showNotification() nos avisos que disparam
+ *    enquanto o painel está aberto (nova venda detectada em tempo real).
+ * 2) Recebe e exibe as notificações push do Firebase Cloud Messaging
+ *    quando o painel está fechado/minimizado (enviadas pelo Worker via
+ *    /notificar-venda).
+ *
+ * Precisa estar hospedado em ./painel-sw.js, na raiz do painel.
+ */
 
-// ==========================================
-// CAMADA 2 — PUSH EM SEGUNDO PLANO (FCM)
-// Precisa vir ANTES de qualquer outra coisa no arquivo, porque o
-// Service Worker precisa registrar o listener de push do Firebase assim
-// que é carregado.
-// ==========================================
-importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/12.1.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/12.1.0/firebase-messaging-compat.js");
 
 firebase.initializeApp({
     apiKey: "AIzaSyAqid6M2HB8_V0vWozjbZEInGpsNZ8IfKQ",
@@ -23,42 +25,45 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// Chamado pelo Firebase quando chega um push com o painel FECHADO ou em
-// segundo plano (é exatamente a Camada 2 que faltava).
+// Dispara quando chega um push do FCM e o painel NÃO está em primeiro
+// plano (minimizado, aba fechada, ou app instalado fechado).
 messaging.onBackgroundMessage((payload) => {
-    const titulo = (payload.notification && payload.notification.title) || "LaLabela Boutique";
+    const notif = payload.notification || {};
+    const titulo = notif.title || "LaLabela Boutique";
+
     const opcoes = {
-        body: (payload.notification && payload.notification.body) || "",
-        icon: "./LaLabela-icon-512-final.png",
+        body: notif.body || "",
+        icon: notif.icon || "./LaLabela-icon-512-final.png",
         badge: "./LaLabela-icon-512-final.png",
-        tag: (payload.notification && payload.notification.tag) || "lalabela-push"
+        tag: notif.tag || "lalabela-painel",
+        data: payload.data || {}
     };
+
     self.registration.showNotification(titulo, opcoes);
 });
 
+// Ao tocar na notificação, abre o painel (ou foca a aba já aberta).
+self.addEventListener("notificationclick", (event) => {
+    event.notification.close();
 
-// ==========================================
-// CAMADA 1 — já existia, sem alteração
-// ==========================================
+    event.waitUntil(
+        clients.matchAll({ type: "window", includeUncontrolled: true }).then((listaJanelas) => {
+            for (const janela of listaJanelas) {
+                if (janela.url.includes("admin.html") && "focus" in janela) {
+                    return janela.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow("./admin.html");
+            }
+        })
+    );
+});
+
 self.addEventListener("install", () => {
     self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
     event.waitUntil(self.clients.claim());
-});
-
-// Ao tocar na notificação, leva de volta para o painel.
-self.addEventListener("notificationclick", (event) => {
-    event.notification.close();
-    event.waitUntil(
-        self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((listaJanelas) => {
-            for (const janela of listaJanelas) {
-                if ("focus" in janela) return janela.focus();
-            }
-            if (self.clients.openWindow) {
-                return self.clients.openWindow("./");
-            }
-        })
-    );
 });

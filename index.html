@@ -1181,107 +1181,348 @@ header{
 }
    
 
-@keyframes butterflyFade {
+/* =========================================================
+   LALABELA — TELA DE BOAS-VINDAS
+   BORBOLETAS ANIMADAS
+   ========================================================= */
 
-    0%,
-    100% {
-        opacity: 0;
-    }
-
-    15%,
-    80% {
-        opacity: var(--opacity);
-    }
-}
-  #telaBoasVindas {
+#telaBoasVindas {
     position: fixed;
     inset: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
 }
 
-#butterflies-container {
+/* ---------------------------------------------------------
+   CAMADA DAS BORBOLETAS
+   --------------------------------------------------------- */
+
+#lbButterflyLayer {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
+
     pointer-events: none;
+
     z-index: 10;
 }
 
-.butterfly {
+/* ---------------------------------------------------------
+   ÁREA DA LOGO
+   FICA ACIMA DAS BORBOLETAS
+   --------------------------------------------------------- */
+
+#lbLogoArea {
     position: absolute;
-    bottom: -80px;
-    width: 45px;
-    height: 45px;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 50;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none;
+}
+
+#lbLogoArea img {
+    display: block;
+
+    width: min(62vw, 330px);
+    height: auto;
+
+    object-fit: contain;
+
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* =========================================================
+   BORBOLETA
+   ========================================================= */
+
+.lb-butterfly {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: var(--lb-size);
+    height: var(--lb-size);
 
     opacity: 0;
 
-    animation-name: voarBorboleta;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+
+    animation:
+        lbFly var(--lb-time) ease-in-out infinite;
+
+    animation-delay: var(--lb-delay);
 }
 
-.butterfly svg {
+/* SVG */
+
+.lb-butterfly svg {
+    display: block;
+
     width: 100%;
     height: 100%;
+
+    overflow: visible;
+
+    filter:
+        drop-shadow(0 0 3px rgba(255,255,255,.85))
+        drop-shadow(0 0 8px rgba(255,255,255,.35));
 }
 
-.butterfly path {
+/* ---------------------------------------------------------
+   LINHAS DA BORBOLETA
+   --------------------------------------------------------- */
+
+.lb-butterfly path,
+.lb-butterfly line {
+
     fill: none;
-    stroke: white;
-    stroke-width: 2;
+
+    stroke: rgba(255,255,255,.96);
+
+    stroke-width: 1.6;
+
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
-@keyframes voarBorboleta {
+/* ---------------------------------------------------------
+   ASAS
+   --------------------------------------------------------- */
+
+.lb-wing-left,
+.lb-wing-right {
+
+    transform-box: fill-box;
+
+    transform-origin: center;
+
+    animation:
+        lbWingBeat var(--lb-wing-time) ease-in-out infinite;
+
+    animation-delay: var(--lb-wing-delay);
+}
+
+/* Asa esquerda */
+
+.lb-wing-left {
+    transform-origin: right center;
+}
+
+/* Asa direita */
+
+.lb-wing-right {
+    transform-origin: left center;
+}
+
+/* ---------------------------------------------------------
+   BATIMENTO DAS ASAS
+   --------------------------------------------------------- */
+
+@keyframes lbWingBeat {
 
     0% {
-        transform:
-            translate(0, 0)
-            rotate(-10deg)
-            scale(0.7);
-
-        opacity: 0;
+        transform: scaleX(1);
     }
 
-    10% {
-        opacity: 0.9;
+    18% {
+        transform: scaleX(.48);
     }
 
-    30% {
-        transform:
-            translate(80px, -30vh)
-            rotate(15deg)
-            scale(0.9);
+    36% {
+        transform: scaleX(1);
     }
 
-    50% {
-        transform:
-            translate(-70px, -55vh)
-            rotate(-15deg)
-            scale(1);
+    55% {
+        transform: scaleX(.55);
     }
 
-    70% {
-        transform:
-            translate(100px, -80vh)
-            rotate(12deg)
-            scale(0.8);
-    }
-
-    90% {
-        opacity: 0.7;
+    75% {
+        transform: scaleX(1);
     }
 
     100% {
+        transform: scaleX(1);
+    }
+}
+
+/* =========================================================
+   VOO
+   ========================================================= */
+
+@keyframes lbFly {
+
+    0% {
+
         transform:
-            translate(-80px, -120vh)
-            rotate(-10deg)
-            scale(0.6);
+            translate3d(
+                var(--lb-x1),
+                var(--lb-y1),
+                0
+            )
+            rotate(var(--lb-r1))
+            scale(var(--lb-scale));
 
         opacity: 0;
+    }
+
+    8% {
+
+        opacity: var(--lb-opacity);
+    }
+
+    22% {
+
+        transform:
+            translate3d(
+                var(--lb-x2),
+                var(--lb-y2),
+                0
+            )
+            rotate(var(--lb-r2))
+            scale(var(--lb-scale));
+    }
+
+    42% {
+
+        transform:
+            translate3d(
+                var(--lb-x3),
+                var(--lb-y3),
+                0
+            )
+            rotate(var(--lb-r3))
+            scale(var(--lb-scale));
+    }
+
+    62% {
+
+        transform:
+            translate3d(
+                var(--lb-x4),
+                var(--lb-y4),
+                0
+            )
+            rotate(var(--lb-r4))
+            scale(var(--lb-scale));
+    }
+
+    82% {
+
+        transform:
+            translate3d(
+                var(--lb-x5),
+                var(--lb-y5),
+                0
+            )
+            rotate(var(--lb-r5))
+            scale(var(--lb-scale));
+
+        opacity: var(--lb-opacity);
+    }
+
+    100% {
+
+        transform:
+            translate3d(
+                var(--lb-x6),
+                var(--lb-y6),
+                0
+            )
+            rotate(var(--lb-r6))
+            scale(var(--lb-scale));
+
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   PARTÍCULAS
+   ========================================================= */
+
+.lb-particle {
+
+    position: absolute;
+
+    width: var(--particle-size);
+    height: var(--particle-size);
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0 0 4px white,
+        0 0 9px rgba(255,255,255,.9);
+
+    opacity: 0;
+
+    animation:
+        lbParticle var(--particle-time) ease-in-out infinite;
+
+    animation-delay: var(--particle-delay);
+
+    pointer-events: none;
+}
+
+@keyframes lbParticle {
+
+    0% {
+        opacity: 0;
+        transform: scale(.2) translateY(15px);
+    }
+
+    30% {
+        opacity: .8;
+    }
+
+    60% {
+        opacity: .4;
+        transform: scale(1) translateY(-5px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(.2) translateY(-25px);
+    }
+}
+
+/* =========================================================
+   REDUÇÃO DE MOVIMENTO
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    #lbButterflyLayer {
+        display: none;
+    }
+}
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    #lbLogoArea img {
+        width: min(64vw, 310px);
+    }
+
+    .lb-butterfly {
+        filter: none;
     }
 }
 </style>
@@ -1290,11 +1531,19 @@ header{
 <body>
 
 <div id="telaBoasVindas">
-    <div id="butterflies-container"></div>
-    <img src="./LaLabela-icon-512-final.png" alt="LaLabela Boutique">
-    <h1>Bem-vinda à LaLabela Boutique</h1>
-    <p>Moda, estilo e peças escolhidas especialmente para você.</p>
-</div>
+
+    <!-- CAMADA DAS BORBOLETAS -->
+    <div id="lbButterflyLayer"></div>
+
+    <!-- LOGO -->
+    <div id="lbLogoArea">
+        <img
+            src="./LaLabela-icon-512-final.png"
+            alt="LaLabela Boutique"
+        >
+    </div>
+
+
 
 <header>
     <div class="nav">
@@ -3262,106 +3511,447 @@ retomarAcompanhamentoPedidos();
 </script>
     
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+/* =========================================================
+   LALABELA — SISTEMA DE BORBOLETAS
+   ========================================================= */
 
-    const container = document.getElementById(
-        "butterflies-container"
-    );
+(function () {
 
-    if (!container) {
-        console.error(
-            "Container das borboletas não encontrado."
-        );
-        return;
+    "use strict";
+
+    function iniciarBorboletas() {
+
+        const layer =
+            document.getElementById(
+                "lbButterflyLayer"
+            );
+
+        if (!layer) {
+            console.warn(
+                "[LaLabela] Camada de borboletas não encontrada."
+            );
+            return;
+        }
+
+        /* Limpa caso o script seja executado novamente */
+        layer.innerHTML = "";
+
+        /*
+         * Quantidade de borboletas.
+         *
+         * Algumas serão grandes,
+         * algumas médias,
+         * algumas pequenas.
+         */
+
+        const quantidadeBorboletas = 15;
+
+        /* -------------------------------------------------
+           FUNÇÕES AUXILIARES
+           ------------------------------------------------- */
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function randomInt(min, max) {
+            return Math.floor(
+                random(min, max + 1)
+            );
+        }
+
+        /* -------------------------------------------------
+           CRIA BORBOLETA
+           ------------------------------------------------- */
+
+        function criarBorboleta() {
+
+            const butterfly =
+                document.createElement("div");
+
+            butterfly.className =
+                "lb-butterfly";
+
+            /*
+             * SVG da borboleta.
+             *
+             * As asas possuem grupos separados
+             * para permitir o movimento.
+             */
+
+            butterfly.innerHTML = `
+
+                <svg
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+
+                    <!-- ASA ESQUERDA -->
+                    <g class="lb-wing-left">
+
+                        <path d="
+                            M50 49
+                            C42 42 22 14 8 20
+                            C-2 25 5 43 16 51
+                            C27 59 40 57 50 49
+                        "/>
+
+                        <path d="
+                            M47 47
+                            C36 40 23 29 10 28
+                        "/>
+
+                        <path d="
+                            M44 51
+                            C32 48 19 44 9 40
+                        "/>
+
+                        <path d="
+                            M40 54
+                            C29 53 20 52 13 49
+                        "/>
+
+                    </g>
+
+
+                    <!-- ASA DIREITA -->
+                    <g class="lb-wing-right">
+
+                        <path d="
+                            M50 49
+                            C58 42 78 14 92 20
+                            C102 25 95 43 84 51
+                            C73 59 60 57 50 49
+                        "/>
+
+                        <path d="
+                            M53 47
+                            C64 40 77 29 90 28
+                        "/>
+
+                        <path d="
+                            M56 51
+                            C68 48 81 44 91 40
+                        "/>
+
+                        <path d="
+                            M60 54
+                            C71 53 80 52 87 49
+                        "/>
+
+                    </g>
+
+
+                    <!-- CORPO -->
+                    <path d="
+                        M50 35
+                        C47 42 47 57 50 70
+                        C53 57 53 42 50 35
+                    "/>
+
+
+                    <!-- ANTENA ESQUERDA -->
+                    <path d="
+                        M49 37
+                        C45 29 40 25 34 24
+                    "/>
+
+
+                    <!-- ANTENA DIREITA -->
+                    <path d="
+                        M51 37
+                        C55 29 60 25 66 24
+                    "/>
+
+                </svg>
+            `;
+
+            /* -------------------------------------------------
+               TAMANHOS
+               ------------------------------------------------- */
+
+            const tamanho =
+                randomInt(38, 105);
+
+            butterfly.style.setProperty(
+                "--lb-size",
+                tamanho + "px"
+            );
+
+            /*
+             * Borboletas grandes ficam mais afastadas
+             * da área central da logo.
+             */
+
+            let x;
+
+            const lado =
+                Math.random();
+
+            if (tamanho > 80) {
+
+                if (lado < .5) {
+
+                    x = random(3, 24);
+
+                } else {
+
+                    x = random(76, 94);
+                }
+
+            } else {
+
+                x = random(2, 96);
+            }
+
+            /* -------------------------------------------------
+               POSIÇÕES
+               ------------------------------------------------- */
+
+            const yInicial =
+                window.innerHeight + tamanho;
+
+            butterfly.style.left =
+                x + "vw";
+
+            butterfly.style.top =
+                yInicial + "px";
+
+            /* -------------------------------------------------
+               TEMPO DO VOO
+               ------------------------------------------------- */
+
+            const tempo =
+                random(12, 21);
+
+            butterfly.style.setProperty(
+                "--lb-time",
+                tempo + "s"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-delay",
+                random(-20, 2) + "s"
+            );
+
+            /* -------------------------------------------------
+               OPACIDADE
+               ------------------------------------------------- */
+
+            butterfly.style.setProperty(
+                "--lb-opacity",
+                random(.55, .95)
+            );
+
+            /* -------------------------------------------------
+               ESCALA
+               ------------------------------------------------- */
+
+            butterfly.style.setProperty(
+                "--lb-scale",
+                random(.75, 1.15)
+            );
+
+            /* -------------------------------------------------
+               BATIMENTO DAS ASAS
+               ------------------------------------------------- */
+
+            butterfly.style.setProperty(
+                "--lb-wing-time",
+                random(.75, 1.25) + "s"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-wing-delay",
+                random(-1, 0) + "s"
+            );
+
+            /* -------------------------------------------------
+               TRAJETÓRIA
+               ------------------------------------------------- */
+
+            butterfly.style.setProperty(
+                "--lb-x1",
+                random(-20, 20) + "px"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-y1",
+                "0px"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-x2",
+                random(-130, 130) + "px"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-y2",
+                random(-20, -30) + "vh"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-x3",
+                random(-160, 160) + "px"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-y3",
+                random(-42, -52) + "vh"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-x4",
+                random(-150, 150) + "px"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-y4",
+                random(-65, -72) + "vh"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-x5",
+                random(-130, 130) + "px"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-y5",
+                random(-85, -92) + "vh"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-x6",
+                random(-180, 180) + "px"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-y6",
+                random(-110, -125) + "vh"
+            );
+
+            /* -------------------------------------------------
+               ROTAÇÃO
+               ------------------------------------------------- */
+
+            butterfly.style.setProperty(
+                "--lb-r1",
+                random(-15, 15) + "deg"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-r2",
+                random(-25, 25) + "deg"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-r3",
+                random(-20, 20) + "deg"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-r4",
+                random(-25, 25) + "deg"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-r5",
+                random(-20, 20) + "deg"
+            );
+
+            butterfly.style.setProperty(
+                "--lb-r6",
+                random(-15, 15) + "deg"
+            );
+
+            layer.appendChild(
+                butterfly
+            );
+        }
+
+        /* -------------------------------------------------
+           CRIA AS BORBOLETAS
+           ------------------------------------------------- */
+
+        for (
+            let i = 0;
+            i < quantidadeBorboletas;
+            i++
+        ) {
+
+            criarBorboleta();
+
+        }
+
+        /* -------------------------------------------------
+           PARTÍCULAS
+           ------------------------------------------------- */
+
+        const quantidadeParticulas = 55;
+
+        for (
+            let i = 0;
+            i < quantidadeParticulas;
+            i++
+        ) {
+
+            const particle =
+                document.createElement("span");
+
+            particle.className =
+                "lb-particle";
+
+            particle.style.left =
+                random(2, 98) + "%";
+
+            particle.style.top =
+                random(3, 97) + "%";
+
+            particle.style.setProperty(
+                "--particle-size",
+                random(1, 3) + "px"
+            );
+
+            particle.style.setProperty(
+                "--particle-time",
+                random(2, 5) + "s"
+            );
+
+            particle.style.setProperty(
+                "--particle-delay",
+                random(-5, 0) + "s"
+            );
+
+            layer.appendChild(
+                particle
+            );
+        }
+
     }
 
-    const quantidade = 20;
 
-    for (let i = 0; i < quantidade; i++) {
+    /* =====================================================
+       INICIALIZA
+       ===================================================== */
 
-        const borboleta =
-            document.createElement("div");
+    if (
+        document.readyState ===
+        "loading"
+    ) {
 
-        borboleta.className = "butterfly";
-
-        borboleta.innerHTML = `
-            <svg viewBox="0 0 100 100">
-
-                <path d="
-                    M50 48
-                    C38 15 5 12 12 40
-                    C16 56 35 58 50 48
-                " />
-
-                <path d="
-                    M50 48
-                    C62 15 95 12 88 40
-                    C84 56 65 58 50 48
-                " />
-
-                <path d="
-                    M50 51
-                    C35 48 17 60 25 78
-                    C31 90 45 72 50 51
-                " />
-
-                <path d="
-                    M50 51
-                    C65 48 83 60 75 78
-                    C69 90 55 72 50 51
-                " />
-
-                <path d="
-                    M49 34
-                    C42 24 35 23 30 27
-                " />
-
-                <path d="
-                    M51 34
-                    C58 24 65 23 70 27
-                " />
-
-                <path d="
-                    M50 34
-                    L50 70
-                " />
-
-            </svg>
-        `;
-
-        const tamanho =
-            20 + Math.random() * 35;
-
-        const posicao =
-            Math.random() * 100;
-
-        const duracao =
-            8 + Math.random() * 10;
-
-        const atraso =
-            Math.random() * -15;
-
-        borboleta.style.width =
-            tamanho + "px";
-
-        borboleta.style.height =
-            tamanho + "px";
-
-        borboleta.style.left =
-            posicao + "%";
-
-        borboleta.style.animationDuration =
-            duracao + "s";
-
-        borboleta.style.animationDelay =
-            atraso + "s";
-
-        container.appendChild(
-            borboleta
+        document.addEventListener(
+            "DOMContentLoaded",
+            iniciarBorboletas
         );
+
+    } else {
+
+        iniciarBorboletas();
+
     }
 
-});
+})();
 </script>
 </body>
 </html>

@@ -1615,6 +1615,9 @@ appId:
 const VAPID_KEY =
 "BHyE0QHo93fzZ51xUqJwrf6vv2LGC7H3oHQMU4Mre32q666mI-O7cxUcFT5T_wY4cqtwZ412QdYDncrYZXTG2DQ";
 
+const WORKER_URL =
+"https://wispy-math-2575.pvai.workers.dev";
+
 const CLOUDINARY_CLOUD_NAME =
 "ddhdmddq";
 
@@ -1686,6 +1689,18 @@ function escaparHTML(valor){
         .replace(/>/g,"&gt;")
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
+}
+
+// Avisa a cliente (push) que o status do pedido dela mudou. Não bloqueia
+// a ação do painel se isso falhar — é só um aviso complementar.
+function notificarClienteMudancaStatus(numeroPedido, novoStatus){
+    fetch(WORKER_URL + "/notificar-cliente", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ numeroPedido: numeroPedido, status: novoStatus })
+    }).catch(erro => {
+        console.error("[LaLabela] Falha ao notificar cliente sobre mudança de status:", erro);
+    });
 }
 
 
@@ -2377,6 +2392,7 @@ try {
 await updateDoc(doc(db, "pedidos", idPedido), {
 status: "Pago - Aguardando despacho"
 });
+notificarClienteMudancaStatus(idPedido, "Pago - Aguardando despacho");
 alert("Pagamento confirmado! Pedido movido para aguardando despacho.");
 fecharModalPedidos();
 } catch(e) {
@@ -2390,6 +2406,7 @@ try {
 await updateDoc(doc(db, "pedidos", idPedido), {
 status: "Despachado"
 });
+notificarClienteMudancaStatus(idPedido, "Despachado");
 alert("Pedido despachado com sucesso!");
 fecharModalPedidos();
 } catch(e) {
@@ -2408,6 +2425,7 @@ await updateDoc(doc(db, "pedidos", idPedido), {
 status: "Finalizado",
 finalizadoEm: new Date().toISOString()
 });
+notificarClienteMudancaStatus(idPedido, "Finalizado");
 alert("Pedido finalizado com sucesso! Ele será removido automaticamente do painel em 24h.");
 fecharModalPedidos();
 } catch(e) {
@@ -3926,6 +3944,18 @@ serverTimestamp()
 alert(
 "Produto adicionado com sucesso!"
 );
+
+// Lançamento (só para produtos NOVOS, não em edições) — avisa
+// todas as clientes que ativaram notificações gerais.
+if(tag.trim().toLowerCase() === "lançamento" || tag.trim().toLowerCase() === "lancamento"){
+    fetch(WORKER_URL + "/notificar-lancamento", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nomeProduto: nome })
+    }).catch(erro => {
+        console.error("[LaLabela] Falha ao notificar lançamento:", erro);
+    });
+}
 
 }else{
 

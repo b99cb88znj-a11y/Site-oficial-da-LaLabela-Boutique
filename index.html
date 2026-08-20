@@ -1179,12 +1179,86 @@ header{
         gap:8px;
     }
 }
+    /* ==========================================
+   BORBOLETAS — TELA DE BOAS-VINDAS
+   ========================================== */
+
+#butterflies-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.butterfly {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    opacity: 0;
+    pointer-events: none;
+    animation:
+        butterflyFly var(--duration) linear infinite,
+        butterflyFade var(--fade-duration) ease-in-out infinite;
+}
+
+@keyframes butterflyFly {
+
+    0% {
+        transform:
+            translate(var(--start-x), 110vh)
+            rotate(var(--rotate-start))
+            scale(var(--scale));
+    }
+
+    25% {
+        transform:
+            translate(var(--mid-x), 75vh)
+            rotate(var(--rotate-mid))
+            scale(var(--scale));
+    }
+
+    50% {
+        transform:
+            translate(var(--end-x), 45vh)
+            rotate(var(--rotate-end))
+            scale(var(--scale));
+    }
+
+    75% {
+        transform:
+            translate(var(--mid2-x), 20vh)
+            rotate(var(--rotate-mid2))
+            scale(var(--scale));
+    }
+
+    100% {
+        transform:
+            translate(var(--final-x), -15vh)
+            rotate(var(--rotate-final))
+            scale(var(--scale));
+    }
+}
+
+@keyframes butterflyFade {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    15%,
+    80% {
+        opacity: var(--opacity);
+    }
+}
 </style>
 </head>
 
 <body>
 
 <div id="telaBoasVindas">
+    <div id="butterflies-container"></div>
     <img src="./LaLabela-icon-512-final.png" alt="LaLabela Boutique">
     <h1>Bem-vinda à LaLabela Boutique</h1>
     <p>Moda, estilo e peças escolhidas especialmente para você.</p>
@@ -3154,6 +3228,138 @@ escutarConfigFrete();
 registrarServiceWorkerCliente();
 retomarAcompanhamentoPedidos();
 </script>
+<script>
+/* ==========================================
+   BORBOLETAS DA TELA DE BOAS-VINDAS
+   ========================================== */
 
+(function () {
+
+    const container =
+        document.getElementById(
+            "butterflies-container"
+        );
+
+    if (!container) return;
+
+    const butterflyImage =
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23e8b6d9'%3E%3Cellipse cx='35' cy='35' rx='25' ry='32' transform='rotate(-25 35 35)'/%3E%3Cellipse cx='65' cy='35' rx='25' ry='32' transform='rotate(25 65 35)'/%3E%3Cellipse cx='35' cy='68' rx='18' ry='25' transform='rotate(20 35 68)'/%3E%3Cellipse cx='65' cy='68' rx='18' ry='25' transform='rotate(-20 65 68)'/%3E%3C/g%3E%3Crect x='47' y='28' width='6' height='48' rx='3' fill='%23b8899f'/%3E%3C/svg%3E";
+
+    const quantidade = 12;
+
+    for (let i = 0; i < quantidade; i++) {
+
+        const butterfly =
+            document.createElement("img");
+
+        butterfly.className = "butterfly";
+
+        butterfly.src = butterflyImage;
+
+        const startX =
+            Math.random() * 100;
+
+        const midX =
+            Math.random() * 100;
+
+        const endX =
+            Math.random() * 100;
+
+        const mid2X =
+            Math.random() * 100;
+
+        const finalX =
+            Math.random() * 100;
+
+        const scale =
+            0.45 + Math.random() * 0.8;
+
+        const duration =
+            10 + Math.random() * 12;
+
+        const fadeDuration =
+            3 + Math.random() * 2;
+
+        const opacity =
+            0.35 + Math.random() * 0.45;
+
+        butterfly.style.setProperty(
+            "--start-x",
+            startX + "vw"
+        );
+
+        butterfly.style.setProperty(
+            "--mid-x",
+            midX + "vw"
+        );
+
+        butterfly.style.setProperty(
+            "--end-x",
+            endX + "vw"
+        );
+
+        butterfly.style.setProperty(
+            "--mid2-x",
+            mid2X + "vw"
+        );
+
+        butterfly.style.setProperty(
+            "--final-x",
+            finalX + "vw"
+        );
+
+        butterfly.style.setProperty(
+            "--scale",
+            scale
+        );
+
+        butterfly.style.setProperty(
+            "--duration",
+            duration + "s"
+        );
+
+        butterfly.style.setProperty(
+            "--fade-duration",
+            fadeDuration + "s"
+        );
+
+        butterfly.style.setProperty(
+            "--opacity",
+            opacity
+        );
+
+        butterfly.style.setProperty(
+            "--rotate-start",
+            (-30 + Math.random() * 60) + "deg"
+        );
+
+        butterfly.style.setProperty(
+            "--rotate-mid",
+            (-45 + Math.random() * 90) + "deg"
+        );
+
+        butterfly.style.setProperty(
+            "--rotate-end",
+            (-35 + Math.random() * 70) + "deg"
+        );
+
+        butterfly.style.setProperty(
+            "--rotate-mid2",
+            (-50 + Math.random() * 100) + "deg"
+        );
+
+        butterfly.style.setProperty(
+            "--rotate-final",
+            (-30 + Math.random() * 60) + "deg"
+        );
+
+        butterfly.style.animationDelay =
+            (-Math.random() * duration) + "s";
+
+        container.appendChild(butterfly);
+    }
+
+})();
+</script>
 </body>
 </html>

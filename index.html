@@ -48,96 +48,6 @@
     }
 }
 
-/* =====================================================
-   BORBOLETAS — TELA DE BOAS-VINDAS
-   Só traços brancos, sem preenchimento. Sobem da parte de baixo
-   até sumirem no topo, atrás da logo (z-index menor que a logo).
-===================================================== */
-.borboletas-container{
-    position:absolute;
-    inset:0;
-    overflow:hidden;
-    pointer-events:none;
-    z-index:1;
-}
-
-.borboleta{
-    position:absolute;
-    bottom:-60px;
-    left:var(--esq,50%);
-    width:var(--tam,26px);
-    height:var(--tam,26px);
-    opacity:0;
-    animation:lalabelaVoarBorboleta var(--dur,6s) linear var(--atraso,0s) infinite;
-    will-change:transform,opacity;
-}
-
-.borboleta-svg{
-    width:100%;
-    height:100%;
-    fill:none;
-    stroke:#fff;
-    stroke-width:1.6;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    overflow:visible;
-    display:block;
-}
-
-.borboleta-svg .asa-esquerda,
-.borboleta-svg .asa-direita{
-    transform-box:fill-box;
-    animation:lalabelaBaterAsa var(--dur-asa,1.3s) ease-in-out infinite;
-}
-
-.borboleta-svg .asa-esquerda{
-    transform-origin:right center;
-}
-
-.borboleta-svg .asa-direita{
-    transform-origin:left center;
-}
-
-.borboleta-svg .borboleta-veia{
-    stroke-width:.7;
-    opacity:.55;
-}
-
-@keyframes lalabelaBaterAsa{
-    0%,100%{ transform:scaleX(1); }
-    50%{ transform:scaleX(.68); }
-}
-
-@keyframes lalabelaVoarBorboleta{
-    0%{
-        transform:translate(0,0) rotate(var(--rot,0deg));
-        opacity:0;
-    }
-    10%{
-        opacity:var(--op,.85);
-    }
-    25%{
-        transform:translate(calc(var(--drift,0vw) * .25 + var(--onda,0px)), -28vh) rotate(calc(var(--rot,0deg) + 6deg));
-    }
-    50%{
-        transform:translate(calc(var(--drift,0vw) * .5 - var(--onda,0px)), -55vh) rotate(calc(var(--rot,0deg) - 5deg));
-    }
-    75%{
-        transform:translate(calc(var(--drift,0vw) * .75 + var(--onda,0px)), -82vh) rotate(calc(var(--rot,0deg) + 4deg));
-        opacity:var(--op,.85);
-    }
-    100%{
-        transform:translate(var(--drift,0vw), -118vh) rotate(var(--rot,0deg));
-        opacity:0;
-    }
-}
-
-@media(prefers-reduced-motion:reduce){
-    .borboleta{
-        display:none;
-    }
-}
-
 :root{
     --cream:#FFFFFF;
     --wine:#E91E63;
@@ -1558,13 +1468,95 @@ header{
         padding:20px 18px 18px;
     }
 }
+
+/* =====================================================
+   MODAL — CONFIGURAÇÃO DE COOKIES
+===================================================== */
+.cookie-categoria{
+    border:1px solid var(--line);
+    padding:14px 16px;
+    margin-bottom:14px;
+}
+
+.cookie-categoria-topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+}
+
+.cookie-categoria-topo strong{
+    font-size:0.92rem;
+}
+
+.cookie-categoria p{
+    font-size:0.78rem;
+    color:#777;
+    line-height:1.5;
+    margin:0;
+}
+
+.cookie-selo-obrigatorio{
+    font-size:0.66rem;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:#888;
+    background:#f2f2f2;
+    padding:5px 9px;
+    border-radius:20px;
+    white-space:nowrap;
+    flex:none;
+}
+
+.cookie-switch{
+    position:relative;
+    display:inline-block;
+    width:42px;
+    height:24px;
+    flex:none;
+}
+
+.cookie-switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.cookie-switch-slider{
+    position:absolute;
+    inset:0;
+    background:#ccc;
+    transition:.2s;
+    border-radius:24px;
+    cursor:pointer;
+}
+
+.cookie-switch-slider::before{
+    content:"";
+    position:absolute;
+    height:18px;
+    width:18px;
+    left:3px;
+    bottom:3px;
+    background:#fff;
+    transition:.2s;
+    border-radius:50%;
+}
+
+.cookie-switch input:checked + .cookie-switch-slider{
+    background:#ed1760;
+}
+
+.cookie-switch input:checked + .cookie-switch-slider::before{
+    transform:translateX(18px);
+}
 </style>
 </head>
 
 <body>
 
 <div id="telaBoasVindas">
-    <div class="borboletas-container" id="borboletasContainer" aria-hidden="true"></div>
     <img src="./LaLabela-icon-512-final.png" alt="LaLabela Boutique">
 </div>
 
@@ -1711,8 +1703,37 @@ header{
     <h2 class="serif">Privacidade e Cookies</h2>
     <p>Utilizamos cookies neste site para melhorar sua experiência de navegação e lembrar suas preferências de compra.</p>
     <div class="cookie-botoes">
-        <button type="button" class="cookie-config" onclick="fecharBannerCookies()">Configuração de cookies</button>
+        <button type="button" class="cookie-config" onclick="abrirConfiguracaoCookies()">Configuração de cookies</button>
         <button type="button" class="cookie-aceitar" onclick="aceitarCookies()">Aceitar todos os cookies</button>
+    </div>
+</div>
+
+<div class="modal-sistema" id="modalCookies">
+    <div class="modal-sistema-box">
+        <button class="fechar-modal-sistema" onclick="fecharConfiguracaoCookies()">&times;</button>
+        <h2>Configuração de Cookies</h2>
+        <p style="font-size:0.83rem; color:#777; line-height:1.55; margin:-8px 0 20px;">Veja o que cada tipo de cookie faz no site e escolha o que você prefere permitir.</p>
+
+        <div class="cookie-categoria">
+            <div class="cookie-categoria-topo">
+                <strong>Essenciais</strong>
+                <span class="cookie-selo-obrigatorio">Sempre ativos</span>
+            </div>
+            <p>Necessários para a sacola, o checkout e o cálculo de frete funcionarem. Não podem ser desativados.</p>
+        </div>
+
+        <div class="cookie-categoria">
+            <div class="cookie-categoria-topo">
+                <strong>Preferências</strong>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="cookiePrefToggle" checked>
+                    <span class="cookie-switch-slider"></span>
+                </label>
+            </div>
+            <p>Guardam seu nome, e-mail, telefone e endereços neste aparelho, para preencher automaticamente na próxima compra. Se desativar, você precisa preencher os dados a cada pedido.</p>
+        </div>
+
+        <button class="btn-acao-modal" onclick="salvarPreferenciasCookies()">Salvar preferências</button>
     </div>
 </div>
 
@@ -1847,86 +1868,6 @@ header{
 </div>
 
 <script>
-/* =====================================================
-   BORBOLETAS — TELA DE BOAS-VINDAS
-   Só HTML/CSS/JS, sem biblioteca externa. Cada borboleta recebe
-   tamanho, posição, velocidade, deriva (esquerda/direita) e rotação
-   aleatórios via variáveis CSS (--tam, --dur, --drift etc.), então a
-   mesma animação (@keyframes) produz um voo diferente pra cada uma.
-   Some junto com a tela de boas-vindas porque é filha dela (a tela
-   inteira já tem "animation:sairTela ... forwards" que some tudo).
-===================================================== */
-function iniciarBorboletasBoasVindas(){
-    const container = document.getElementById("borboletasContainer");
-    if(!container) return;
-
-    // Respeita quem pediu menos animação no aparelho/navegador — não
-    // gera nem anima nenhuma borboleta nesse caso.
-    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-        return;
-    }
-
-    const QUANTIDADE_BORBOLETAS = 20;
-
-    function numeroAleatorioEntre(minimo, maximo){
-        return Math.random() * (maximo - minimo) + minimo;
-    }
-
-    function svgBorboleta(){
-        return `<svg class="borboleta-svg" viewBox="0 0 120 120">
-            <g class="asa-esquerda">
-                <path d="M60 38 C 42 18, 14 12, 6 32 C 0 48, 10 62, 30 60 C 42 58, 52 50, 60 40 Z"></path>
-                <path d="M60 55 C 48 58, 30 66, 22 82 C 17 92, 24 98, 34 94 C 44 90, 50 80, 56 68 C 58 64, 59 59, 60 55 Z"></path>
-                <path class="borboleta-veia" d="M57 39 C 45 31, 26 27, 13 33"></path>
-                <path class="borboleta-veia" d="M55 59 C 43 61, 31 69, 25 81"></path>
-            </g>
-            <g class="asa-direita">
-                <path d="M60 38 C 78 18, 106 12, 114 32 C 120 48, 110 62, 90 60 C 78 58, 68 50, 60 40 Z"></path>
-                <path d="M60 55 C 72 58, 90 66, 98 82 C 103 92, 96 98, 86 94 C 76 90, 70 80, 64 68 C 62 64, 61 59, 60 55 Z"></path>
-                <path class="borboleta-veia" d="M63 39 C 75 31, 94 27, 107 33"></path>
-                <path class="borboleta-veia" d="M65 59 C 77 61, 89 69, 95 81"></path>
-            </g>
-            <circle class="borboleta-cabeca" cx="60" cy="29" r="3"></circle>
-            <path class="borboleta-corpo" d="M60 32 C 58 45, 58 62, 60 88 C 61 92, 61 95, 60 98"></path>
-            <path class="borboleta-antena" d="M58 28 C 52 21, 46 15, 42 9"></path>
-            <path class="borboleta-antena" d="M62 28 C 68 21, 74 15, 78 9"></path>
-            <circle class="borboleta-antena-ponta" cx="42" cy="8" r="1.6"></circle>
-            <circle class="borboleta-antena-ponta" cx="78" cy="8" r="1.6"></circle>
-        </svg>`;
-    }
-
-    let htmlBorboletas = "";
-
-    for(let i = 0; i < QUANTIDADE_BORBOLETAS; i++){
-        const tamanho = numeroAleatorioEntre(16, 36).toFixed(1);
-        const posicaoEsquerda = numeroAleatorioEntre(2, 94).toFixed(1);
-        const duracaoVoo = numeroAleatorioEntre(4.5, 8).toFixed(2);
-        const atrasoInicio = numeroAleatorioEntre(0, 2.4).toFixed(2);
-        const derivaLateral = numeroAleatorioEntre(-22, 22).toFixed(1);
-        const ondulacao = numeroAleatorioEntre(14, 42).toFixed(1);
-        const rotacao = numeroAleatorioEntre(-10, 10).toFixed(1);
-        const opacidadeMaxima = numeroAleatorioEntre(0.55, 0.95).toFixed(2);
-        const duracaoAsa = numeroAleatorioEntre(0.9, 1.8).toFixed(2);
-
-        htmlBorboletas += `<div class="borboleta" style="
-            --tam:${tamanho}px;
-            --esq:${posicaoEsquerda}%;
-            --dur:${duracaoVoo}s;
-            --atraso:${atrasoInicio}s;
-            --drift:${derivaLateral}vw;
-            --onda:${ondulacao}px;
-            --rot:${rotacao}deg;
-            --op:${opacidadeMaxima};
-            --dur-asa:${duracaoAsa}s;
-            left:${posicaoEsquerda}%;
-        ">${svgBorboleta()}</div>`;
-    }
-
-    container.innerHTML = htmlBorboletas;
-}
-
-iniciarBorboletasBoasVindas();
-
 let PRODUTOS = [];
 let carrinho = [];
 let categoriaAtual = "todos";
@@ -1950,6 +1891,24 @@ verificarExpiracaoSessao();
 let perfilCliente = JSON.parse(localStorage.getItem("lalabela_perfil")) || {
     nome: "", cpf: "", whatsapp: "", email: "", enderecos: []
 };
+
+// Controla se o site pode guardar nome/e-mail/telefone/endereços no
+// aparelho (categoria "Preferências" da configuração de cookies). Sem
+// preferência salva ainda, assume permitido (mesmo comportamento de
+// antes de existir essa configuração).
+function cookiesPreferenciasPermitidas(){
+    try{
+        const prefs = JSON.parse(localStorage.getItem("lalabela_cookie_prefs"));
+        return !prefs || prefs.preferencias !== false;
+    }catch(e){
+        return true;
+    }
+}
+
+function salvarPerfilLocal(){
+    if(!cookiesPreferenciasPermitidas()) return;
+    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+}
 
 function mascaraCpf(input) {
     let v = input.value.replace(/\D/g, "");
@@ -2012,7 +1971,7 @@ function salvarPerfilCliente(){
     perfilCliente.cpf = document.getElementById("perfilCpf").value.trim();
     perfilCliente.whatsapp = document.getElementById("perfilWhatsapp").value.trim();
     perfilCliente.email = document.getElementById("perfilEmail").value.trim();
-    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    salvarPerfilLocal();
     localStorage.setItem("lalabela_ultimo_acesso", new Date().getTime());
     
     if (typeof window.salvarClienteNoFirebase === "function") {
@@ -2056,7 +2015,7 @@ function usarEndereco(index){
 
 function excluirEndereco(index){
     perfilCliente.enderecos.splice(index, 1);
-    localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+    salvarPerfilLocal();
     renderizarEnderecosSalvos();
 }
 
@@ -2078,7 +2037,7 @@ async function buscarCep(){
             const novoEnd = { cep: cepInput, rua: dados.logradouro || "", bairro: dados.bairro || "", numero: "", complemento: "" };
             if(!perfilCliente.enderecos.some(e => e.cep === cepInput)){
                 perfilCliente.enderecos.push(novoEnd);
-                localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+                salvarPerfilLocal();
                 renderizarEnderecosSalvos();
             }
         }
@@ -3105,10 +3064,7 @@ async function finalizarPedidoSite() {
         perfilCliente.whatsapp =
             telefone;
 
-        localStorage.setItem(
-            "lalabela_perfil",
-            JSON.stringify(perfilCliente)
-        );
+        salvarPerfilLocal();
 
         localStorage.setItem(
             "lalabela_ultimo_acesso",
@@ -3371,12 +3327,45 @@ function mostrarBannerCookiesSeNecessario(){
 }
 function aceitarCookies(){
     localStorage.setItem("lalabela_cookies_ok", "aceito");
+    localStorage.setItem("lalabela_cookie_prefs", JSON.stringify({ preferencias: true }));
     fecharBannerCookies();
 }
 function fecharBannerCookies(){
     const banner = document.getElementById("cookieBanner");
     if(banner) banner.classList.remove("visivel");
 }
+
+function abrirConfiguracaoCookies(){
+    const toggle = document.getElementById("cookiePrefToggle");
+    if(toggle) toggle.checked = cookiesPreferenciasPermitidas();
+    const modal = document.getElementById("modalCookies");
+    if(modal) modal.classList.add("aberto");
+}
+
+function fecharConfiguracaoCookies(){
+    const modal = document.getElementById("modalCookies");
+    if(modal) modal.classList.remove("aberto");
+}
+
+function salvarPreferenciasCookies(){
+    const toggle = document.getElementById("cookiePrefToggle");
+    const permitePreferencias = toggle ? toggle.checked : true;
+
+    localStorage.setItem("lalabela_cookie_prefs", JSON.stringify({ preferencias: permitePreferencias }));
+    localStorage.setItem("lalabela_cookies_ok", "aceito");
+
+    // Se a cliente desativou "Preferências", apaga o que já estava
+    // guardado neste aparelho (nome, e-mail, telefone, endereços).
+    if(!permitePreferencias){
+        localStorage.removeItem("lalabela_perfil");
+        perfilCliente = { nome: "", cpf: "", whatsapp: "", email: "", enderecos: [] };
+        renderizarEnderecosSalvos();
+    }
+
+    fecharConfiguracaoCookies();
+    fecharBannerCookies();
+}
+
 mostrarBannerCookiesSeNecessario();
 
 // Assim que a cliente termina de digitar o e-mail no checkout, buscamos no
@@ -3407,7 +3396,7 @@ document.getElementById("checkoutEmail").addEventListener("blur", async function
                 perfilCliente.enderecos.push(end);
             }
         });
-        localStorage.setItem("lalabela_perfil", JSON.stringify(perfilCliente));
+        salvarPerfilLocal();
         renderizarEnderecosSalvos();
     }
 
